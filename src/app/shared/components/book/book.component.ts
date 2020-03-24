@@ -9,7 +9,8 @@ import { book } from "src/app/core/models/book";
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
-  styleUrls: ['./book.component.scss']
+  styleUrls: ['./book.component.scss'],
+  providers: [RequestService]
 })
 export class BookComponent implements OnInit {
 
