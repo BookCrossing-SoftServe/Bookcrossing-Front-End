@@ -12,6 +12,7 @@ import { RequestsComponent } from './shared/components/requests/requests.compone
 import { RequestService } from './core/services/request/request.service';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,8 +27,8 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule,
-    MDBBootstrapModule.forRoot()
+    MDBBootstrapModule.forRoot(),
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
