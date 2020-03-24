@@ -12,6 +12,7 @@ import { RequestsComponent } from './shared/components/requests/requests.compone
 import { RequestService } from './core/services/request/request.service';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { BooksComponent } from './shared/components/books/books.component';
 
 @NgModule({
   declarations: [
@@ -22,13 +23,14 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     RequestsComponent,
     NavbarComponent,
     FooterComponent,
+    BooksComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    MDBBootstrapModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    MDBBootstrapModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

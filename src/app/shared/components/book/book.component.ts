@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { RequestService } from 'src/app/core/services/request/request.service';
 import { ActivatedRoute } from '@angular/router';
 import { bookUrl } from 'src/app/configs/api-endpoint.constants';
-// import { Book } from "src/app/core/models/book/book";
+import { book } from "src/app/core/models/book";
 
 @Component({
   selector: 'app-book',
@@ -14,7 +14,7 @@ import { bookUrl } from 'src/app/configs/api-endpoint.constants';
 export class BookComponent implements OnInit {
 
     readonly baseUrl = bookUrl;
-    book: Book;
+    book: book;
     bookId: number;
 
   constructor(
@@ -33,7 +33,7 @@ export class BookComponent implements OnInit {
   }
   
   getBookById(bookId: number) {
-    return this.http.get<Book>(this.baseUrl + `/${bookId}`).subscribe((value: Book) => {
+    return this.http.get<book>(this.baseUrl + `/${bookId}`).subscribe((value: book) => {
       this.book = value;
     });
   }
