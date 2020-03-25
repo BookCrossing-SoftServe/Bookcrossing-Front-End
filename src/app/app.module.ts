@@ -10,6 +10,8 @@ import { RegistrationComponent } from './shared/components/registration/registra
 import { AddBookComponent } from './shared/components/add-book/add-book.component';
 import { Routes, RouterModule } from '@angular/router';
 import { BookService } from './core/services/book.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSelectModule} from '@angular/material/select';
 
 const appRoutes: Routes = [
   { path: "", component: RegistrationComponent},
@@ -33,6 +35,8 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     MDBBootstrapModule.forRoot(),
     RouterModule.forRoot(appRoutes),
+    BrowserAnimationsModule,
+    MatSelectModule
   ],
   providers: [
     BookService

@@ -1,3 +1,21 @@
 form {
     margin: 0% 10%;
 }
+.additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+  }
+mat-select{
+    text-align: left;
+}
+mat-select-trigger{
+    color: #495057;
+}
+.btn-author{
+    align-items: center;
+    padding: .375rem .75rem;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    background-color: #e9ecef;
+}
