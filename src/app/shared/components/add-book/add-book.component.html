@@ -1,58 +1,64 @@
-<!-- Default form register -->
 <form
-  [formGroup]="addBookForm" (ngSubmit)='onSubmit()'
-  class="text-center border border-light p-5"
->
-  <p class="h4 mb-4">Add new book</p>
+    [formGroup]="addBookForm"
+    (ngSubmit)="onSubmit()"
+    class="text-center border border-light p-5"
+  >
+    <p class="h4 mb-4">Add new book</p>
 
-  <div class="form-row mb-4">
-    <div class="col">
-      <!-- Book title -->
-      <input
-        formControlName="title"
-        type="text"
-        class="form-control"
-        placeholder="Book title"
-      />
+    <div class="form-row mb-4">
+      <div class="col">
+        <!-- Book title -->
+        <input
+          formControlName="title"
+          type="text"
+          class="form-control"
+          placeholder="Book title"
+          required
+        />
+      </div>
+
+      <div class="col">
+        <!-- Author -->
+        <input
+          formControlName="authors"
+          type="text"
+          class="form-control"
+          placeholder="Author"
+          required
+        />
+      </div>
+
+      <div class="col">
+        <!-- Author -->
+        <input
+          formControlName="publisher"
+          type="text"
+          class="form-control"
+          placeholder="Publisher"
+          required
+        />
+      </div>
+
+      <div class="col">
+        <select
+          formControlName="genres"
+          class="browser-default custom-select"
+          required
+        >
+          <option selected hidden value="1">Genre</option>
+          <option *ngFor="let genre of genres" value="genre.id">{{
+            genre.name
+          }}</option>
+        </select>
+      </div>
     </div>
 
-    <div class="col">
-      <!-- Author -->
-      <input
-        formControlName="authors"
-        type="text"
-        class="form-control"
-        placeholder="Author"
-      />
-    </div>
-
-    <div class="col">
-      <!-- Author -->
-      <input
-        formControlName="publisher"
-        type="text"
-        class="form-control"
-        placeholder="Publisher"
-      />
-    </div>
-
-    <div class="col">
-      <select formControlName="genres" class="browser-default custom-select">
-        <option selected hidden value="1">Genre</option>
-        <option *ngFor="let genre of genres" value="genre.id">{{
-          genre.name
-        }}</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Sign up button -->
-  <button class="btn btn-info my-4 btn-block" type="submit">Add book</button>
-
-  <!-- Social register -->
-  <hr />
-
-  <!-- Terms of service -->
-</form>
-
-<!-- Default form register -->
+    <!-- Add book button -->
+    <button
+      class="btn btn-info my-4 btn-block"
+      type="submit"
+      [disabled]="addBookForm.invalid"
+    >
+      Submit
+    </button>
+  </form>

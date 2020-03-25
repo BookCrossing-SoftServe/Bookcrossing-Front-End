@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { IBook } from "../models/book";
+import { IBook } from "../interfaces/book";
 
 @Injectable()
 export class BookService {
