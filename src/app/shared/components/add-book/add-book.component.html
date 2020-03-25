@@ -73,16 +73,16 @@
             placeholder="Author Firstname"
           />
           <input
-            formControlName="lastName"
-            type="text"
-            class="form-control"
-            placeholder="Author Lastname"
-          />
-          <input
             formControlName="middleName"
             type="text"
             class="form-control"
             placeholder="Author Middlename"
+          />
+          <input
+            formControlName="lastName"
+            type="text"
+            class="form-control"
+            placeholder="Author Lastname"
           />
           <div class="input-group-append">
             <button
@@ -96,7 +96,7 @@
           </div>
         </div>
         <div>
-          <ul class="list-group">
+          <ul class="list-group authors-list">
             <li *ngFor="let author of authors" class="list-group-item">
               <span>{{ author.firstName + " " +  author.middleName + "  " + author.lastName }}</span>
               <button class="btn btn-outline-danger waves-effect" (click)="onDeleteAuthor(author)">

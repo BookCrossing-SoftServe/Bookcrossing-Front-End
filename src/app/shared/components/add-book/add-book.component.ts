@@ -23,7 +23,7 @@ export class AddBookComponent implements OnInit {
     { id: 3, name: "Science fiction" }
   ];
 
-  authors: IAuthor[] = [{ firstName: "sdasdad", lastName: "Tolkien" }];
+  authors: IAuthor[] = [];
 
   ngOnInit(): void {
     this.buildForm();
@@ -53,12 +53,11 @@ export class AddBookComponent implements OnInit {
 
     const book: IBook = {
       name: this.addBookForm.get("title").value,
-      authors: this.addBookForm.get("authors").value,
+      authors: this.authors,
       genres: this.addBookForm.get("genres").value,
       available: true,
       userId: this.userId
     };
-
     console.log(book);
     this.bookService.postBook(book).subscribe(
       (data: IBook) => {
@@ -66,16 +65,18 @@ export class AddBookComponent implements OnInit {
       },
       error => {
         alert(error.message);
-        console.log(error);
       }
     );
+
+    this.authors = [];
+    this.addBookForm.reset();
   }
 
   onAddAuthor() {
     const author: IAuthor = {
       firstName: this.authorControl.get("firstName").value,
-      lastName: this.authorControl.get("firstName").value,
-      middleName: this.authorControl.get("firstName").value
+      lastName: this.authorControl.get("lastName").value,
+      middleName: this.authorControl.get("middleName").value
     };
     this.authors.push(author);
   }
@@ -89,6 +90,5 @@ export class AddBookComponent implements OnInit {
     if (index > -1) {
       this.authors.splice(index, 1);
     }
-    console.log(this.authors);
   }
 }
