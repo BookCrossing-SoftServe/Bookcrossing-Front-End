@@ -12,7 +12,4 @@ export class BookService {
     return this.http.get<IBook>(this.apiUrl + id);
   }
 
-  postBook(book: IBook) {
-    return this.http.post<IBook>(this.apiUrl, book);
-  }
 }

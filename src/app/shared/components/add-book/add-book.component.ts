@@ -1,26 +1,26 @@
-import { Component, OnInit } from "@angular/core";
-import { IGenre } from "src/app/core/interfaces/genre";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { IBook } from "src/app/core/interfaces/book";
-import { BookService } from "src/app/core/services/book.service";
-import { IAuthor } from "src/app/core/interfaces/author";
+import { Component, OnInit } from '@angular/core';
+import { IGenre } from 'src/app/core/interfaces/genre';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { IBook } from 'src/app/core/interfaces/book';
+import { IAuthor } from 'src/app/core/interfaces/author';
+import { BooksService } from 'src/app/core/services/books.service';
 
 @Component({
-  selector: "app-add-book",
-  templateUrl: "./add-book.component.html",
-  styleUrls: ["./add-book.component.scss"]
+  selector: 'app-add-book',
+  templateUrl: './add-book.component.html',
+  styleUrls: ['./add-book.component.scss']
 })
 export class AddBookComponent implements OnInit {
-  constructor(private bookService: BookService) {}
+  constructor(private bookService: BooksService) {}
   addBookForm: FormGroup;
   authorControl: FormGroup;
 
   userId: number = 1;
 
   genres: IGenre[] = [
-    { id: 1, name: "Fantazy" },
-    { id: 2, name: "Horror" },
-    { id: 3, name: "Science fiction" }
+    { id: 1, name: 'Fantazy' },
+    { id: 2, name: 'Horror' },
+    { id: 3, name: 'Science fiction' }
   ];
 
   authors: IAuthor[] = [];
@@ -46,22 +46,20 @@ export class AddBookComponent implements OnInit {
 
   onSubmit() {
     let genres: IGenre[] = [];
-    for (let i = 0; i < this.addBookForm.get("genres").value.length; i++) {
-      const id = this.addBookForm.get("genres").value[i];
+    for (let i = 0; i < this.addBookForm.get('genres').value.length; i++) {
+      const id = this.addBookForm.get('genres').value[i];
       genres.push({ id: id, name: this.getGenreById(id) });
     }
-
     const book: IBook = {
-      name: this.addBookForm.get("title").value,
+      name: this.addBookForm.get('title').value,
       authors: this.authors,
-      genres: this.addBookForm.get("genres").value,
+      genres: genres,
       available: true,
       userId: this.userId
     };
-    console.log(book);
     this.bookService.postBook(book).subscribe(
       (data: IBook) => {
-        alert("Successfully added");
+        alert('Successfully added');
       },
       error => {
         alert(error.message);
@@ -74,15 +72,15 @@ export class AddBookComponent implements OnInit {
 
   onAddAuthor() {
     const author: IAuthor = {
-      firstName: this.authorControl.get("firstName").value,
-      lastName: this.authorControl.get("lastName").value,
-      middleName: this.authorControl.get("middleName").value
+      firstName: this.authorControl.get('firstName').value,
+      lastName: this.authorControl.get('lastName').value,
+      middleName: this.authorControl.get('middleName').value
     };
     this.authors.push(author);
   }
 
   getGenreById(id: number) {
-    return this.genres ? this.genres.find(genre => genre.id == id)?.name : "";
+    return this.genres ? this.genres.find(genre => genre.id == id)?.name : '';
   }
 
   onDeleteAuthor(author: IAuthor) {
