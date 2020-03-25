@@ -54,6 +54,7 @@ export class AddBookComponent implements OnInit {
       name: this.addBookForm.get('title').value,
       authors: this.authors,
       genres: genres,
+      publisher: this.addBookForm.get('publisher').value,
       available: true,
       userId: this.userId
     };
