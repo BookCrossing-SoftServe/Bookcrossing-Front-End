@@ -1,11 +1,12 @@
 <div class="container my-5">
-  <section>    
+  <section>
     <!-- container -->
     <div class="row">
       <div class="col-12">
         <div class="card card-list">
           <div class="card-header white d-flex  align-items-center py-3">
-            <p class="h5-responsive font-weight-bold mb-0 col-sm">Authors</p>
+
+            <p class="h5-responsive font-weight-bold mb-0 mr-2">Authors</p>
 
             <!-- header search -->
             <div class="col">
@@ -18,33 +19,38 @@
                 </div>
               </div>
             </div>
-
+            
             <!-- header buttons -->
             <ul class="list-unstyled d-flex align-items-center mb-1">
               <li>
                 <button class="btn btn-md px-3 my-0 mr-0" (click)="toggleNew()">
-                  <i class="fas fa-plus"></i> Add new Author</button>
-                </li>
+                  <i class="fas fa-plus"></i>
+                  <span class="button-label">Add new Author</span>
+                </button>
+              </li>
               <li>
                 <button class="btn btn-md px-3 my-0 mr-0">
-                  <i class="fas fa-clipboard-list"></i> Show logs
+                  <i class="fas fa-clipboard-list"></i> 
+                  <span class="button-label">Show logs</span>
                 </button>
               </li>
               <li>
                 <button class="btn btn-md px-3 my-0 mr-0" (click)="toggleReportTable()">
-                  <i class="fas fa-exclamation-triangle"></i> Show Reports
+                  <i class="fas fa-exclamation-triangle"></i>                  
+                  <span class="button-label">Show Reports</span> 
                 </button>
               </li>
             </ul>
-          </div>         
+          </div>
 
 
           <div class="container" *ngIf="toggleNewAuthor">
             <app-author-form (onAction)="addAuthor($event)" (onCancel)="toggleNew()" [author]="newAuthor">
             </app-author-form>
           </div>
+
           <div class="container" *ngIf="isReportTableToggled">
-            <app-reports></app-reports>          
+            <app-reports></app-reports>
           </div>
 
 
@@ -53,11 +59,14 @@
             <table class="table table-hover mb-0">
               <thead>
                 <tr>
-                  <th scope="col" [ngClass]="{'activeHead': searchField=='id'}"     (click)="searchField = 'id'">#</th>
-                  <th scope="col" [ngClass]="{'activeHead': searchField=='firstName'}" (click)="searchField = 'firstName'">Firstname</th>
-                  <th scope="col" [ngClass]="{'activeHead': searchField=='lastName'}" (click)="searchField = 'lastName'">Lastname</th>
-                  <th scope="col" [ngClass]="{'activeHead': searchField=='middleName'}" (click)="searchField = 'middleName'">Middlename</th>
-                  <th>Actions</th>
+                  <th scope="col" [ngClass]="{'active-head': searchField=='id'}" (click)="searchField = 'id'">#</th>
+                  <th scope="col" [ngClass]="{'active-head': searchField=='firstName'}"
+                    (click)="searchField = 'firstName'">Firstname</th>
+                  <th scope="col" [ngClass]="{'active-head': searchField=='lastName'}"
+                    (click)="searchField = 'lastName'">Lastname</th>
+                  <th scope="col" [ngClass]="{'active-head': searchField=='middleName'}"
+                    (click)="searchField = 'middleName'">Middlename</th>
+                  <th scope="col" class="action">Actions</th>
                 </tr>
               </thead>
 
@@ -71,15 +80,20 @@
                     <td>{{author.lastName}}</td>
                     <td>{{author.middleName}}</td>
                     <td>
-                      <button class="btn btn-md btn-md px-3 my-0" (click)=toggleEdit(i)> <i class="far fa-edit"></i></button>
-                      <button class="btn btn-red btn-md px-3 my-0" (click)="deleteAuthor(author)"><i
-                          class="fas fa-ban"></i></button>
-                      <button class="btn btn-danger btn-md px-3 my-0"><i class="fas fa-exclamation"></i></button>
+                      <!-- Actions -->
+                      <div class=" row d-flex justify-content-center">
+                        <button class="btn btn-md btn-md px-3 m-1" (click)=toggleEdit(i)> <i
+                            class="far fa-edit"></i></button>
+                        <button class="btn btn-red btn-md px-3 m-1" (click)="deleteAuthor(author)"><i
+                            class="fas fa-ban"></i></button>
+                        <button class="btn btn-danger btn-md px-3 m-1"><i class="fas fa-exclamation"></i></button>
+                      </div>
                     </td>
                   </tr>
                   <tr *ngIf="isEditActive(i)">
                     <td colspan="5">
-                      <app-author-form (onAction)="editAuthor($event,i)" (onCancel)="resetEditIndex()" [author]="editedAuthor">
+                      <app-author-form (onAction)="editAuthor($event,i)" (onCancel)="resetEditIndex()"
+                        [author]="editedAuthor">
                       </app-author-form>
                     </td>
                   </tr>
