@@ -26,22 +26,27 @@ export class ReportsComponent implements OnInit {
   constructor() { }
   resolved = true;
   ngOnInit(): void {
-    this.reports = [
-      ({
+    this.reports = [{
         id: 1,
-        reportedId: 2,
-        reportedBy: 2,
-        reason: "Innapropriate name",
-        date: '02.01.2020',
-        resolvedBy: 1
-      }),
-      {
+        reportedId: 123,
+        reportedBy: 4125,
+        reason: "this feature is not implemented yet, this is static sample table",
+        date: '01.01.2077',
+        resolvedBy: 1,
+      },{
         id: 2,
         reportedId: 1,
         reportedBy: 1,
         reason: "Innapropriate name",
         date: '01.01.2020',
         resolvedBy: null,
+      },{
+        id: 3,
+        reportedId: 2,
+        reportedBy: 2,
+        reason: "Innapropriate name",
+        date: '02.01.2020',
+        resolvedBy: 1
       }]
   }
   resolve(reportId : number): void {
