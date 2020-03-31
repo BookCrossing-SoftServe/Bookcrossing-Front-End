@@ -1,4 +1,4 @@
-import { author } from './author';
+import { IAuthor } from './author';
 import {genre} from './genre';
 export class book{
     id:number;
@@ -6,7 +6,7 @@ export class book{
     userId:number;
     publisher:string;
     available:boolean;
-    authors:author[];
+    authors:IAuthor[];
     genres:genre[];
 
 

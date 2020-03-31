@@ -1,69 +1,94 @@
 <div class="container my-5">
-
-  <section>
-
+  <section>    
+    <!-- container -->
     <div class="row">
       <div class="col-12">
         <div class="card card-list">
-          <div class="card-header white d-flex justify-content-between align-items-center py-3">
+          <div class="card-header white d-flex  align-items-center py-3">
             <p class="h5-responsive font-weight-bold mb-0 col-sm">Authors</p>
+
+            <!-- header search -->
             <div class="col">
-              <div class="input-group form-sm form-2 pl-0">
-                <input class="form-control my-0 py-1 red-border" type="text" placeholder="Search" aria-label="Search">
+              <div class="input-group">
+                <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="search">
                 <div class="input-group-append">
-                  <span class="input-group-text red lighten-3" id="basic-text1"><i class="fas fa-search text-grey"
-                      aria-hidden="true"></i></span>
+                  <button class="input-group-text btn-light">
+                    <i class="fas fa-search text-grey" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </div>
-            <ul class="list-unstyled d-flex align-items-center mb-0">
-              <li><button class="btn btn-md px-3 my-0 mr-0"><i class="fas fa-plus"></i> Add new
-                  Author</button></li>
-              <li><button class="btn btn-md px-3 my-0 mr-0"><i class="fas fa-clipboard-list"></i> Show logs</button>
-              </li>
-              <li><button class="btn btn-md px-3 my-0 mr-0"><i class="fas fa-exclamation-triangle"></i> Show
-                  Reports</button></li>
-            </ul>
-          </div>
-          <div class="card-body">
 
-            <table class="table">
+            <!-- header buttons -->
+            <ul class="list-unstyled d-flex align-items-center mb-1">
+              <li>
+                <button class="btn btn-md px-3 my-0 mr-0" (click)="toggleNew()">
+                  <i class="fas fa-plus"></i> Add new Author</button>
+                </li>
+              <li>
+                <button class="btn btn-md px-3 my-0 mr-0">
+                  <i class="fas fa-clipboard-list"></i> Show logs
+                </button>
+              </li>
+              <li>
+                <button class="btn btn-md px-3 my-0 mr-0" (click)="toggleReportTable()">
+                  <i class="fas fa-exclamation-triangle"></i> Show Reports
+                </button>
+              </li>
+            </ul>
+          </div>         
+
+
+          <div class="container" *ngIf="toggleNewAuthor">
+            <app-author-form (onAction)="addAuthor($event)" (onCancel)="toggleNew()" [author]="newAuthor">
+            </app-author-form>
+          </div>
+          <div class="container" *ngIf="isReportTableToggled">
+            <app-reports></app-reports>          
+          </div>
+
+
+          <!-- Table -->
+          <div class="card-body">
+            <table class="table table-hover mb-0">
               <thead>
                 <tr>
-                  <th scope="col">Author ID</th>
-                  <th scope="col">Firstname</th>
-                  <th scope="col">Middlename</th>
-                  <th scope="col">Lastname</th>
-                  <th scope="col">Reported</th>
-                  <th scope="col">Edit</th>
-                  <th scope="col">Delete</th>
+                  <th scope="col" [ngClass]="{'activeHead': searchField=='id'}"     (click)="searchField = 'id'">#</th>
+                  <th scope="col" [ngClass]="{'activeHead': searchField=='firstName'}" (click)="searchField = 'firstName'">Firstname</th>
+                  <th scope="col" [ngClass]="{'activeHead': searchField=='lastName'}" (click)="searchField = 'lastName'">Lastname</th>
+                  <th scope="col" [ngClass]="{'activeHead': searchField=='middleName'}" (click)="searchField = 'middleName'">Middlename</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
+
               <tbody>
-                <tr *ngFor="let author of authors let i = index" id={{i}}>
-                  <th scope="row"><a class="text-primary">{{author.id}}</a></th>
-                  <td>{{author.firstName}}</td>
-                  <td>{{author.middleName}}</td>
-                  <td>{{author.lastName}}</td>
-                  <td>
-                    <button class="btn btn-danger btn-md px-3 my-0 mr-0" *ngIf="isReported(author.id)"><i class="fas fa-exclamation"></i></button>
-                  </td>                  
-                  <td>
-                    <button class="btn btn-md btn-md px-3 my-0 mr-0"><i class="far fa-edit"></i></button>
-                  </td>
-                  <td>
-                    <button class="btn btn-red btn-md px-3 my-0 ml-0" (click)="deleteAuthor(author)"><i class="fas fa-ban"></i></button>
-                  </td>
-                </tr>
+                <ng-container *ngFor="let author of authors | filter:search:searchField; let i = index ">
+                  <tr id={{i}}>
+                    <th scope="row">
+                      <a class="text-primary">{{author.id}}</a>
+                    </th>
+                    <td>{{author.firstName}}</td>
+                    <td>{{author.lastName}}</td>
+                    <td>{{author.middleName}}</td>
+                    <td>
+                      <button class="btn btn-md btn-md px-3 my-0" (click)=toggleEdit(i)> <i class="far fa-edit"></i></button>
+                      <button class="btn btn-red btn-md px-3 my-0" (click)="deleteAuthor(author)"><i
+                          class="fas fa-ban"></i></button>
+                      <button class="btn btn-danger btn-md px-3 my-0"><i class="fas fa-exclamation"></i></button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="isEditActive(i)">
+                    <td colspan="5">
+                      <app-author-form (onAction)="editAuthor($event,i)" (onCancel)="resetEditIndex()" [author]="editedAuthor">
+                      </app-author-form>
+                    </td>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
-          </div>
-          <div class="card-footer white py-3 d-flex justify-content-between">
           </div>
         </div>
       </div>
     </div>
-
   </section>
-
 </div>

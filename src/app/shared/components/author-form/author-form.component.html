@@ -1,0 +1,32 @@
+<form class="p-2" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-row">
+        <div class="col-sm">
+            <label>ID</label>
+            <input type="text" class="form-control mb-4" placeholder="ID" disabled="true" formControlName="id"
+                name="id">
+        </div>
+        <div class="col-sm">
+            <label>Firstname</label>
+            <input type="text" class="form-control mb-4" placeholder="Firstname" formControlName="firstName"
+                name="firstName">
+        </div>
+        <div class="col-sm">
+            <label>Lastname</label>
+            <input type="text" class="form-control mb-4" placeholder="Lastname" formControlName="lastName"
+                name="lastName">
+        </div>
+        <div class="col-sm">
+            <label>Middlename</label>
+            <input type="text" class="form-control mb-4" placeholder="Middlename" formControlName="middleName"
+                name="middleName">
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <div class="col">
+            <button class="btn btn-info btn-block" type="submit">Submit</button>
+        </div> 
+        <div class="col">
+            <button class="btn btn-info btn-block" type="button" (click)="cancel()">Cancel</button>    
+        </div>   
+    </div>
+</form>
