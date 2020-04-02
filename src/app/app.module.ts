@@ -17,6 +17,7 @@ import { AuthorsComponent } from './shared/components/authors/authors.component'
 import { AuthorFormComponent} from './shared/components/author-form/author-form.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { FilterPipe } from './shared/pipes/filter.pipe';
+import { RefDirective } from './shared/directives/ref.derictive';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { FilterPipe } from './shared/pipes/filter.pipe';
     AuthorFormComponent,
     ReportsComponent,
     FilterPipe,
+    RefDirective
   ],
   imports: [
     BrowserModule,
@@ -42,6 +44,7 @@ import { FilterPipe } from './shared/pipes/filter.pipe';
     MDBBootstrapModule.forRoot()
   ],
   providers: [],
+  entryComponents: [AuthorFormComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

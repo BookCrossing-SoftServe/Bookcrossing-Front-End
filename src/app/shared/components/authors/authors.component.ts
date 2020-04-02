@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver } from '@angular/core';
 import { IAuthor } from "src/app/core/models/author";
 import {Router} from '@angular/router';
 import {AuthorService} from "src/app/core/services/author/authors.service";
+import { AuthorFormComponent } from '../author-form/author-form.component';
+import { RefDirective } from '../../directives/ref.derictive';
 
 @Component({
   selector: 'app-authors',
@@ -10,63 +12,54 @@ import {AuthorService} from "src/app/core/services/author/authors.service";
 })
 export class AuthorsComponent implements OnInit {
 
-
+  @ViewChild(RefDirective, {static: false}) refDir : RefDirective
   authors : IAuthor[];
 
   search : string = '';
   searchField : string = 'id';
-
-  toggleEditIndex : number = -1;
-  toggleNewAuthor : boolean = false;
   isReportTableToggled : boolean = false;
 
   editedAuthor : IAuthor;
-  newAuthor : IAuthor = {
-    id: 0,
-    firstName: "",
-    lastName: "",
-    middleName: ""
-  };
 
-  constructor(private router : Router, private authorService: AuthorService) { }
+  constructor(private router : Router, private authorService: AuthorService, private resolver: ComponentFactoryResolver) { }
   ngOnInit() {
-   this.authorService.getAuthors()
-     .subscribe( authorData => {
-       this.authors = authorData;
-     });   
-  }
-
-
-
-  toggleReportTable() : void {
-    this.isReportTableToggled = !this.isReportTableToggled;
+    this.getAuthors();
   }
   
-
-  resetEditIndex() : void{
-    this.toggleEditIndex = -1;
+  toggleReportTable() : void {
+    this.isReportTableToggled = !this.isReportTableToggled;
+  }  
+  showAddForm()
+  {
+    let newAuthor : IAuthor = {
+      firstName: "",
+      lastName: "",
+      middleName: ""
+    };
+    this.showForm("Add Author",newAuthor)
   }
-  isEditActive(index : number) : boolean {
-    return this.toggleEditIndex == index;
+  showEditForm(author : IAuthor,index : number)
+  {
+    this.showForm("Edit Author",author,false,index)
   }  
 
-  toggleNew() : void{
-    this.toggleNewAuthor = !this.toggleNewAuthor;
-  }
-
-  toggleEdit(index : number): void{
-    if(this.toggleEditIndex == index)
-      this.resetEditIndex()
-    else
-      this.toggleEditIndex = index;
-      this.editedAuthor = Object.assign({},this.authors[index]);
+  private showForm(title : string, author : IAuthor, isNewAuthor : boolean = true, index? : number){    
+    let formFactory = this.resolver.resolveComponentFactory(AuthorFormComponent);
+    let instance = this.refDir.containerRef.createComponent(formFactory).instance;
+    instance.title = title;
+    instance.author = author;
+    instance.isNewAuthor = isNewAuthor
+    instance.onCancel.subscribe(()=> this.refDir.containerRef.clear());
+    if(isNewAuthor)
+      instance.onAction.subscribe(author => this.addAuthor(author));
+    else    
+      instance.onAction.subscribe(author => this.editAuthor(author,index));
   }
 
   editAuthor(author: IAuthor, index : number): void {
     this.authorService.updateAuthor(author).subscribe({
       next: () => {
         this.authors[index] = author;
-        this.resetEditIndex();
         console.log("Suc");
       },
       error: error => console.error(error)
@@ -77,7 +70,6 @@ export class AuthorsComponent implements OnInit {
       .subscribe({
         next: author => {
           this.authors = this.authors.filter(u => u !== author)
-          this.resetEditIndex();
           console.log("Suc");
         },
         error: error => console.error(error)
@@ -88,10 +80,18 @@ export class AuthorsComponent implements OnInit {
     this.authorService.addAuthor(author).subscribe({
       next: author => {
         this.authors.unshift(author);
-        this.resetEditIndex();
         console.log("Suc");
       },
       error: error => console.error(error)
     });
   };
+  getAuthors() : void {
+    this.authorService.getAuthors()
+    .subscribe( {
+      next: authorData => {
+      this.authors = authorData;
+    },
+    error: error => console.error(error)
+   });   
+  }
 }

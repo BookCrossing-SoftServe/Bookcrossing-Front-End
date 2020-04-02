@@ -2,28 +2,27 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IAuthor } from 'src/app/core/models/author'
+import { authorUrl } from "src/app/configs/api-endpoint.constants";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorService {
-  constructor(    private http: HttpClient, ) {}
-
-  readonly baseUrl = "https://localhost:44370/api/Authors";
+  constructor(private http: HttpClient,) {}
 
   getAuthors():Observable<IAuthor[]>{
-    return this.http.get<IAuthor[]>(this.baseUrl);
+    return this.http.get<IAuthor[]>(authorUrl);
   }
   getAuthorById(authorId: number) {
-    return this.http.get<IAuthor[]>(this.baseUrl + `/${authorId}`);
+    return this.http.get<IAuthor[]>(authorUrl + `/${authorId}`);
   }
   addAuthor(author : IAuthor){
-    return this.http.post<IAuthor>(this.baseUrl, author);
+    return this.http.post<IAuthor>(authorUrl, author);
   }
   deleteAuthor(authorId: number) {
-    return this.http.delete<IAuthor>(this.baseUrl + `/${authorId}`);
+    return this.http.delete<IAuthor>(authorUrl + `/${authorId}`);
   }
   updateAuthor(author: IAuthor) {
-    return this.http.put<IAuthor>(this.baseUrl, author);
+    return this.http.put<IAuthor>(authorUrl, author);
   }
 }

@@ -1,6 +1,6 @@
+<ng-template appRef></ng-template>
 <div class="container my-5">
   <section>
-    <!-- container -->
     <div class="row">
       <div class="col-12">
         <div class="card card-list">
@@ -23,9 +23,15 @@
             <!-- header buttons -->
             <ul class="list-unstyled d-flex align-items-center mb-1">
               <li>
-                <button class="btn btn-md px-3 my-0 mr-0" (click)="toggleNew()">
+                <button class="btn btn-md px-3 my-0 mr-0" (click)="showAddForm()">
                   <i class="fas fa-plus"></i>
-                  <span class="button-label">Add new Author</span>
+                  <span class="button-label">Add Author</span>
+                </button>
+              </li>
+              <li>
+                <button class="btn btn-md px-3 my-0 mr-0"  (click)="toggleReportTable()">
+                  <i class="fas fa-exclamation-triangle"></i>                  
+                  <span class="button-label">Show Reports</span> 
                 </button>
               </li>
               <li>
@@ -34,19 +40,7 @@
                   <span class="button-label">Show logs</span>
                 </button>
               </li>
-              <li>
-                <button class="btn btn-md px-3 my-0 mr-0" (click)="toggleReportTable()">
-                  <i class="fas fa-exclamation-triangle"></i>                  
-                  <span class="button-label">Show Reports</span> 
-                </button>
-              </li>
             </ul>
-          </div>
-
-
-          <div class="container" *ngIf="toggleNewAuthor">
-            <app-author-form (onAction)="addAuthor($event)" (onCancel)="toggleNew()" [author]="newAuthor">
-            </app-author-form>
           </div>
 
           <div class="container" *ngIf="isReportTableToggled">
@@ -57,16 +51,23 @@
           <!-- Table -->
           <div class="card-body">
             <table class="table table-hover mb-0">
+
               <thead>
                 <tr>
-                  <th scope="col" [ngClass]="{'active-head': searchField=='id'}" (click)="searchField = 'id'">#</th>
-                  <th scope="col" [ngClass]="{'active-head': searchField=='firstName'}"
+                  <th scope="col" 
+                    [ngClass]="{'active-head': searchField=='id'}" 
+                    (click)="searchField = 'id'">#</th>
+                  <th scope="col" 
+                    class="text-justify"
+                    [ngClass]="{'active-head': searchField=='firstName'}"
                     (click)="searchField = 'firstName'">Firstname</th>
-                  <th scope="col" [ngClass]="{'active-head': searchField=='lastName'}"
+                  <th scope="col" 
+                    [ngClass]="{'active-head': searchField=='lastName'}"
                     (click)="searchField = 'lastName'">Lastname</th>
-                  <th scope="col" [ngClass]="{'active-head': searchField=='middleName'}"
+                  <th scope="col" 
+                    [ngClass]="{'active-head': searchField=='middleName'}"
                     (click)="searchField = 'middleName'">Middlename</th>
-                  <th scope="col" class="action">Actions</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
 
@@ -78,31 +79,25 @@
                     </th>
                     <td>{{author.firstName}}</td>
                     <td>{{author.lastName}}</td>
-                    <td>{{author.middleName}}</td>
-                    <td>
-                      <!-- Actions -->
-                      <div class=" row d-flex justify-content-center">
-                        <button class="btn btn-md btn-md px-3 m-1" (click)=toggleEdit(i)> <i
+                    <td>{{author.middleName}}</td>                    
+                    <!-- Actions -->
+                    <td >
+                      <div class=" row d-flex">
+                        <button class="btn btn-md btn-md px-3 m-1" (click)=showEditForm(author,i)> <i
                             class="far fa-edit"></i></button>
                         <button class="btn btn-red btn-md px-3 m-1" (click)="deleteAuthor(author)"><i
                             class="fas fa-ban"></i></button>
-                        <button class="btn btn-danger btn-md px-3 m-1"><i class="fas fa-exclamation"></i></button>
                       </div>
                     </td>
-                  </tr>
-                  <tr *ngIf="isEditActive(i)">
-                    <td colspan="5">
-                      <app-author-form (onAction)="editAuthor($event,i)" (onCancel)="resetEditIndex()"
-                        [author]="editedAuthor">
-                      </app-author-form>
-                    </td>
-                  </tr>
-                </ng-container>
+                </ng-container>                
               </tbody>
+
             </table>
+
           </div>
         </div>
       </div>
     </div>
+
   </section>
 </div>
