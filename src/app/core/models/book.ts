@@ -1,6 +1,6 @@
 import { author } from './author';
 import {genre} from './genre';
-export class book{
+export class Book{
     id:number;
     name:string;
     userId:number;

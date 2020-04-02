@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import { requestUrl } from "src/app/configs/api-endpoint.constants";
-import { Request } from 'src/app/core/models/request/request';
+import { Request } from 'src/app/core/models/request';
 
 @Injectable()
 export class RequestService {

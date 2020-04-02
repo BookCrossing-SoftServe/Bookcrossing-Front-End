@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Request } from 'src/app/core/models/request/request'
+import { Request } from 'src/app/core/models/request'
 import { ActivatedRoute } from "@angular/router";
 import { HttpClient} from '@angular/common/http';
 import { switchMap } from 'rxjs/operators';
