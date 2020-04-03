@@ -1,10 +1,10 @@
-import { Book } from './book'
-import { User } from './user'
-export interface Request {
+import { IBook } from './book'
+import { IUser } from './user'
+export interface IRequest {
   id: number;
-  book: Book;
-  owner: User;
-  user: User;
+  book: IBook;
+  owner: IUser;
+  user: IUser;
   requestDate: Date;
   receiveDate?: Date;
 }
