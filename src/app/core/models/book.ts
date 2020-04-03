@@ -1,11 +1,11 @@
-import { IAuthor } from './author';
-import { IGenre } from './genre';
-export interface IBook {
+import { Author } from './author';
+import { Genre } from './genre';
+export interface Book {
   id?: number;
   name: string;
   userId: number;
   publisher?: string;
   available: boolean;
-  authors: IAuthor[];
-  genres: IGenre[];
+  authors: Author[];
+  genres: Genre[];
 }

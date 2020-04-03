@@ -1,26 +1,24 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { IBook } from "../models/book";
-import { environment } from "src/environments/environment";
+import { Book } from "../models/book";
+import { bookUrl } from 'src/app/configs/api-endpoint.constants';
 
 @Injectable()
 export class BooksService {
-  apiUrl: string = environment.apiUrl + "/Books";
+  private apiUrl: string = bookUrl;
 
   constructor(private http: HttpClient) {}
 
-  getBooks(): Observable<IBook[]> {
-    return this.http.get<IBook[]>(this.apiUrl);
+  getBooks(): Observable<Book[]> {
+    return this.http.get<Book[]>(this.apiUrl);
   }
 
-  getBookById(id: number): Observable<IBook> {
-    let url = this.apiUrl;
-    let url_ = url.concat(id.toString());
-    return this.http.get<IBook>(url_);
+  getBookById(id: number): Observable<Book> {
+    return this.http.get<Book>(this.apiUrl + id);
   }
 
-  postBook(book: IBook) {
-    return this.http.post<IBook>(this.apiUrl, book);
+  postBook(book: Book) {
+    return this.http.post<Book>(this.apiUrl, book);
   }
 }
