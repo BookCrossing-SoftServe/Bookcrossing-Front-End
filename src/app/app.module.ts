@@ -16,12 +16,12 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { BooksComponent } from './shared/components/books/books.component';
 import { AddBookComponent } from './shared/components/add-book/add-book.component';
-import { BooksService } from './core/services/books.service';
 import { AuthorsComponent } from './shared/components/authors/authors.component';
 import { AuthorFormComponent } from './shared/components/author-form/author-form.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { FilterPipe } from './shared/pipes/filter.pipe';
 import { RefDirective } from './shared/directives/ref.derictive';
+import { Routes } from '@angular/router';
 
 const appRoutes: Routes = [
   { path: "", component: RegistrationComponent},
@@ -58,7 +58,7 @@ const appRoutes: Routes = [
     MatSelectModule
   ],
   providers: [
-    BooksService
+    BookService
   ],  
   entryComponents: [AuthorFormComponent],
   bootstrap: [AppComponent]
