@@ -21,8 +21,7 @@ export class AuthorsComponent implements OnInit {
 
   //TODO: make search query work with pagination
   //search atm only works with local data
-  search : string = '';
-  searchField : string = 'id';  
+  searchQuery : string = '';
 
   isReportTableToggled : boolean = false;
 
@@ -32,8 +31,17 @@ export class AuthorsComponent implements OnInit {
     this.getAuthors(1,true);
   };
 
+  search(page : number = 1,searchQuery : string) : void{
+    this.getAuthors(page,true,searchQuery);
+  }
+
   pageChanged(currentPage : number){
-    this.getAuthors(currentPage);
+    if(this.searchQuery){
+      this.search(currentPage,this.searchQuery);
+    }
+    else{
+      this.getAuthors(currentPage);
+    }
   }
 
   //UI Add/Edit forms
@@ -91,8 +99,8 @@ export class AuthorsComponent implements OnInit {
       error: error => console.error(error)
     });
   };
-  getAuthors(page : number, firstRequest : boolean = false) : void {    
-    this.authorService.getAuthorsPage(page,this.pageSize,firstRequest)
+  getAuthors(page : number, firstRequest : boolean = false, searchQuery : string = null) : void {    
+    this.authorService.getAuthorsPage(page,this.pageSize,firstRequest,searchQuery)
     .subscribe( {
       next: pageData => {
       this.authors = pageData.page;

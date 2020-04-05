@@ -13,9 +13,9 @@
             <!-- header search -->
             <div class="col">
               <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="search">
+                <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchQuery">
                 <div class="input-group-append">
-                  <button class="input-group-text btn-light">
+                  <button class="input-group-text btn-light" (click)="search(1,searchQuery)">
                     <i class="fas fa-search text-grey" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -56,25 +56,16 @@
 
               <thead>
                 <tr>
-                  <th scope="col" 
-                    [ngClass]="{'active-head': searchField=='id'}" 
-                    (click)="searchField = 'id'">#</th>
-                  <th scope="col" 
-                    class="text-justify"
-                    [ngClass]="{'active-head': searchField=='firstName'}"
-                    (click)="searchField = 'firstName'">Firstname</th>
-                  <th scope="col" 
-                    [ngClass]="{'active-head': searchField=='lastName'}"
-                    (click)="searchField = 'lastName'">Lastname</th>
-                  <th scope="col" 
-                    [ngClass]="{'active-head': searchField=='middleName'}"
-                    (click)="searchField = 'middleName'">Middlename</th>
+                  <th scope="col">#</th>
+                  <th scope="col">Firstname</th>
+                  <th scope="col">Lastname</th>
+                  <th scope="col">Middlename</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
 
               <tbody>
-                <ng-container *ngFor="let author of authors | filter:search:searchField; let i = index;">
+                <ng-container *ngFor="let author of authors let i = index;">
                   <tr id={{i}}>
                     <th scope="row">
                       <a class="text-primary">{{author.id}}</a>
@@ -94,7 +85,7 @@
                 </ng-container>                
               </tbody>
             </table>
-            <app-pagination *ngIf="authors !== undefined"
+            <app-pagination *ngIf="authors.length != 0"
               [arraySize]="totalSize"   
               [pageSize]="pageSize"
               (onPageChange)="pageChanged($event)"
