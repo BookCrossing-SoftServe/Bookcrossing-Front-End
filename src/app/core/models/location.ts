@@ -1,3 +1,3 @@
-export interface Location {
+export interface ILocation {
 
 }

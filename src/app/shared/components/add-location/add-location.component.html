@@ -1,75 +1,40 @@
 <div>
-    <form
-      [formGroup]="addBookForm"
-      (ngSubmit)="onSubmit()"
-      class="text-center border border-light p-5"
-    >
-      <p class="h4 mb-4">Add new book</p>
-  
-      <div class="form-row mb-4">
-        <div class="col">
-          <!-- Book title -->
-          <input
-            formControlName="title"
-            type="text"
-            class="form-control"
-            placeholder="Book title"
-            required
-          />
-        </div>
-  
-        <div class="col">
-          <input
-            formControlName="publisher"
-            type="text"
-            class="form-control"
-            placeholder="Publisher"
-            required
-          />
-        </div>
-  
-        <!-- Select multiple genres -->
-        <div class="col">
-          <mat-select
-            formControlName="genres"
-            class="form-control"
-            multiple
-            placeholder="Genre"
-            required
-          >
-            <mat-select-trigger>
-              {{
-                addBookForm.get("genres").value
-                  ? getGenreById(addBookForm.get("genres").value[0])
-                  : ""
-              }}
-              <span
-                *ngIf="addBookForm.get('genres').value?.length > 1"
-                class="additional-selection"
-              >
-                (+{{ addBookForm.get("genres").value.length - 1 }}
-                {{
-                  addBookForm.get("genres").value.length === 2
-                    ? "other"
-                    : "others"
-                }})
-              </span>
-            </mat-select-trigger>
-            <mat-option *ngFor="let genre of genres" [value]="genre.id">{{
-              genre.name
-            }}</mat-option>
-          </mat-select>
-        </div>
+  <form
+    [formGroup]="addLocationForm"
+    (ngSubmit)="onSubmit()"
+    class="text-center border border-light p-5"
+  >
+    <p class="h4 mb-4">Add new book</p>
+
+    <div class="form-row mb-4">
+      <div class="col">
+        <!-- Book title -->
+        <input
+          formControlName="city"
+          type="text"
+          class="form-control"
+          placeholder="City"
+          required
+        />
       </div>
-  
-      <!-- Add book button -->
-      <button
-        class="btn btn-info "
-        type="submit"
-        [disabled]="(addBookForm.invalid || authors.length === 0)"
-      >
-        Submit
-      </button>
-    </form>
-  </div>
-  
+
+      <div class="col">
+        <input
+          formControlName="street"
+          type="text"
+          class="form-control"
+          placeholder="Street"
+          required
+        />
+      </div>
+    </div>
+    <!-- Add book button -->
+    <button
+      class="btn btn-info"
+      type="submit"
+      [disabled]="addLocationForm.invalid"
+    >
+      Submit
+    </button>
+  </form>
+</div>

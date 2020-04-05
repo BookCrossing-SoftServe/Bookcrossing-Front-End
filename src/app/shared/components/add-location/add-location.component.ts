@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-location',
@@ -18,8 +18,15 @@ export class AddLocationComponent implements OnInit {
 
   buildForm() {
     this.addLocationForm = new FormGroup({
-      
-    };) 
+      city: new FormControl(null, Validators.required),
+      street: new FormControl(null, Validators.required),
+      officeName: new FormControl(null, Validators.required),
+      room: new FormControl(null, Validators.required)
+    });
   }
+
+onSubmit(){
+  ;
+}
 
 }

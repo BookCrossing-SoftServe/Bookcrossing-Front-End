@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { IGenre } from 'src/app/core/models/genre';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { BookService } from 'src/app/core/services/book.service';
-import { Genre } from 'src/app/core/models/genre';
-import { Author } from 'src/app/core/models/author';
-import { Book } from 'src/app/core/models/book';
+import { IBook } from 'src/app/core/models/book';
+import { IAuthor } from 'src/app/core/models/author';
+import { BookService } from 'src/app/core/services/book/book.service';
 
 @Component({
   selector: 'app-add-book',
@@ -17,13 +17,13 @@ export class AddBookComponent implements OnInit {
 
   userId: number = 1;
 
-  genres: Genre[] = [
+  genres: IGenre[] = [
     { id: 1, name: 'Fantazy' },
     { id: 2, name: 'Horror' },
     { id: 3, name: 'Science fiction' }
   ];
 
-  authors: Author[] = [];
+  authors: IAuthor[] = [];
 
   ngOnInit(): void {
     this.buildForm();
@@ -45,12 +45,12 @@ export class AddBookComponent implements OnInit {
   }
 
   onSubmit() {
-    let genres: Genre[] = [];
+    let genres: IGenre[] = [];
     for (let i = 0; i < this.addBookForm.get('genres').value.length; i++) {
       const id = this.addBookForm.get('genres').value[i];
       genres.push({ id: id, name: this.getGenreById(id) });
     }
-    const book: Book = {
+    const book: IBook = {
       name: this.addBookForm.get('title').value,
       authors: this.authors,
       genres: genres,
@@ -59,7 +59,7 @@ export class AddBookComponent implements OnInit {
       userId: this.userId
     };
     this.bookService.postBook(book).subscribe(
-      (data: Book) => {
+      (data: IBook) => {
         alert('Successfully added');
       },
       error => {
@@ -72,7 +72,7 @@ export class AddBookComponent implements OnInit {
   }
 
   onAddAuthor() {
-    const author: Author = {
+    const author: IAuthor = {
       firstName: this.authorControl.get('firstName').value,
       lastName: this.authorControl.get('lastName').value,
       middleName: this.authorControl.get('middleName').value
@@ -84,7 +84,7 @@ export class AddBookComponent implements OnInit {
     return this.genres ? this.genres.find(genre => genre.id == id)?.name : '';
   }
 
-  onDeleteAuthor(author: Author) {
+  onDeleteAuthor(author: IAuthor) {
     const index = this.authors.indexOf(author);
     if (index > -1) {
       this.authors.splice(index, 1);
