@@ -4,11 +4,11 @@
     (ngSubmit)="onSubmit()"
     class="text-center border border-light p-5"
   >
-    <p class="h4 mb-4">Add new book</p>
+    <p class="h4 mb-4">Add location</p>
 
     <div class="form-row mb-4">
       <div class="col">
-        <!-- Book title -->
+        <!-- City input-->
         <input
           formControlName="city"
           type="text"
@@ -18,6 +18,7 @@
         />
       </div>
 
+      <!-- Street input -->
       <div class="col">
         <input
           formControlName="street"
@@ -27,8 +28,31 @@
           required
         />
       </div>
+
+      <!-- Office name input -->
+      <div class="col">
+        <input
+          formControlName="officeName"
+          type="text"
+          class="form-control"
+          placeholder="Building"
+          required
+        />
+      </div>
+
+      <!-- Room input -->
+      <div class="col">
+        <input
+          formControlName="room"
+          type="number"
+          class="form-control"
+          placeholder="Room number"
+          required
+        />
+      </div>
     </div>
-    <!-- Add book button -->
+
+    <!-- Add location button -->
     <button
       class="btn btn-info"
       type="submit"

@@ -17,6 +17,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
 import { BooksComponent } from './shared/components/books/books.component';
 import { AddBookComponent } from './shared/components/add-book/add-book.component';
 import { AddLocationComponent } from './shared/components/add-location/add-location.component';
+import { LocationService } from './core/services/location/location.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { AddLocationComponent } from './shared/components/add-location/add-locat
     MatSelectModule
   ],
   providers: [
-    BookService
+    BookService,
+    LocationService
   ],
   bootstrap: [AppComponent]
 })

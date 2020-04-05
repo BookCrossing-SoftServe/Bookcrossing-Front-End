@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { LocationService } from 'src/app/core/services/location/location.service';
+import { ILocation } from 'src/app/core/models/location';
 
 @Component({
   selector: 'app-add-location',
@@ -8,7 +10,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class AddLocationComponent implements OnInit {
 
-  constructor() { }
+  constructor(private locationService: LocationService) { }
 
   addLocationForm: FormGroup;
 
@@ -25,8 +27,24 @@ export class AddLocationComponent implements OnInit {
     });
   }
 
-onSubmit(){
-  ;
+onSubmit() {
+  const room: number[] = [this.addLocationForm.get('room').value];
+  const location: ILocation = {
+    city: this.addLocationForm.get('city').value,
+    street: this.addLocationForm.get('street').value,
+    officeName: this.addLocationForm.get('officeName').value,
+    rooms: room
+  };
+  this.locationService.postLocation(location).subscribe(
+    (data: ILocation) => {
+      alert('Successfully added');
+    },
+    error => {
+      alert(error.message);
+    }
+  );
+
+  this.addLocationForm.reset();
 }
 
 }
