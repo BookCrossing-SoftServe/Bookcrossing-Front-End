@@ -8,7 +8,6 @@ import { LoginComponent } from './shared/components/login/login.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RegistrationComponent } from './shared/components/registration/registration.component';
 import { Routes, RouterModule } from '@angular/router';
-import { BookService } from './core/services/book.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSelectModule} from '@angular/material/select';
 import { BookComponent } from './shared/components/book/book.component';
@@ -18,7 +17,8 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { BooksComponent } from './shared/components/books/books.component';
 import { AddBookComponent } from './shared/components/add-book/add-book.component';
-import { BooksService } from './core/services/books.service';
+import { BookService } from './core/services/book.service';
+import { AddLocationComponent } from './shared/components/add-location/add-location.component';
 
 const appRoutes: Routes = [
   { path: "", component: RegistrationComponent},
@@ -37,7 +37,8 @@ const appRoutes: Routes = [
     RequestsComponent,
     NavbarComponent,
     FooterComponent,
-    BooksComponent
+    BooksComponent,
+    AddLocationComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +52,7 @@ const appRoutes: Routes = [
     MatSelectModule
   ],
   providers: [
-    BooksService
+    BookService
   ],
   bootstrap: [AppComponent]
 })

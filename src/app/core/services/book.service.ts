@@ -5,7 +5,7 @@ import { Book } from "../models/book";
 import { bookUrl } from 'src/app/configs/api-endpoint.constants';
 
 @Injectable()
-export class BooksService {
+export class BookService {
   private apiUrl: string = bookUrl;
 
   constructor(private http: HttpClient) {}
