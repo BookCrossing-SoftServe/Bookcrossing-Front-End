@@ -22,6 +22,7 @@ import { ReportsComponent } from './shared/components/reports/reports.component'
 import { FilterPipe } from './shared/pipes/filter.pipe';
 import { RefDirective } from './shared/directives/ref.derictive';
 import { Routes } from '@angular/router';
+import { PaginationComponent } from './shared/components/pagination/pagination.component';
 
 const appRoutes: Routes = [
   { path: "", component: RegistrationComponent},
@@ -45,7 +46,8 @@ const appRoutes: Routes = [
     AuthorFormComponent,
     ReportsComponent,
     FilterPipe,
-    RefDirective
+    RefDirective,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,

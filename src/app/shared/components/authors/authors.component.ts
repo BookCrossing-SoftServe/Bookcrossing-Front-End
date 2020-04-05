@@ -13,36 +13,41 @@ import { RefDirective } from '../../directives/ref.derictive';
 export class AuthorsComponent implements OnInit {
 
   @ViewChild(RefDirective, {static: false}) refDir : RefDirective
+
   authors : IAuthor[];
 
+  totalPages : number;
+  pageSize : number = 10;
+
+  //TODO: make search query work with pagination
+  //search atm only works with local data
   search : string = '';
-  searchField : string = 'id';
+  searchField : string = 'id';  
+
   isReportTableToggled : boolean = false;
 
-  editedAuthor : IAuthor;
-
   constructor(private router : Router, private authorService: AuthorService, private resolver: ComponentFactoryResolver) { }
+
   ngOnInit() {
-    this.getAuthors();
+    this.getAuthors(1);
+  };
+
+  pageChanged(currentPage : number){
+    this.getAuthors(currentPage);
   }
-  
-  toggleReportTable() : void {
-    this.isReportTableToggled = !this.isReportTableToggled;
-  }  
-  showAddForm()
-  {
+
+  //UI Add/Edit forms
+  showAddForm()  {
     let newAuthor : IAuthor = {
       firstName: "",
       lastName: "",
       middleName: ""
     };
-    this.showForm("Add Author",newAuthor)
-  }
-  showEditForm(author : IAuthor,index : number)
-  {
+    this.showForm("Add Author",newAuthor)  
+  };
+  showEditForm(author : IAuthor,index : number){
     this.showForm("Edit Author",author,false,index)
-  }  
-
+  };
   private showForm(title : string, author : IAuthor, isNewAuthor : boolean = true, index? : number){    
     let formFactory = this.resolver.resolveComponentFactory(AuthorFormComponent);
     let instance = this.refDir.containerRef.createComponent(formFactory).instance;
@@ -54,8 +59,9 @@ export class AuthorsComponent implements OnInit {
       instance.onAction.subscribe(author => this.addAuthor(author));
     else    
       instance.onAction.subscribe(author => this.editAuthor(author,index));
-  }
+  };
 
+  //CRUD
   editAuthor(author: IAuthor, index : number): void {
     this.authorService.updateAuthor(author).subscribe({
       next: () => {
@@ -85,13 +91,14 @@ export class AuthorsComponent implements OnInit {
       error: error => console.error(error)
     });
   };
-  getAuthors() : void {
-    this.authorService.getAuthors()
+  getAuthors(page : number) : void {    
+    this.authorService.getAuthorsPage(page,this.pageSize)
     .subscribe( {
-      next: authorData => {
-      this.authors = authorData;
+      next: pageData => {
+      this.authors = pageData.page;
+      this.totalPages = pageData.totalPages;
     },
     error: error => console.error(error)
    });   
-  }
+  };
 }

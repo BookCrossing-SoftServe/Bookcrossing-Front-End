@@ -1,4 +1,6 @@
-<ng-template appRef></ng-template>
+<ng-template appRef>
+  <!--Add/Edit Forms-->
+</ng-template>
 <div class="container my-5">
   <section>
     <div class="row">
@@ -29,7 +31,7 @@
                 </button>
               </li>
               <li>
-                <button class="btn btn-md px-3 my-0 mr-0"  (click)="toggleReportTable()">
+                <button class="btn btn-md px-3 my-0 mr-0"  (click)="isReportTableToggled = !isReportTableToggled">
                   <i class="fas fa-exclamation-triangle"></i>                  
                   <span class="button-label">Show Reports</span> 
                 </button>
@@ -72,7 +74,7 @@
               </thead>
 
               <tbody>
-                <ng-container *ngFor="let author of authors | filter:search:searchField; let i = index ">
+                <ng-container *ngFor="let author of authors | filter:search:searchField; let i = index;">
                   <tr id={{i}}>
                     <th scope="row">
                       <a class="text-primary">{{author.id}}</a>
@@ -91,9 +93,12 @@
                     </td>
                 </ng-container>                
               </tbody>
-
             </table>
-
+            <app-pagination *ngIf="authors !== undefined"
+              [arraySize]="totalPages"   
+              [pageSize]="pageSize"
+              (onPageChange)="pageChanged($event)"
+            ></app-pagination>
           </div>
         </div>
       </div>

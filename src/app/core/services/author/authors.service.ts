@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IAuthor } from 'src/app/core/models/author'
 import { authorUrl } from "src/app/configs/api-endpoint.constants";
+import { IPage } from '../../models/page';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,12 @@ import { authorUrl } from "src/app/configs/api-endpoint.constants";
 export class AuthorService {
   constructor(private http: HttpClient,) {}
 
-  getAuthors():Observable<IAuthor[]>{
-    return this.http.get<IAuthor[]>(authorUrl);
+
+  getAuthorsPage(page : number, pageSize : number = 10):Observable<IPage<IAuthor>>{
+    let params = new HttpParams()
+                  .set("page", page.toString())
+                  .set("pageSize", pageSize.toString())
+    return this.http.get<IPage<IAuthor>>(authorUrl,{params});
   }
   getAuthorById(authorId: number) {
     return this.http.get<IAuthor[]>(authorUrl + `/${authorId}`);
