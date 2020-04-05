@@ -21,14 +21,6 @@ import { AuthorFormComponent } from './shared/components/author-form/author-form
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { FilterPipe } from './shared/pipes/filter.pipe';
 import { RefDirective } from './shared/directives/ref.derictive';
-import { Routes } from '@angular/router';
-
-const appRoutes: Routes = [
-  { path: "", component: RegistrationComponent},
-  { path: "login", component: LoginComponent },
-  { path: "registration", component: RegistrationComponent },
-  { path: "book", component: AddBookComponent}
-];
 
 @NgModule({
   declarations: [
