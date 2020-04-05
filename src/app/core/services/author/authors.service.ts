@@ -12,10 +12,12 @@ export class AuthorService {
   constructor(private http: HttpClient,) {}
 
 
-  getAuthorsPage(page : number, pageSize : number = 10):Observable<IPage<IAuthor>>{
+  getAuthorsPage(page : number, pageSize : number = 10, firstRequest : boolean = false):Observable<IPage<IAuthor>>{
     let params = new HttpParams()
                   .set("page", page.toString())
                   .set("pageSize", pageSize.toString())
+                  .set("firstRequest", firstRequest.toString())
+                  console.log(firstRequest.toString());
     return this.http.get<IPage<IAuthor>>(authorUrl,{params});
   }
   getAuthorById(authorId: number) {

@@ -1,4 +1,4 @@
 export interface IPage<T> {
-    totalPages: number;      
+    totalCount: number;      
     page: Array<T>;
   }

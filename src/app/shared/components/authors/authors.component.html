@@ -95,7 +95,7 @@
               </tbody>
             </table>
             <app-pagination *ngIf="authors !== undefined"
-              [arraySize]="totalPages"   
+              [arraySize]="totalSize"   
               [pageSize]="pageSize"
               (onPageChange)="pageChanged($event)"
             ></app-pagination>

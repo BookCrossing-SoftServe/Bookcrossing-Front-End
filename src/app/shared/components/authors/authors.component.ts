@@ -16,7 +16,7 @@ export class AuthorsComponent implements OnInit {
 
   authors : IAuthor[];
 
-  totalPages : number;
+  totalSize : number;
   pageSize : number = 10;
 
   //TODO: make search query work with pagination
@@ -29,7 +29,7 @@ export class AuthorsComponent implements OnInit {
   constructor(private router : Router, private authorService: AuthorService, private resolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-    this.getAuthors(1);
+    this.getAuthors(1,true);
   };
 
   pageChanged(currentPage : number){
@@ -91,12 +91,12 @@ export class AuthorsComponent implements OnInit {
       error: error => console.error(error)
     });
   };
-  getAuthors(page : number) : void {    
-    this.authorService.getAuthorsPage(page,this.pageSize)
+  getAuthors(page : number, firstRequest : boolean = false) : void {    
+    this.authorService.getAuthorsPage(page,this.pageSize,firstRequest)
     .subscribe( {
       next: pageData => {
       this.authors = pageData.page;
-      this.totalPages = pageData.totalPages;
+      this.totalSize = pageData.totalCount;
     },
     error: error => console.error(error)
    });   
