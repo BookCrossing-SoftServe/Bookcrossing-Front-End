@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { IAuthor } from "src/app/core/models/author";
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute, Params} from '@angular/router';
 import {AuthorService} from "src/app/core/services/author/authors.service";
 import { AuthorFormComponent } from '../author-form/author-form.component';
 import { RefDirective } from '../../directives/ref.derictive';
@@ -18,33 +18,45 @@ export class AuthorsComponent implements OnInit {
 
   totalSize : number;
   pageSize : number = 10;
-
-  //TODO: make search query work with pagination
-  //search atm only works with local data
+  initialPage : number = 1;
   searchQuery : string = '';
+  firstRequest : boolean = true;
 
   isReportTableToggled : boolean = false;
 
-  constructor(private router : Router, private authorService: AuthorService, private resolver: ComponentFactoryResolver) { }
+  constructor(private route : ActivatedRoute,private router : Router, private authorService: AuthorService, private resolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-    this.getAuthors(1,true);
+    this.route.queryParams.subscribe((params : Params) => {
+      if(params.page){
+        this.initialPage = +params.page;
+      }
+      if(params.searchQuery){
+        this.searchQuery = params.searchQuery;
+      }
+      this.getAuthors(this.initialPage, this.firstRequest);
+      this.firstRequest = false;
+    })
   };
 
-  search(page : number = 1,searchQuery : string) : void{
-    this.getAuthors(page,true,searchQuery);
+  search() : void{
+    this.initialPage = 1;
+    this.firstRequest = true;
+    this.changeUrl(1);
+  }
+  pageChanged(currentPage : number) : void{
+      this.changeUrl(currentPage);
+  }
+  private changeUrl(page : number)  : void{
+    this.router.navigate(['.'], 
+      {
+        relativeTo: this.route, 
+        queryParams: { page: page, searchQuery: this.searchQuery},
+        queryParamsHandling: 'merge',
+      });
   }
 
-  pageChanged(currentPage : number){
-    if(this.searchQuery){
-      this.search(currentPage,this.searchQuery);
-    }
-    else{
-      this.getAuthors(currentPage);
-    }
-  }
-
-  //UI Add/Edit forms
+  //Forms
   showAddForm()  {
     let newAuthor : IAuthor = {
       firstName: "",
@@ -74,7 +86,6 @@ export class AuthorsComponent implements OnInit {
     this.authorService.updateAuthor(author).subscribe({
       next: () => {
         this.authors[index] = author;
-        console.log("Suc");
       },
       error: error => console.error(error)
     });
@@ -84,7 +95,6 @@ export class AuthorsComponent implements OnInit {
       .subscribe({
         next: author => {
           this.authors = this.authors.filter(u => u !== author)
-          console.log("Suc");
         },
         error: error => console.error(error)
       })
@@ -99,8 +109,8 @@ export class AuthorsComponent implements OnInit {
       error: error => console.error(error)
     });
   };
-  getAuthors(page : number, firstRequest : boolean = false, searchQuery : string = null) : void {    
-    this.authorService.getAuthorsPage(page,this.pageSize,firstRequest,searchQuery)
+  getAuthors(page : number, firstRequest : boolean = true) : void {   
+    this.authorService.getAuthorsPage(page,this.pageSize,firstRequest,this.searchQuery)
     .subscribe( {
       next: pageData => {
       this.authors = pageData.page;

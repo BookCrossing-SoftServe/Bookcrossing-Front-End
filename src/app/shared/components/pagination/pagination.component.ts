@@ -9,7 +9,7 @@ export class PaginationComponent implements OnInit {
   @Output() onPageChange : EventEmitter<number> = new EventEmitter<number>()
   @Input() arraySize : number;
   @Input() pageSize : number;
-  current : number = 1;
+  @Input() selectedPage : number;
   total : number;
   pageList : number[];
   constructor() { }
@@ -20,34 +20,38 @@ export class PaginationComponent implements OnInit {
   }
   
   ngOnChanges(changes: SimpleChanges) {
-    const currentItem: SimpleChange = changes.arraySize;
-    if(currentItem.currentValue > 0){
-      this.total = changes.arraySize.currentValue;
-      this.current = 1;
-      this.ngOnInit();
-    }
+    if(changes.arraySize){
+      const currentItem: SimpleChange = changes.arraySize;
+      if(currentItem.currentValue > 0){
+        this.total = currentItem.currentValue;
+        this.ngOnInit();
+      }  
+    } 
   }
   selectPage(pageNumber : number){
-    if(pageNumber == this.current){
+    if(pageNumber == this.selectedPage){
       return;
     }
     this.onPageChange.emit(pageNumber);
-    this.current = pageNumber;
+    this.selectedPage = pageNumber;
     this.changePageList();
   }
   private changePageList(){
-    if (this.current + 1 >= this.total){      
-      if (this.total <= 2){
-      this.pageList = [];
-        for(let i = 1; i <= this.total; i++){
-          this.pageList.push(i);
-        }
-      }
-      return; 
+    let startPage = 1;
+    let endPage = this.total;
+    if(this.total <= 5){     
+
+    }else if(this.selectedPage + 1 >= this.total){
+      startPage = this.total - 4;
+    }else{
+      startPage = Math.max(this.selectedPage-2, 1);
+      endPage = Math.max(this.selectedPage+2,Math.min(5,this.total));
     }
     this.pageList = [];
-    for(let i = Math.max(this.current-2, 1); i <= Math.max(this.current+2,Math.min(5,this.total)); i++){
-      this.pageList.push(i);
+    for(startPage; startPage <= endPage; startPage++){
+      this.pageList.push(startPage);
     }
   }
 }
+
+  

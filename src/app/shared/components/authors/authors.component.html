@@ -1,6 +1,7 @@
 <ng-template appRef>
   <!--Add/Edit Forms-->
 </ng-template>
+
 <div class="container my-5">
   <section>
     <div class="row">
@@ -13,9 +14,9 @@
             <!-- header search -->
             <div class="col">
               <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchQuery">
+                <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchQuery" (keyup.enter)="search()">
                 <div class="input-group-append">
-                  <button class="input-group-text btn-light" (click)="search(1,searchQuery)">
+                  <button class="input-group-text btn-light" (click)="search()">
                     <i class="fas fa-search text-grey" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -85,9 +86,10 @@
                 </ng-container>                
               </tbody>
             </table>
-            <app-pagination *ngIf="authors.length != 0"
+            <app-pagination *ngIf="authors && authors.length > 0"
               [arraySize]="totalSize"   
               [pageSize]="pageSize"
+              [selectedPage]="initialPage"
               (onPageChange)="pageChanged($event)"
             ></app-pagination>
           </div>
