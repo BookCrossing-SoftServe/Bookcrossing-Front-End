@@ -14,7 +14,7 @@
             <!-- header search -->
             <div class="col">
               <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchQuery" (keyup.enter)="search()">
+                <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="queryParams.searchQuery" (keyup.enter)="search()">
                 <div class="input-group-append">
                   <button class="input-group-text btn-light" (click)="search()">
                     <i class="fas fa-search text-grey" aria-hidden="true"></i>
@@ -58,9 +58,9 @@
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Firstname</th>
-                  <th scope="col">Lastname</th>
-                  <th scope="col">Middlename</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Middle Name</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -88,8 +88,8 @@
             </table>
             <app-pagination *ngIf="authors && authors.length > 0"
               [arraySize]="totalSize"   
-              [pageSize]="pageSize"
-              [selectedPage]="initialPage"
+              [pageSize]="queryParams.pageSize"
+              [selectedPage]="queryParams.page"
               (onPageChange)="pageChanged($event)"
             ></app-pagination>
           </div>

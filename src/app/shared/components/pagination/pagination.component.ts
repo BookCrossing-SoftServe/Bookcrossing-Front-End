@@ -17,8 +17,7 @@ export class PaginationComponent implements OnInit {
   ngOnInit(): void {    
     this.total = Math.ceil(this.arraySize / this.pageSize);
     this.changePageList();
-  }
-  
+  }  
   ngOnChanges(changes: SimpleChanges) {
     if(changes.arraySize){
       const currentItem: SimpleChange = changes.arraySize;

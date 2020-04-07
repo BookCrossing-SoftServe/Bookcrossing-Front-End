@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver } from '@angular/core';
 import { IAuthor } from "src/app/core/models/author";
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {AuthorService} from "src/app/core/services/author/authors.service";
 import { AuthorFormComponent } from '../author-form/author-form.component';
 import { RefDirective } from '../../directives/ref.derictive';
+import { PaginationParameters } from 'src/app/core/models/paginationParameters';
 
 @Component({
   selector: 'app-authors',
@@ -15,43 +16,41 @@ export class AuthorsComponent implements OnInit {
   @ViewChild(RefDirective, {static: false}) refDir : RefDirective
 
   authors : IAuthor[];
-
-  totalSize : number;
-  pageSize : number = 10;
-  initialPage : number = 1;
-  searchQuery : string = '';
-  firstRequest : boolean = true;
-
+  queryParams : PaginationParameters = new PaginationParameters();
+  totalSize : number;  
   isReportTableToggled : boolean = false;
 
   constructor(private route : ActivatedRoute,private router : Router, private authorService: AuthorService, private resolver: ComponentFactoryResolver) { }
 
+
   ngOnInit() {
     this.route.queryParams.subscribe((params : Params) => {
       if(params.page){
-        this.initialPage = +params.page;
+        this.queryParams.page = +params.page;
       }
       if(params.searchQuery){
-        this.searchQuery = params.searchQuery;
+        this.queryParams.searchQuery = params.searchQuery;
       }
-      this.getAuthors(this.initialPage, this.firstRequest);
-      this.firstRequest = false;
+      this.queryParams.pageSize = 5;
+      this.getAuthors(this.queryParams);
     })
   };
 
+  //Pagination/URL
   search() : void{
-    this.initialPage = 1;
-    this.firstRequest = true;
-    this.changeUrl(1);
+    this.queryParams.page = 1;
+    this.queryParams.firstRequest = true;
+    this.changeUrl(this.queryParams);
   }
-  pageChanged(currentPage : number) : void{
-      this.changeUrl(currentPage);
+  pageChanged(currentPage : number) : void{      
+      this.queryParams.page = currentPage;  
+      this.changeUrl(this.queryParams);
   }
-  private changeUrl(page : number)  : void{
+  private changeUrl(params : PaginationParameters)  : void{
     this.router.navigate(['.'], 
       {
         relativeTo: this.route, 
-        queryParams: { page: page, searchQuery: this.searchQuery},
+        queryParams: {page: params.page, searchQuery: params.searchQuery ? params.searchQuery : null},
         queryParamsHandling: 'merge',
       });
   }
@@ -108,9 +107,9 @@ export class AuthorsComponent implements OnInit {
       },
       error: error => console.error(error)
     });
-  };
-  getAuthors(page : number, firstRequest : boolean = true) : void {   
-    this.authorService.getAuthorsPage(page,this.pageSize,firstRequest,this.searchQuery)
+  };  
+  getAuthors(params : PaginationParameters) : void {   
+    this.authorService.getAuthorsPage(params)
     .subscribe( {
       next: pageData => {
       this.authors = pageData.page;

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { IAuthor } from 'src/app/core/models/author'
 import { authorUrl } from "src/app/configs/api-endpoint.constants";
 import { IPage } from '../../models/page';
+import { PaginationParameters } from 'src/app/core/models/paginationParameters';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,13 @@ export class AuthorService {
   constructor(private http: HttpClient,) {}
 
 
-  getAuthorsPage(page : number, pageSize : number = 10, firstRequest : boolean = true, searchQuery? : string):Observable<IPage<IAuthor>>{
+  getAuthorsPage(paginationParameters : PaginationParameters):Observable<IPage<IAuthor>>{
     let params = new HttpParams()
-                  .set("page", page.toString())
-                  .set("pageSize", pageSize.toString())
-                  .set("firstRequest", firstRequest.toString())
-    if(searchQuery){
-      params = params.set("searchQuery", searchQuery)
+                  .set("page", paginationParameters.page.toString())
+                  .set("pageSize", paginationParameters.pageSize.toString())
+                  .set("firstRequest", paginationParameters.firstRequest.toString())
+    if(paginationParameters.searchQuery){
+      params = params.set("searchQuery", paginationParameters.searchQuery)
     }
     return this.http.get<IPage<IAuthor>>(authorUrl,{params});
   }
