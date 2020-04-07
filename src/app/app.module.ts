@@ -18,6 +18,7 @@ import { BooksComponent } from './shared/components/books/books.component';
 import { AddBookComponent } from './shared/components/add-book/add-book.component';
 import { AddLocationComponent } from './shared/components/add-location/add-location.component';
 import { LocationService } from './core/services/location/location.service';
+import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { LocationService } from './core/services/location/location.service';
     NavbarComponent,
     FooterComponent,
     BooksComponent,
-    AddLocationComponent
+    AddLocationComponent,
+    MapboxComponent
   ],
   imports: [
     BrowserModule,
