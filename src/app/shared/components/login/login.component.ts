@@ -3,7 +3,7 @@ import {NgForm} from '@angular/forms';
 import {Router, ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from '../../../core/services/authentication/authentication.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-
+import {first} from 'rxjs/operators';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -39,5 +39,16 @@ export class LoginComponent implements OnInit {
 
 
   singIn(loginFrom: NgForm) {
+
+    this.authenticationService.login(loginFrom)
+      .pipe(first())
+      .subscribe(
+        data => {
+          this.router.navigate([this.returnUrl]);
+        },
+        error => {
+          this.error = error;
+          this.loading = false;
+        });
   }
 }
