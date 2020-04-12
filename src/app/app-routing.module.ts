@@ -5,6 +5,7 @@ import { RegistrationComponent } from './shared/components/registration/registra
 import { BookComponent } from './shared/components/book/book.component';
 import { RequestsComponent } from './shared/components/requests/requests.component';
 import { BooksComponent } from './shared/components/books/books.component';
+import { AuthorsComponent } from './shared/components/authors/authors.component';
 import { AddBookComponent } from './shared/components/add-book/add-book.component';
 import { AddLocationComponent } from './shared/components/add-location/add-location.component';
 import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
@@ -17,12 +18,13 @@ const routes: Routes = [
   //     { path: '', component: AdminDashboardComponent },
   //   ]
   // },
-  { path: 'book/:id', component: BookComponent },
-  { path: 'add-book', component: AddBookComponent },
-  { path: 'requests/:id', component: RequestsComponent },
-  { path: 'books', component: BooksComponent },
+
+  {path: 'book/:id', component: BookComponent},
+  {path: "book", component: AddBookComponent},
+  {path: 'requests/:id', component: RequestsComponent},
+  {path :'books',component:BooksComponent},
   { path: 'add-location', component: AddLocationComponent },
-  { path: 'mapbox', component: MapboxComponent },
+  {path: 'authors',component:AuthorsComponent}
 ];
 
 @NgModule({

@@ -19,6 +19,11 @@ import { AddBookComponent } from './shared/components/add-book/add-book.componen
 import { AddLocationComponent } from './shared/components/add-location/add-location.component';
 import { LocationService } from './core/services/location/location.service';
 import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
+import { AuthorsComponent } from './shared/components/authors/authors.component';
+import { AuthorFormComponent } from './shared/components/author-form/author-form.component';
+import { ReportsComponent } from './shared/components/reports/reports.component';
+import { FilterPipe } from './shared/pipes/filter.pipe';
+import { RefDirective } from './shared/directives/ref.derictive';
 
 @NgModule({
   declarations: [
@@ -33,6 +38,11 @@ import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
     BooksComponent,
     AddLocationComponent,
     MapboxComponent
+    AuthorsComponent,
+    AuthorFormComponent,
+    ReportsComponent,
+    FilterPipe,
+    RefDirective
   ],
   imports: [
     BrowserModule,
@@ -47,7 +57,8 @@ import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
   providers: [
     BookService,
     LocationService
-  ],
+  ],  
+  entryComponents: [AuthorFormComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
