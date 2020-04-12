@@ -37,7 +37,7 @@ import { RefDirective } from './shared/directives/ref.derictive';
     FooterComponent,
     BooksComponent,
     AddLocationComponent,
-    MapboxComponent
+    MapboxComponent,
     AuthorsComponent,
     AuthorFormComponent,
     ReportsComponent,
