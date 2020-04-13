@@ -10,6 +10,8 @@ import { AddBookComponent } from './shared/components/add-book/add-book.componen
 import { DemoComponent } from './shared/components/demo/demo.component';
 import { AddLocationComponent } from './shared/components/add-location/add-location.component';
 import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
+import { ForgotPasswordComponent } from './shared/components/password/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './shared/components/password/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,9 +26,16 @@ const routes: Routes = [
   {path: "book", component: AddBookComponent},
   {path: 'requests/:id', component: RequestsComponent},
   {path :'books',component:BooksComponent},
-  { path: 'add-location', component: AddLocationComponent },
+  {path: 'add-location', component: AddLocationComponent },
   {path: 'authors',component:AuthorsComponent},
   {path: 'demo',component:DemoComponent},
+  { path: 'password', children:
+    [
+      { path: 'forgot', component: ForgotPasswordComponent },
+      { path: 'reset', component: ResetPasswordComponent },
+    ]
+  },
+
 ];
 
 @NgModule({
