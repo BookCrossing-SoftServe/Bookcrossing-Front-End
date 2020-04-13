@@ -1,3 +1,4 @@
+
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
@@ -24,6 +25,8 @@ import {RefDirective} from './shared/directives/ref.derictive';
 import {AdminComponent} from './shared/components/admin/admin.component';
 import {JwtInterceptor} from './shared/validators/jwt.interceptor';
 import {ErrorInterceptor} from './shared/validators/error.interceptor';
+import { DemoComponent } from './shared/components/demo/demo.component';
+
 
 @NgModule({
   declarations: [
@@ -36,30 +39,49 @@ import {ErrorInterceptor} from './shared/validators/error.interceptor';
     NavbarComponent,
     FooterComponent,
     BooksComponent,
+    AddLocationComponent,
+    MapboxComponent,
     AuthorsComponent,
     AuthorFormComponent,
     ReportsComponent,
     FilterPipe,
     RefDirective,
-    AdminComponent
+    AdminComponent,
+    DemoComponent
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    MatMenuModule,
+    MatIconModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpTranslateLoader,
+        deps: [HttpClient]
+      }
+    }),
     FormsModule,
     ReactiveFormsModule,
     MDBBootstrapModule.forRoot(),
     BrowserAnimationsModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   providers: [
     BookService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    LanguageService,
+    CookieService,
+    LocationService
+
   ],
   entryComponents: [AuthorFormComponent],
   bootstrap: [AppComponent]
 })
-export class AppModule {
+export class AppModule { }
+export function httpTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }
