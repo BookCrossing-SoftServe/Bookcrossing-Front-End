@@ -1,6 +1,7 @@
+import { assetsUrl } from './configs/api-endpoint.constants';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpBackend, HttpClient, HttpClientModule, HttpHandler } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -81,6 +82,7 @@ import { DemoComponent } from './shared/components/demo/demo.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
 export function httpTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http , assetsUrl + 'i18n/', '.json');
 }
