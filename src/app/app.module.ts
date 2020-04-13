@@ -1,7 +1,7 @@
 import { assetsUrl } from './configs/api-endpoint.constants';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpBackend, HttpClient, HttpClientModule, HttpHandler } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -35,12 +35,16 @@ import { MatInputModule } from '@angular/material/input';
 import { AuthorsComponent } from './shared/components/authors/authors.component';
 import { AuthorFormComponent } from './shared/components/author-form/author-form.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
-import { FilterPipe } from './shared/pipes/filter.pipe';
-import { RefDirective } from './shared/directives/ref.derictive';
 import { DemoComponent } from './shared/components/demo/demo.component';
 import { ForgotPasswordComponent } from './shared/components/password/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './shared/components/password/reset-password/reset-password.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {FilterPipe} from './shared/pipes/filter.pipe';
+import {RefDirective} from './shared/directives/ref.derictive';
+import {AdminComponent} from './shared/components/admin/admin.component';
+import {JwtInterceptor} from './shared/validators/jwt.interceptor';
+import {ErrorInterceptor} from './shared/validators/error.interceptor';
+
 
 @NgModule({
   declarations: [
@@ -62,7 +66,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     RefDirective,
     DemoComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    AdminComponent,
+    DemoComponent
+
   ],
   imports: [
     BrowserModule,
@@ -91,10 +98,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   ],
   providers: [
     BookService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     LanguageService,
     NotificationService,
     CookieService,
     LocationService
+
   ],
   entryComponents: [AuthorFormComponent],
   bootstrap: [AppComponent]
