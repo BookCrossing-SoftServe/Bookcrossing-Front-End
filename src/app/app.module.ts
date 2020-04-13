@@ -1,7 +1,7 @@
 import { assetsUrl } from './configs/api-endpoint.constants';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpBackend, HttpClient, HttpClientModule, HttpHandler } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,9 +31,13 @@ import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
 import { AuthorsComponent } from './shared/components/authors/authors.component';
 import { AuthorFormComponent } from './shared/components/author-form/author-form.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
-import { FilterPipe } from './shared/pipes/filter.pipe';
-import { RefDirective } from './shared/directives/ref.derictive';
 import { DemoComponent } from './shared/components/demo/demo.component';
+import {FilterPipe} from './shared/pipes/filter.pipe';
+import {RefDirective} from './shared/directives/ref.derictive';
+import {AdminComponent} from './shared/components/admin/admin.component';
+import {JwtInterceptor} from './shared/validators/jwt.interceptor';
+import {ErrorInterceptor} from './shared/validators/error.interceptor';
+
 
 @NgModule({
   declarations: [
@@ -53,7 +57,9 @@ import { DemoComponent } from './shared/components/demo/demo.component';
     ReportsComponent,
     FilterPipe,
     RefDirective,
+    AdminComponent,
     DemoComponent
+
   ],
   imports: [
     BrowserModule,
@@ -78,9 +84,12 @@ import { DemoComponent } from './shared/components/demo/demo.component';
   ],
   providers: [
     BookService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     LanguageService,
     CookieService,
     LocationService
+
   ],
   entryComponents: [AuthorFormComponent],
   bootstrap: [AppComponent]
