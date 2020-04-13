@@ -25,6 +25,7 @@ export class AuthenticationService {
   }
 
   login(form) {
+    console.log('auth service')
     return this.http.post<any>(this.baseUrl, form)
       .pipe(map(user => {
         // login successful if there's a jwt token in the response

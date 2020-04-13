@@ -4,6 +4,7 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from '../../../core/services/authentication/authentication.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {first} from 'rxjs/operators';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -31,20 +32,22 @@ export class LoginComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
-    });
+    /*    this.loginForm = this.formBuilder.group({
+          username: ['', Validators.required],
+          password: ['', Validators.required]
+        });*/
   }
 
 
-  singIn(loginFrom: NgForm) {
+  singIn(loginFrom) {
 
-    this.authenticationService.login(loginFrom)
+    this.authenticationService.login(loginFrom.value)
       .pipe(first())
       .subscribe(
         data => {
-          this.router.navigate([this.returnUrl]);
+          console.log('log from res')
+          console.log(data)
+          this.router.navigate(['/books']);
         },
         error => {
           this.error = error;
