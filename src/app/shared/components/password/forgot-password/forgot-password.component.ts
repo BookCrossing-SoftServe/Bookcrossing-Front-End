@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import {FormBuilder, Validators} from "@angular/forms";
 import {NotificationService} from "../../../../core/services/notification/notification.service";
 import {TranslateService} from "@ngx-translate/core";
-//import {AuthService} from "../../../core/auth/auth.service";
+import { AuthenticationService } from "src/app/core/services/authentication/authentication.service";
 
 @Component({
   selector: "app-email-conf",
@@ -13,7 +13,7 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private notificationService: NotificationService,
     private translate: TranslateService,
-    //private authService: AuthService,
+    private authService: AuthenticationService,
     private fb: FormBuilder
   ) {}
 
@@ -24,15 +24,15 @@ export class ForgotPasswordComponent implements OnInit {
     ],
   });
 
-  // onSubmit() {
-  //   this.authService.forgotPassword(this.forgotPasswordForm.value.Email).subscribe(() => {
-  //     this.notificationService.success(this.translate
-  //       .instant("components.account.password-forgot.success"));
-  //   }, err => {
-  //     this.notificationService.warn(this.translate
-  //       .instant("components.account.password-forgot.error"));
-  //   });
-  // }
+  onSubmit() {
+    this.authService.forgotPassword(this.forgotPasswordForm.value.Email).subscribe(() => {
+      this.notificationService.success(this.translate
+        .instant("components.password.forgot-success"));
+    }, err => {
+      this.notificationService.warn(this.translate
+        .instant("components.password.forgot-error"));
+    });
+  }
 
   ngOnInit(): void {
   }

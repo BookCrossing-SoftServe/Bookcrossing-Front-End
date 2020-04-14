@@ -54,7 +54,6 @@ export class RequestsComponent implements OnInit {
       }
     });
   }
-
   approveRequest(requestId: number) {
     this.requestService.approveRequest(requestId).subscribe((value: IRequest) => {
       this.requests[requestId] = value;
