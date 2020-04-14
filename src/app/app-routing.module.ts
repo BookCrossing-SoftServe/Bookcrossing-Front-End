@@ -15,6 +15,7 @@ import { ForgotPasswordComponent } from './shared/components/password/forgot-pas
 import { ResetPasswordComponent } from './shared/components/password/reset-password/reset-password.component';
 
 
+
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },

@@ -36,6 +36,7 @@ export class RequestsComponent implements OnInit {
       this.sortedData = this.requests.slice();
     });
   }
+  
   sortData(sort: Sort) {
     const data = this.requests.slice();
     if (!sort.active || sort.direction === '') {
