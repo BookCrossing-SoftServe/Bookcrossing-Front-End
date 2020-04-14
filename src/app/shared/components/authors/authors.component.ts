@@ -26,7 +26,7 @@ export class AuthorsComponent implements OnInit {
 
   ngOnInit() {
     this.routeActive.queryParams.subscribe((params : Params) => {
-      this.fillParams(params);      
+      this.mapParams(params);      
       this.searchText = params.searchQuery;
       this.getAuthors(this.queryParams);
     })
@@ -61,13 +61,13 @@ export class AuthorsComponent implements OnInit {
         queryParamsHandling: 'merge',
       });
   }  
-  private fillParams(params: Params) {
-    this.queryParams.page = params.page ? +params.page : 1;
+  private mapParams(params: Params, defaultPage : number = 1, defultPageSize : number = 10, defaultSearchField : string = "lastName", ) {
+    this.queryParams.page = params.page ? +params.page : defaultPage;
     this.queryParams.searchQuery = params.searchQuery ? params.searchQuery : null;    
-    this.queryParams.pageSize = params.pageSize ? +params.pageSize : 5;
-    this.queryParams.searchField = params.searchField ? params.searchField : "lastName";
+    this.queryParams.pageSize = params.pageSize ? +params.pageSize : defultPageSize;
+    this.queryParams.searchField = params.searchField ? params.searchField : defaultSearchField;
     this.queryParams.orderByAscending = params.orderByAscending ? params.orderByAscending : true;
-    this.queryParams.orderByField = params.orderByField ? params.orderByField : "lastName";
+    this.queryParams.orderByField = params.orderByField ? params.orderByField : defaultSearchField;
   } 
 
   //Form
@@ -89,27 +89,6 @@ export class AuthorsComponent implements OnInit {
       error: error => console.error(error)
     });
   };
-  deleteAuthor(author: IAuthor): void {
-    this.authorService.deleteAuthor(author.id)
-      .subscribe({
-        next: author => {
-          this.authors = this.authors.filter(u => u !== author)
-          if(this.authors.length == 0){
-            this.ngOnInit();
-          }
-        },
-        error: error => console.error(error)
-      })
-      this.authors = this.authors.filter(u => u !== author)
-  };
-  addAuthor(author: IAuthor): void {
-    this.authorService.addAuthor(author).subscribe({
-      next: author => {
-        this.authors.unshift(author);
-      },
-      error: error => console.error(error)
-    });
-  };  
   getAuthors(params : PaginationParameters) : void {      
     this.authorService.getAuthorsPage(params)
     .subscribe( {

@@ -22,9 +22,6 @@ export class AuthorService {
   addAuthor(author : IAuthor){
     return this.http.post<IAuthor>(authorUrl, author);
   }
-  deleteAuthor(authorId: number) {
-    return this.http.delete<IAuthor>(authorUrl + `/${authorId}`);
-  }
   updateAuthor(author: IAuthor) {
     return this.http.put<IAuthor>(authorUrl, author);
   }
