@@ -21,10 +21,8 @@ export class PaginationComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if(changes.arraySize){
       const currentItem: SimpleChange = changes.arraySize;
-      if(currentItem.currentValue > 0){
-        this.total = currentItem.currentValue;
-        this.ngOnInit();
-      }  
+      this.total = currentItem.currentValue;
+      this.ngOnInit();
     } 
   }
   selectPage(pageNumber : number){

@@ -17,67 +17,67 @@ export class AuthorsComponent implements OnInit {
 
   authors : IAuthor[];
   queryParams : PaginationParameters = new PaginationParameters();
+  searchText : string;
   totalSize : number;  
   isReportTableToggled : boolean = false;
 
-  constructor(private route : ActivatedRoute,private router : Router, private authorService: AuthorService, private resolver: ComponentFactoryResolver) { }
+  constructor(private routeActive : ActivatedRoute,private router : Router, private authorService: AuthorService, private resolver: ComponentFactoryResolver) { }
 
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params : Params) => {
-      if(params.page){
-        this.queryParams.page = +params.page;
-      }
-      if(params.searchQuery){
-        this.queryParams.searchQuery = params.searchQuery;
-      }
-      this.queryParams.pageSize = 5;
+    this.routeActive.queryParams.subscribe((params : Params) => {
+      this.fillParams(params);      
+      this.searchText = params.searchQuery;
       this.getAuthors(this.queryParams);
     })
-  };
+  }; 
 
   //Pagination/URL
   search() : void{
+    if(this.queryParams.searchQuery == this.searchText){
+      return;
+    }
     this.queryParams.page = 1;
     this.queryParams.firstRequest = true;
+    this.queryParams.searchQuery = this.searchText;
+    this.changeUrl(this.queryParams);
+  }
+  changeSort(selectedHeader : string){  
+    this.queryParams.orderByField = selectedHeader; 
+    this.queryParams.searchField = selectedHeader;
+    this.queryParams.orderByAscending = !this.queryParams.orderByAscending;
     this.changeUrl(this.queryParams);
   }
   pageChanged(currentPage : number) : void{      
-      this.queryParams.page = currentPage;  
+      this.queryParams.page = currentPage; 
+      this.queryParams.firstRequest = false; 
       this.changeUrl(this.queryParams);
   }
   private changeUrl(params : PaginationParameters)  : void{
     this.router.navigate(['.'], 
       {
-        relativeTo: this.route, 
-        queryParams: {page: params.page, searchQuery: params.searchQuery ? params.searchQuery : null},
+        relativeTo: this.routeActive, 
+        queryParams: params,
         queryParamsHandling: 'merge',
       });
-  }
+  }  
+  private fillParams(params: Params) {
+    this.queryParams.page = params.page ? +params.page : 1;
+    this.queryParams.searchQuery = params.searchQuery ? params.searchQuery : null;    
+    this.queryParams.pageSize = params.pageSize ? +params.pageSize : 5;
+    this.queryParams.searchField = params.searchField ? params.searchField : "lastName";
+    this.queryParams.orderByAscending = params.orderByAscending ? params.orderByAscending : true;
+    this.queryParams.orderByField = params.orderByField ? params.orderByField : "lastName";
+  } 
 
-  //Forms
-  showAddForm()  {
-    let newAuthor : IAuthor = {
-      firstName: "",
-      lastName: "",
-      middleName: ""
-    };
-    this.showForm("Add Author",newAuthor)  
-  };
-  showEditForm(author : IAuthor,index : number){
-    this.showForm("Edit Author",author,false,index)
-  };
-  private showForm(title : string, author : IAuthor, isNewAuthor : boolean = true, index? : number){    
+  //Form
+  showEditForm(author : IAuthor,index : number){    
     let formFactory = this.resolver.resolveComponentFactory(AuthorFormComponent);
     let instance = this.refDir.containerRef.createComponent(formFactory).instance;
-    instance.title = title;
+    instance.title = "Edit Author";
     instance.author = author;
-    instance.isNewAuthor = isNewAuthor
     instance.onCancel.subscribe(()=> this.refDir.containerRef.clear());
-    if(isNewAuthor)
-      instance.onAction.subscribe(author => this.addAuthor(author));
-    else    
-      instance.onAction.subscribe(author => this.editAuthor(author,index));
+    instance.onAction.subscribe(author => this.editAuthor(author,index));
   };
 
   //CRUD
@@ -94,6 +94,9 @@ export class AuthorsComponent implements OnInit {
       .subscribe({
         next: author => {
           this.authors = this.authors.filter(u => u !== author)
+          if(this.authors.length == 0){
+            this.ngOnInit();
+          }
         },
         error: error => console.error(error)
       })
@@ -103,17 +106,18 @@ export class AuthorsComponent implements OnInit {
     this.authorService.addAuthor(author).subscribe({
       next: author => {
         this.authors.unshift(author);
-        console.log("Suc");
       },
       error: error => console.error(error)
     });
   };  
-  getAuthors(params : PaginationParameters) : void {   
+  getAuthors(params : PaginationParameters) : void {      
     this.authorService.getAuthorsPage(params)
     .subscribe( {
       next: pageData => {
       this.authors = pageData.page;
-      this.totalSize = pageData.totalCount;
+      if(pageData.totalCount){
+        this.totalSize = pageData.totalCount;
+      }
     },
     error: error => console.error(error)
    });   

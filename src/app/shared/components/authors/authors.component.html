@@ -9,12 +9,15 @@
         <div class="card card-list">
           <div class="card-header white d-flex  align-items-center py-3">
 
-            <p class="h5-responsive font-weight-bold mb-0 mr-2">Authors</p>
+            <p class="h5-responsive font-weight-bold mb-0 mr-2">
+              Authors
+            </p>
 
             <!-- header search -->
             <div class="col">
               <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="queryParams.searchQuery" (keyup.enter)="search()">
+                <input class="form-control" type="text" placeholder="Search" aria-label="Search"
+                  [(ngModel)]="searchText" (keyup.enter)="search()">
                 <div class="input-group-append">
                   <button class="input-group-text btn-light" (click)="search()">
                     <i class="fas fa-search text-grey" aria-hidden="true"></i>
@@ -22,25 +25,19 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- header buttons -->
             <ul class="list-unstyled d-flex align-items-center mb-1">
               <li>
-                <button class="btn btn-md px-3 my-0 mr-0" (click)="showAddForm()">
-                  <i class="fas fa-plus"></i>
-                  <span class="button-label">Add Author</span>
-                </button>
-              </li>
-              <li>
-                <button class="btn btn-md px-3 my-0 mr-0"  (click)="isReportTableToggled = !isReportTableToggled">
-                  <i class="fas fa-exclamation-triangle"></i>                  
-                  <span class="button-label">Show Reports</span> 
-                </button>
-              </li>
-              <li>
                 <button class="btn btn-md px-3 my-0 mr-0">
-                  <i class="fas fa-clipboard-list"></i> 
-                  <span class="button-label">Show logs</span>
+                  <i class="fas fa-plus"></i>
+                  <span class="button-label">Merge Authors</span>
+                </button>
+              </li>
+              <li>
+                <button class="btn btn-md px-3 my-0 mr-0" (click)="isReportTableToggled = !isReportTableToggled">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <span class="button-label">Show Reports</span>
                 </button>
               </li>
             </ul>
@@ -50,17 +47,32 @@
             <app-reports></app-reports>
           </div>
 
-
           <!-- Table -->
           <div class="card-body">
             <table class="table table-hover mb-0">
 
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">First Name</th>
-                  <th scope="col">Last Name</th>
-                  <th scope="col">Middle Name</th>
+                  <th scope="col" (click)="changeSort('id')"
+                    [ngClass]="{'active-header': queryParams.orderByField == 'id'}">
+                      # 
+                    <i class="fas fa-sort pl-1"></i>
+                  </th>
+                  <th scope="col" (click)="changeSort('firstName')"
+                    [ngClass]="{'active-header': queryParams.orderByField == 'firstName'}">
+                      First Name 
+                    <i class="fas fa-sort pl-1"></i>
+                  </th>
+                  <th scope="col" (click)="changeSort('lastName')"
+                    [ngClass]="{'active-header': queryParams.orderByField == 'lastName'}">
+                      Last Name 
+                    <i class="fas fa-sort pl-1"></i>
+                  </th>
+                  <th scope="col" (click)="changeSort('middlename')"
+                    [ngClass]="{'active-header': queryParams.orderByField == 'middlename'}">
+                      Middle Name
+                    <i class="fas fa-sort pl-1"></i>
+                  </th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -73,29 +85,23 @@
                     </th>
                     <td>{{author.firstName}}</td>
                     <td>{{author.lastName}}</td>
-                    <td>{{author.middleName}}</td>                    
-                    <!-- Actions -->
-                    <td >
+                    <td>{{author.middleName}}</td>
+                    <td>
                       <div class=" row d-flex">
                         <button class="btn btn-md btn-md px-3 m-1" (click)=showEditForm(author,i)> <i
                             class="far fa-edit"></i></button>
-                        <button class="btn btn-md btn-outline-danger z-depth-0 waves-effect px-3 m-1" (click)="deleteAuthor(author)"><i
-                            class="fas fa-ban"></i></button>
                       </div>
                     </td>
-                </ng-container>                
+                </ng-container>
               </tbody>
             </table>
-            <app-pagination *ngIf="authors && authors.length > 0"
-              [arraySize]="totalSize"   
-              [pageSize]="queryParams.pageSize"
-              [selectedPage]="queryParams.page"
-              (onPageChange)="pageChanged($event)"
-            ></app-pagination>
+
+            <app-pagination *ngIf="authors && authors.length > 0" [arraySize]="totalSize"
+              [pageSize]="queryParams.pageSize" [selectedPage]="queryParams.page" (onPageChange)="pageChanged($event)">
+            </app-pagination>
           </div>
         </div>
       </div>
     </div>
-
   </section>
 </div>

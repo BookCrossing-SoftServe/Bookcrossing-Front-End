@@ -21,8 +21,7 @@ const routes: Routes = [
   {path: "book", component: AddBookComponent},
   {path: 'requests/:id', component: RequestsComponent},
   {path :'books',component:BooksComponent},
-  {path: 'authors',component:AuthorsComponent},
-  {path: 'authors/:page', component:AuthorsComponent}
+  {path: 'authors',component:AuthorsComponent}
 ];
 
 @NgModule({

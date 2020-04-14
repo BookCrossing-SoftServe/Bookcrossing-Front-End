@@ -5,23 +5,16 @@ import { IAuthor } from 'src/app/core/models/author'
 import { authorUrl } from "src/app/configs/api-endpoint.constants";
 import { IPage } from '../../models/page';
 import { PaginationParameters } from 'src/app/core/models/paginationParameters';
+import { PaginationService } from '../pagination/pagination.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorService {
-  constructor(private http: HttpClient,) {}
-
+  constructor(private http: HttpClient, private pagination: PaginationService) {}  
 
   getAuthorsPage(paginationParameters : PaginationParameters):Observable<IPage<IAuthor>>{
-    let params = new HttpParams()
-                  .set("page", paginationParameters.page.toString())
-                  .set("pageSize", paginationParameters.pageSize.toString())
-                  .set("firstRequest", paginationParameters.firstRequest.toString())
-    if(paginationParameters.searchQuery){
-      params = params.set("searchQuery", paginationParameters.searchQuery)
-    }
-    return this.http.get<IPage<IAuthor>>(authorUrl,{params});
+    return this.pagination.getPage<IAuthor>(authorUrl,paginationParameters);
   }
   getAuthorById(authorId: number) {
     return this.http.get<IAuthor[]>(authorUrl + `/${authorId}`);
