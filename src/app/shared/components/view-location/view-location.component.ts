@@ -25,8 +25,6 @@ export class ViewLocationComponent implements OnInit {
     });
   }
 
-
-
   ngOnInit(): void {
     this.getLocation();
   }

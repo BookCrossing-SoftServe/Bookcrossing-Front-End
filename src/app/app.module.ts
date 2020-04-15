@@ -5,7 +5,7 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import { AppRoutingModule } from './app-routing.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import {MatSortModule} from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { AppComponent } from './app.component';
@@ -14,17 +14,21 @@ import { LoginComponent } from './shared/components/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './shared/components/registration/registration.component';
 import { BookService } from './core/services/book/book.service';
+import { JwtHelperService, JWT_OPTIONS } from "@auth0/angular-jwt";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 import { CookieService } from "ngx-cookie-service";
 import { BookComponent } from './shared/components/book/book.component';
 import { RequestsComponent } from './shared/components/requests/requests.component';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { JwtModule } from "@auth0/angular-jwt";
 import { BooksComponent } from './shared/components/books/books.component';
 import { AddBookComponent } from './shared/components/add-book/add-book.component';
-import {MatCardModule} from '@angular/material/card';
+import { PaginationComponent } from './shared/components/pagination/pagination.component';
+import { MatCardModule } from '@angular/material/card';
 import { LanguageService } from './core/services/language/language.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AddLocationComponent } from './shared/components/add-location/add-location.component';
@@ -39,11 +43,12 @@ import { DemoComponent } from './shared/components/demo/demo.component';
 import { ForgotPasswordComponent } from './shared/components/password/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './shared/components/password/reset-password/reset-password.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {FilterPipe} from './shared/pipes/filter.pipe';
-import {RefDirective} from './shared/directives/ref.derictive';
-import {AdminComponent} from './shared/components/admin/admin.component';
-import {JwtInterceptor} from './shared/validators/jwt.interceptor';
-import {ErrorInterceptor} from './shared/validators/error.interceptor';
+import { FilterPipe } from './shared/pipes/filter.pipe';
+import { RefDirective } from './shared/directives/ref.derictive';
+import { AdminComponent } from './shared/components/admin/admin.component';
+import { JwtInterceptor } from './shared/validators/jwt.interceptor';
+import { ErrorInterceptor } from './shared/validators/error.interceptor';
+import { MatButtonModule  } from '@angular/material/button';
 import { ViewLocationComponent } from './shared/components/view-location/view-location.component';
 import { ContentFilterPipe } from './shared/pipes/content-filter.pipe';
 import { ViewAuthorsComponent } from './shared/components/view-authors/view-authors.component';
@@ -66,6 +71,7 @@ import { ViewAuthorsComponent } from './shared/components/view-authors/view-auth
     ReportsComponent,
     FilterPipe,
     RefDirective,
+    PaginationComponent,
     DemoComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
@@ -81,6 +87,9 @@ import { ViewAuthorsComponent } from './shared/components/view-authors/view-auth
     HttpClientModule,
     MatSnackBarModule,
     MatMenuModule,
+    JwtModule,
+    MatDialogModule,
+    MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -99,6 +108,13 @@ import { ViewAuthorsComponent } from './shared/components/view-authors/view-auth
     MDBBootstrapModule.forRoot(),
     BrowserAnimationsModule,
     MatSelectModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: [""],
+        blacklistedRoutes: [""]
+      }
+    }),
   ],
   providers: [
     BookService,
@@ -107,6 +123,7 @@ import { ViewAuthorsComponent } from './shared/components/view-authors/view-auth
     LanguageService,
     NotificationService,
     CookieService,
+    JwtHelperService,
     LocationService
 
   ],
@@ -117,4 +134,7 @@ export class AppModule { }
 
 export function httpTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http , assetsUrl + 'i18n/', '.json');
+}
+export function tokenGetter() {
+  return localStorage.getItem("currentUser");
 }
