@@ -27,6 +27,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { BooksComponent } from './shared/components/books/books.component';
 import { AddBookComponent } from './shared/components/add-book/add-book.component';
+import { PaginationComponent } from './shared/components/pagination/pagination.component';
 import { MatCardModule } from '@angular/material/card';
 import { LanguageService } from './core/services/language/language.service';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -48,7 +49,8 @@ import { AdminComponent } from './shared/components/admin/admin.component';
 import { JwtInterceptor } from './shared/validators/jwt.interceptor';
 import { ErrorInterceptor } from './shared/validators/error.interceptor';
 import { MatButtonModule  } from '@angular/material/button';
-
+import { ViewLocationComponent } from './shared/components/view-location/view-location.component';
+import { ContentFilterPipe } from './shared/pipes/content-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -68,12 +70,14 @@ import { MatButtonModule  } from '@angular/material/button';
     ReportsComponent,
     FilterPipe,
     RefDirective,
+    PaginationComponent,
     DemoComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
     AdminComponent,
-    DemoComponent
-
+    DemoComponent,
+    ViewLocationComponent,
+    ContentFilterPipe
   ],
   imports: [
     BrowserModule,
