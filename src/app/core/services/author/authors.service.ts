@@ -14,7 +14,7 @@ export class AuthorService {
   constructor(private http: HttpClient, private pagination: PaginationService) {}  
 
   getAuthors() {
-    return this.http.get<IAuthor>(authorUrl);
+    return this.http.get<IAuthor[]>(authorUrl);
   }
 
   getAuthorsPage(paginationParameters : PaginationParameters):Observable<IPage<IAuthor>>{
