@@ -16,9 +16,9 @@
       <ul class="navbar-nav mr-auto text-uppercase">
 
         <!--add new links here  -->
-        <!--   <li class="nav-item">
-             <a class="nav-link" routerLink="home">Features</a>
-           </li>-->
+          <li class="nav-item">
+             <a class="nav-link" routerLink="demo">{{'common.routes' | translate}}</a>
+          </li>
 
       </ul>
 
@@ -26,8 +26,21 @@
 
 
     </div>
-
-
+    <button mat-button [matMenuTriggerFor]="menu">
+      {{'common.language' | translate}}
+      <mat-icon>translate</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button (click)="changeLang(languages[0])" mat-menu-item>
+        <span class="flag-icon flag-icon-gb"></span>
+        <span>{{'common.languages.gb'|translate}}</span>
+      </button>
+      <button (click)="changeLang(languages[1])" mat-menu-item>
+        <span class="flag-icon flag-icon-ua"></span>
+        <span>{{'common.languages.ua'|translate}}</span>
+      </button>
+    </mat-menu>
+    
   </div>
 
 </nav>
