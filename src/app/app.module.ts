@@ -51,7 +51,6 @@ import { ErrorInterceptor } from './shared/validators/error.interceptor';
 import { MatButtonModule  } from '@angular/material/button';
 import { ViewLocationComponent } from './shared/components/view-location/view-location.component';
 import { ContentFilterPipe } from './shared/pipes/content-filter.pipe';
-import { ViewAuthorsComponent } from './shared/components/view-authors/view-authors.component';
 
 @NgModule({
   declarations: [
@@ -78,8 +77,7 @@ import { ViewAuthorsComponent } from './shared/components/view-authors/view-auth
     AdminComponent,
     DemoComponent,
     ViewLocationComponent,
-    ContentFilterPipe,
-    ViewAuthorsComponent
+    ContentFilterPipe
   ],
   imports: [
     BrowserModule,
