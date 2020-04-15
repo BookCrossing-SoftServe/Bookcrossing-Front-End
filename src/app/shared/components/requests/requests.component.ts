@@ -4,8 +4,8 @@ import { Sort } from '@angular/material/sort';
 import { ActivatedRoute } from "@angular/router";
 import { switchMap } from 'rxjs/operators';
 import { NotificationService } from "../../../core/services/notification/notification.service";
-import { NgxPaginationModule } from 'ngx-pagination';
 import {TranslateService} from "@ngx-translate/core";
+import { NgxPaginationModule } from 'ngx-pagination';
 import { RequestService } from 'src/app/core/services/request/request.service'
 
 @Component({
