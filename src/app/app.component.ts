@@ -1,5 +1,12 @@
 import {Component} from '@angular/core';
 import {NavbarComponent} from './shared/components/navbar/navbar.component';
+import {Router} from '@angular/router';
+import {AuthenticationService} from '../app/core/services/authentication/authentication.service';
+import {Role} from '../app/core/models/role';
+import {IUser} from '../app/core/models/user';
+import { TranslateService } from "@ngx-translate/core";
+import {LanguageService} from "./core/services/language/language.service";
+
 
 @Component({
   selector: 'app-root',
@@ -8,5 +15,30 @@ import {NavbarComponent} from './shared/components/navbar/navbar.component';
 
 })
 export class AppComponent {
+
+  currentUser: IUser;
   title = 'BookCrossingFrontEnd';
+
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private translate: TranslateService,
+    private languageService: LanguageService
+  ) {
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+  }
+
+  ngOnInit(): void {
+    const lang: string = this.languageService.setIfNotExists();
+    this.translate.setDefaultLang(lang);
+    this.translate.use(lang);
+  }
+  logout() {
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
+  }
+
+
+
 }
+
