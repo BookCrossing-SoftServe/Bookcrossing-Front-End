@@ -8,19 +8,20 @@ import { BookService } from 'src/app/core/services/book/book.service';
 @Component({
   selector: 'app-add-book',
   templateUrl: './add-book.component.html',
-  styleUrls: ['./add-book.component.scss']
+  styleUrls: ['./add-book.component.scss'],
 })
 export class AddBookComponent implements OnInit {
   constructor(private bookService: BookService) {}
   addBookForm: FormGroup;
   authorControl: FormGroup;
+  addNewAuthor: boolean = false;
 
   userId: number = 1;
 
   genres: IGenre[] = [
     { id: 1, name: 'Fantazy' },
     { id: 2, name: 'Horror' },
-    { id: 3, name: 'Science fiction' }
+    { id: 3, name: 'Science fiction' },
   ];
 
   authors: IAuthor[] = [];
@@ -33,14 +34,13 @@ export class AddBookComponent implements OnInit {
     this.authorControl = new FormGroup({
       firstName: new FormControl(null, Validators.required),
       lastName: new FormControl(null, Validators.required),
-      middleName: new FormControl(null, Validators.required)
+      middleName: new FormControl(null, Validators.required),
     });
 
     this.addBookForm = new FormGroup({
       title: new FormControl(null, Validators.required),
       genres: new FormControl(null, Validators.required),
-      publisher: new FormControl(null),
-      author: this.authorControl
+      publisher: new FormControl(null)
     });
   }
 
@@ -56,14 +56,15 @@ export class AddBookComponent implements OnInit {
       genres: genres,
       publisher: this.addBookForm.get('publisher').value,
       available: true,
-      userId: this.userId
+      userId: this.userId,
     };
     this.bookService.postBook(book).subscribe(
       (data: IBook) => {
         alert('Successfully added');
       },
-      error => {
-        alert(error.message);
+      (error) => {
+        alert(error);
+        console.log(error);
       }
     );
 
@@ -75,19 +76,33 @@ export class AddBookComponent implements OnInit {
     const author: IAuthor = {
       firstName: this.authorControl.get('firstName').value,
       lastName: this.authorControl.get('lastName').value,
-      middleName: this.authorControl.get('middleName').value
+      middleName: this.authorControl.get('middleName').value,
     };
-    this.authors.push(author);
+
+    this.addAuthor(author);
   }
 
   getGenreById(id: number) {
-    return this.genres ? this.genres.find(genre => genre.id == id)?.name : '';
+    return this.genres ? this.genres.find((genre) => genre.id == id)?.name : '';
   }
 
   onDeleteAuthor(author: IAuthor) {
     const index = this.authors.indexOf(author);
     if (index > -1) {
       this.authors.splice(index, 1);
+    }
+  }
+
+  addAuthor(author) {
+    const index = this.authors.findIndex((elem) => {
+      return (
+        elem.firstName.toLowerCase() === author.firstName.toLowerCase() &&
+        elem.middleName.toLowerCase() === author.middleName.toLowerCase() &&
+        elem.lastName.toLowerCase() === author.lastName.toLowerCase()
+      );
+    });
+    if (index < 0) {
+      this.authors.push(author);
     }
   }
 }
