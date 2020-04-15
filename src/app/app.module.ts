@@ -24,6 +24,8 @@ import { AuthorFormComponent } from './shared/components/author-form/author-form
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { FilterPipe } from './shared/pipes/filter.pipe';
 import { RefDirective } from './shared/directives/ref.derictive';
+import { ViewLocationComponent } from './shared/components/view-location/view-location.component';
+import { ContentFilterPipe } from './shared/pipes/content-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { RefDirective } from './shared/directives/ref.derictive';
     AuthorFormComponent,
     ReportsComponent,
     FilterPipe,
-    RefDirective
+    RefDirective,
+    ViewLocationComponent,
+    ContentFilterPipe
   ],
   imports: [
     BrowserModule,

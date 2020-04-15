@@ -23,7 +23,7 @@ const routes: Routes = [
   {path: "book", component: AddBookComponent},
   {path: 'requests/:id', component: RequestsComponent},
   {path :'books',component:BooksComponent},
-  { path: 'add-location', component: AddLocationComponent },
+  {path: 'add-location', component: AddLocationComponent },
   {path: 'authors',component:AuthorsComponent}
 ];
 
