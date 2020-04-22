@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
 import { IAuthor } from 'src/app/core/models/author'
 import { authorUrl } from "src/app/configs/api-endpoint.constants";
 import { IPage } from '../../models/page';
@@ -12,6 +12,14 @@ import { PaginationService } from '../pagination/pagination.service';
 })
 export class AuthorService {
   constructor(private http: HttpClient, private pagination: PaginationService) {}  
+
+   private authorEditedSource = new Subject<IAuthor>();
+
+   authorEdited$ = this.authorEditedSource.asObservable();
+
+   editAuthor(author: IAuthor) {
+    this.authorEditedSource.next(author);
+  }
 
   getAuthorsPage(paginationParameters : PaginationParameters):Observable<IPage<IAuthor>>{
     return this.pagination.getPage<IAuthor>(authorUrl,paginationParameters);
