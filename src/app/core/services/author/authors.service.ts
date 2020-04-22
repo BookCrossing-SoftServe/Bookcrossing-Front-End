@@ -8,10 +8,13 @@ import { PaginationParameters } from 'src/app/core/models/paginationParameters';
 import { PaginationService } from '../pagination/pagination.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthorService {
-  constructor(private http: HttpClient, private pagination: PaginationService) {}  
+  constructor(
+    private http: HttpClient,
+    private pagination: PaginationService
+  ) {}
 
    private authorEditedSource = new Subject<IAuthor>();
 
@@ -27,7 +30,7 @@ export class AuthorService {
   getAuthorById(authorId: number) {
     return this.http.get<IAuthor[]>(authorUrl + `/${authorId}`);
   }
-  addAuthor(author : IAuthor){
+  addAuthor(author: IAuthor) {
     return this.http.post<IAuthor>(authorUrl, author);
   }
   updateAuthor(author: IAuthor) {
