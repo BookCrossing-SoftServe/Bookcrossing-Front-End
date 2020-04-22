@@ -27,7 +27,7 @@
             </div>
 
             <!-- header buttons -->
-            <ul *ngIf="isAdmin" class="list-unstyled d-flex align-items-center mb-1">
+            <ul class="list-unstyled d-flex align-items-center mb-1">
               <li>
                 <button class="btn btn-md px-3 my-0 mr-0">
                   <i class="fas fa-plus"></i>
@@ -54,39 +54,39 @@
               <thead>
                 <tr>
                   <th scope="col" (click)="changeSort('id')"
-                    [ngClass]="{'active-header': queryParams.searchField == 'id'}">
+                    [ngClass]="{'active-header': queryParams.orderByField == 'id'}">
                       # 
                     <i class="fas fa-sort pl-1"></i>
                   </th>
                   <th scope="col" (click)="changeSort('firstName')"
-                    [ngClass]="{'active-header': queryParams.searchField == 'firstName'}">
+                    [ngClass]="{'active-header': queryParams.orderByField == 'firstName'}">
                       First Name 
                     <i class="fas fa-sort pl-1"></i>
                   </th>
                   <th scope="col" (click)="changeSort('lastName')"
-                    [ngClass]="{'active-header': queryParams.searchField == 'lastName'}">
+                    [ngClass]="{'active-header': queryParams.orderByField == 'lastName'}">
                       Last Name 
                     <i class="fas fa-sort pl-1"></i>
                   </th>
                   <th scope="col" (click)="changeSort('middlename')"
-                    [ngClass]="{'active-header': queryParams.searchField == 'middlename'}">
+                    [ngClass]="{'active-header': queryParams.orderByField == 'middlename'}">
                       Middle Name
                     <i class="fas fa-sort pl-1"></i>
                   </th>
-                  <th scope="col" *ngIf="isAdmin">Actions</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
 
               <tbody>
                 <ng-container *ngFor="let author of authors let i = index;">
-                  <tr id={{i}} (click)="onSelectRow(author)">
+                  <tr id={{i}}>
                     <th scope="row">
                       <a class="text-primary">{{author.id}}</a>
                     </th>
                     <td>{{author.firstName}}</td>
                     <td>{{author.lastName}}</td>
                     <td>{{author.middleName}}</td>
-                    <td *ngIf="isAdmin">
+                    <td>
                       <div class=" row d-flex">
                         <button class="btn btn-md btn-md px-3 m-1" (click)=showEditForm(author,i)> <i
                             class="far fa-edit"></i></button>
