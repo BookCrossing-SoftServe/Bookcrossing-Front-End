@@ -1,4 +1,3 @@
-
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {LoginComponent} from './shared/components/login/login.component';
@@ -13,6 +12,7 @@ import { AddLocationComponent } from './shared/components/add-location/add-locat
 import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
 import { ForgotPasswordComponent } from './shared/components/password/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './shared/components/password/reset-password/reset-password.component';
+import {GenreComponent} from './shared/components/genre/genre.component';
 
 
 
@@ -34,6 +34,7 @@ const routes: Routes = [
   {path: 'add-location', component: AddLocationComponent },
   {path: 'authors',component:AuthorsComponent},
   {path: 'demo',component:DemoComponent},
+  {path: 'genres', component: GenreComponent},
   { path: 'password', children:
     [
       { path: 'forgot', component: ForgotPasswordComponent },

@@ -44,6 +44,7 @@ import {RefDirective} from './shared/directives/ref.derictive';
 import {AdminComponent} from './shared/components/admin/admin.component';
 import {JwtInterceptor} from './shared/validators/jwt.interceptor';
 import {ErrorInterceptor} from './shared/validators/error.interceptor';
+import { GenreComponent } from './shared/components/genre/genre.component';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import {ErrorInterceptor} from './shared/validators/error.interceptor';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     AdminComponent,
-    DemoComponent
+    DemoComponent,
+    GenreComponent
 
   ],
   imports: [
