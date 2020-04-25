@@ -53,6 +53,8 @@ import { MatButtonModule  } from '@angular/material/button';
 import { ViewLocationComponent } from './shared/components/view-location/view-location.component';
 import { ContentFilterPipe } from './shared/pipes/content-filter.pipe';
 import { GenreService } from './core/services/genre/genre';
+import { HomeComponent } from './shared/components/home/home.component';
+import { RulesComponent } from './shared/components/rules/rules.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,9 @@ import { GenreService } from './core/services/genre/genre';
     DemoComponent,
     GenreComponent
     ViewLocationComponent,
-    ContentFilterPipe
+    ContentFilterPipe,
+    HomeComponent,
+    RulesComponent
   ],
   imports: [
     BrowserModule,
