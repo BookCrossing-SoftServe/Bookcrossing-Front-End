@@ -54,6 +54,8 @@ import { ContentFilterPipe } from './shared/pipes/content-filter.pipe';
 import { GenreService } from './core/services/genre/genre';
 import { HomeComponent } from './shared/components/home/home.component';
 import { RulesComponent } from './shared/components/rules/rules.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
 
 @NgModule({
   declarations: [
@@ -111,6 +113,7 @@ import { RulesComponent } from './shared/components/rules/rules.component';
     MDBBootstrapModule.forRoot(),
     BrowserAnimationsModule,
     MatSelectModule,
+    MatAutocompleteModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
