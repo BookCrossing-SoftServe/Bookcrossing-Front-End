@@ -40,6 +40,7 @@ export class AddBookComponent implements OnInit {
     );
     this.buildForm();
     this.getAllGenres();
+    console.log(this.filteredAuthors);
   }
 
   buildForm() {
@@ -79,7 +80,7 @@ export class AddBookComponent implements OnInit {
 
   onSubmit() {
     let genres: IGenre[] = [];
-    for (let i = 0; i < this.addBookForm.get("genres").value.length; i++) {
+    for (let i = 0; i < this.addBookForm.get("genres").value?.length; i++) {
       const id = this.addBookForm.get("genres").value[i];
       genres.push({ id: id, name: this.getGenreById(id) });
     }
@@ -98,6 +99,7 @@ export class AddBookComponent implements OnInit {
       (error) => {
         // alert(error);
         console.log(error);
+        console.log(book);
       }
     );
 

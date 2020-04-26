@@ -106,20 +106,31 @@
           ></textarea>
         </div>
       </div>
-  
+
+      <div class="form-row mb-4">
+        <div class="col-3">
+          <p class="h5 input-label">Image:</p>
+        </div>
+        <div class="col-4">
+          <div class="file-upload-wrapper">
+          <input
+            type="file"
+            class=" file-upload"
+          >
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- Authors -->
-    <!-- Select Existing  -->
-    <div class="row">
+
+    <!-- old Authors -->
+    <!-- <div class="row">
       <div class="col mb-4">
-        <!-- <app-authors
+        <app-authors
           (selectRow)="addAuthor($event)"
           [isAdmin]="false"
-        ></app-authors> -->
+        ></app-authors>
       </div>
-      <!-- Add new Author form -->
       <div class="col mb-4">
-        <!-- <div class="col-2 mb-4"> -->
         <div class="container my-5">
           <button
             *ngIf="!addNewAuthor"
@@ -129,7 +140,6 @@
             Add new author
           </button>
         </div>
-        <!-- </div> -->
         <div
           *ngIf="addNewAuthor"
           class="input-group container my-5"
@@ -184,14 +194,21 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div> -->
 
+    <button
+      class="btn btn-info"
+    
+    >
+    Add image
+    </button>
     <!-- Add book button -->
     <button
       class="btn btn-info"
       type="submit"
-      [disabled]="addBookForm.invalid || selectedAuthors.length === 0"
+      
     >
+    <!-- [disabled]="addBookForm.invalid || selectedAuthors.length === 0" -->
       Submit
     </button>
   </form>
