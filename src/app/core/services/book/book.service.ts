@@ -5,7 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { IBook } from "../../models/book";
 import {PaginationService} from "../pagination/pagination.service";
-import {PaginationParameters} from "../../models/paginationParameters";
+import {PaginationParameters} from "../../../core/models/Pagination/paginationParameters";
 import {IPage} from "../../models/page";
 import {IAuthor} from "../../models/author";
 

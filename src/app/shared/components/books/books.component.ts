@@ -1,8 +1,9 @@
 import {Component, ComponentFactoryResolver, OnInit} from '@angular/core';
 import { IBook } from 'src/app/core/models/book';
 import { BookService } from 'src/app/core/services/book/book.service';
-import {PaginationParameters} from "../../../core/models/paginationParameters";
+import {PaginationParameters} from "../../../core/models/Pagination/paginationParameters";
 import {ActivatedRoute, Params, Router} from "@angular/router";
+import { PaginationService } from 'src/app/core/services/pagination/pagination.service';
 
 @Component({
   selector: 'app-books',
@@ -21,24 +22,16 @@ export class BooksComponent implements OnInit {
   constructor(private routeActive : ActivatedRoute,
               private router : Router,
               private bookService:BookService,
+              private paginationService : PaginationService,
               private resolver: ComponentFactoryResolver
               ) { }
 
   ngOnInit(): void {
-    this.routeActive.queryParams.subscribe((params : Params) => {
-      this.mapParams(params,1,5,"name");
+    this.routeActive.queryParams.subscribe((params : Params) => {      
+      this.queryParams = this.paginationService.mapToPaginationParams(params,1,5)
       this.searchText = params.searchQuery;
       this.getBooks(this.queryParams);
     })
-  }
-
-  private mapParams(params: Params, defaultPage : number = 1, defultPageSize : number = 5, defaultField? : string ) {
-    this.queryParams.page = params.page ? +params.page : defaultPage;
-    this.queryParams.pageSize = params.pageSize ? +params.pageSize : defultPageSize;
-    this.queryParams.searchQuery = params.searchQuery ? params.searchQuery : null;
-    this.queryParams.searchField = params.searchField ? params.searchField : defaultField;
-    this.queryParams.orderByAscending = params.orderByAscending ? params.orderByAscending : true;
-    this.queryParams.orderByField = params.orderByField ? params.orderByField : defaultField;
   }
 
   pageChanged(currentPage : number) : void{
@@ -60,6 +53,7 @@ export class BooksComponent implements OnInit {
     this.bookService.getBooksPage(params)
       .subscribe( {
         next: pageData => {
+          console.log(pageData);
           this.books = pageData.page;
           if(pageData.totalCount){
             this.totalSize = pageData.totalCount;
