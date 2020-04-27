@@ -22,13 +22,13 @@ export class AuthorsComponent implements OnInit {
   queryParams : PaginationParameters = new PaginationParameters();
   searchText : string;
   searchField : string = "lastname";
-  totalSize : number;  
+  totalSize : number;
   isReportTableToggled : boolean = false;
 
   constructor(
     private routeActive : ActivatedRoute,
-    private router : Router, 
-    private authorService: AuthorService, 
+    private router : Router,
+    private authorService: AuthorService,
     private paginationService : PaginationService,
     private resolver: ComponentFactoryResolver
     ) { }
@@ -41,7 +41,7 @@ export class AuthorsComponent implements OnInit {
       this.searchText = this.queryParams?.filters[0]?.value;
       this.getAuthors(this.queryParams);
     })
-  }; 
+  };
 
   private onAuthorEditted() {
     this.authorService.authorEdited$.subscribe((author) => {
@@ -56,29 +56,29 @@ export class AuthorsComponent implements OnInit {
   search() : void{
     if(this.queryParams?.filters[0]?.value == this.searchText){
       return
-    }  
+    }
     this.queryParams.page = 1;
     this.queryParams.filters[0] = <FilterParameters> {propertyName:this.searchField, value: this.searchText}
     this.changeUrl(this.queryParams);
   }
-  changeSort(selectedHeader : string){  
+  changeSort(selectedHeader : string){
     this.queryParams.sort = <SortParameters> {orderByField:selectedHeader, orderByAscending: !this.queryParams.sort.orderByAscending}
     this.changeUrl(this.queryParams);
   }
-  pageChanged(currentPage : number) : void{      
-      this.queryParams.page = currentPage; 
-      this.queryParams.firstRequest = false; 
+  pageChanged(currentPage : number) : void{
+      this.queryParams.page = currentPage;
+      this.queryParams.firstRequest = false;
       this.changeUrl(this.queryParams);
   }
-  private changeUrl(params : PaginationParameters)  : void{    
-    this.router.navigate(['.'], 
+  private changeUrl(params : PaginationParameters)  : void{
+    this.router.navigate(['.'],
       {
         relativeTo: this.routeActive,
         queryParams: this.paginationService.mapToParams(params)
       });
-  }  
+  }
   //Form
-  showEditForm(author : IAuthor,index : number){    
+  showEditForm(author : IAuthor,index : number){
     let formFactory = this.resolver.resolveComponentFactory(AuthorFormComponent);
     let instance = this.refDir.containerRef.createComponent(formFactory).instance;
     instance.title = "Edit Author";
@@ -87,18 +87,18 @@ export class AuthorsComponent implements OnInit {
   };
 
   //Get
-  getAuthors(params : PaginationParameters) : void {      
+  getAuthors(params : PaginationParameters) : void {
     this.authorService.getAuthorsPage(params)
     .subscribe( {
       next: pageData => {
       this.authors = pageData.page;
       if(pageData.totalCount){
-        this.totalSize = pageData.totalCount;        
+        this.totalSize = pageData.totalCount;
       }
     },
     error: error => {
       alert("An error has occured, please try again");
     }
-   });   
+   });
   };
 }
