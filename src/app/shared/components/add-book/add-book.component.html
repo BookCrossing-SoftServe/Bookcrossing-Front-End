@@ -36,9 +36,12 @@
         />
       </div>
     </div>
+    <p *ngFor="let author of authors">
+      {{author.firstName+" "+author.middleName+" "+author.lastName}}
+    </p>
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let author of filteredAuthors | async" [value]="author.id">
-        {{author.name+" "+author.middlename+" "+author.lastname}}
+      <mat-option *ngFor="let author of authors" [value]="author.id">
+        {{author.firstName+" "+author.middleName+" "+author.lastName}}
       </mat-option>
     </mat-autocomplete>
 
@@ -108,18 +111,35 @@
       </div>
 
       <div class="form-row mb-4">
+        <button
+        class="btn btn-info"
+        (click)="fileInput.click()"
+      >
+      Add image
+      </button>
+      </div>
+
+      <div class="form-row mb-4">
         <div class="col-3">
           <p class="h5 input-label">Image:</p>
         </div>
-        <div class="col-4">
-          <div class="file-upload-wrapper">
+        <div class="file-upload-wrapper">
           <input
+          #fileInput
+          style="display: none;"
             type="file"
             class=" file-upload"
+            (change)="onFileSelected($event)"
           >
           </div>
+        <div class="col-4" *ngIf="selectedFile">
+          <p class="h5 input-label">{{selectedFile.name}}</p>
         </div>
       </div>
+
+
+
+
     </div>
 
     <!-- old Authors -->
@@ -196,12 +216,7 @@
       </div>
     </div> -->
 
-    <button
-      class="btn btn-info"
-    
-    >
-    Add image
-    </button>
+
     <!-- Add book button -->
     <button
       class="btn btn-info"

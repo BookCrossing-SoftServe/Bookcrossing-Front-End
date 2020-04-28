@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit} from "@angular/core";
 import { IGenre } from "src/app/core/models/genre";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { IBook } from "src/app/core/models/book";
@@ -6,7 +6,7 @@ import { IAuthor } from "src/app/core/models/author";
 import { BookService } from "src/app/core/services/book/book.service";
 import { GenreService } from "src/app/core/services/genre/genre";
 import { Observable } from "rxjs";
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map } from "rxjs/operators";
 
 @Component({
   selector: "app-add-book",
@@ -18,6 +18,8 @@ export class AddBookComponent implements OnInit {
     private bookService: BookService,
     private genreService: GenreService
   ) {}
+  
+
   addBookForm: FormGroup;
   authorControl: FormGroup;
   authorSearchControl = new FormControl();
@@ -29,18 +31,25 @@ export class AddBookComponent implements OnInit {
 
   selectedAuthors: IAuthor[] = [];
 
-  authors: IAuthor[] = [{ firstName: "aadad", lastName: "Pratchett" }, { firstName: "Terry", lastName: "Budget" }];
+  authors: IAuthor[] = [
+    { firstName: "aadad",middleName: 'sadad', lastName: "Pratchett" },
+    { firstName: "Terry", lastName: "Budget" },
+  ];
 
   filteredAuthors: Observable<IAuthor[]>;
 
+  selectedFile = null;
+  
+
   ngOnInit(): void {
-    this.filteredAuthors = this.authorSearchControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+    // this.filteredAuthors = this.authorSearchControl.valueChanges.pipe(
+    //   startWith(""),
+    //   map((value) => this._filter(value))
+    // );
     this.buildForm();
     this.getAllGenres();
     console.log(this.filteredAuthors);
+    console.log(this.authors);
   }
 
   buildForm() {
@@ -57,22 +66,20 @@ export class AddBookComponent implements OnInit {
     });
   }
 
-  private _filter(value: string): IAuthor[] {
-    // const filterValue = this._normalizeValue(value);
-    const filterValue = value;
-    console.log(filterValue);
-    return this.authors.filter(
-      (author) =>
-        this._normalizeValue(author.firstName).includes(filterValue) ||
-        this._normalizeValue(author.middleName).includes(filterValue) ||
-        this._normalizeValue(author.lastName).includes(filterValue)
-    );
-  }
+  // private _filter(value: string): IAuthor[] {
+  //   const filterValue = this._normalizeValue(value);
+  //   console.log(filterValue);
+  //   return this.authors.filter(
+  //     (author) =>
+  //       this._normalizeValue(author.firstName).includes(filterValue) ||
+  //       this._normalizeValue(author.middleName).includes(filterValue) ||
+  //       this._normalizeValue(author.lastName).includes(filterValue)
+  //   );
+  // }
 
-  private _normalizeValue(value: string): string {
-    // console.log(value.toLowerCase().replace(/\s/g, ""));
-    return value.toLowerCase().replace(/\s/g, "");
-  }
+  // private _normalizeValue(value: string): string {
+  //   return value.toLowerCase().replace(/\s/g, "");
+  // }
 
   getAuthorString(author: IAuthor): string {
     return author.firstName + author.middleName + author.lastName;
@@ -91,6 +98,7 @@ export class AddBookComponent implements OnInit {
       publisher: this.addBookForm.get("publisher").value,
       available: true,
       userId: this.userId,
+      img: this.selectedFile,
     };
     this.bookService.postBook(book).subscribe(
       (data: IBook) => {
@@ -150,5 +158,9 @@ export class AddBookComponent implements OnInit {
     if (index < 0) {
       this.selectedAuthors.push(author);
     }
+  }
+
+  onFileSelected(event) {
+    this.selectedFile = event.target.files[0];
   }
 }
