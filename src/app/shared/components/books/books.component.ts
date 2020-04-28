@@ -20,7 +20,6 @@ export class BooksComponent implements OnInit {
 
   books: IBook[];
   queryParams: BookParameters = new BookParameters;
-  searchText: string;
 
   selectedLocation: number;
   loadedLocation: number;
@@ -31,7 +30,6 @@ export class BooksComponent implements OnInit {
   genres: IGenre[] = [];
 
   totalSize: number;
-
   showAvailableOnly: boolean = true;
   availableFilter: FilterParameters = { propertyName: "Available", value: true + '', method: "Equal" };
 
@@ -48,7 +46,11 @@ export class BooksComponent implements OnInit {
     this.getAllGenres();
     this.getLocation();
     this.routeActive.queryParams.subscribe((params: Params) => {
-      this.queryParams = this.paginationService.mapFromqQueryToBookParams(params, 1, 5)
+      let result = this.paginationService.mapFromqQueryToBookParams(params, 1, 5)
+      if(typeof this.queryParams.showAvailable !== "undefined"){
+        result.showAvailable = this.queryParams.showAvailable;
+      }
+      this.queryParams = result;
       this.toggleAvailableFilter(this.queryParams.showAvailable)
       this.getBooks(this.queryParams);
     })
@@ -103,17 +105,12 @@ export class BooksComponent implements OnInit {
   toggleAvailableFilter(showAvailableOnly: boolean) {
     if (showAvailableOnly) {
       this.queryParams.bookFilters.push(this.availableFilter);
-      this.queryParams.showAvailable = true;
+      this.queryParams.showAvailable = showAvailableOnly;
     }
     else {
-      if(this.queryParams.bookFilters?.length>1){
-        this.queryParams.bookFilters = this.queryParams.bookFilters.filter(f => f.propertyName != this.availableFilter.propertyName);
+        this.queryParams.bookFilters = [];
       }
-      else{
-        this.queryParams.bookFilters = null;
-      }
-      this.queryParams.showAvailable = false;
-    }
+    this.queryParams.showAvailable = showAvailableOnly;
   }
   //Navigation
   resetPageIndex() : void {
