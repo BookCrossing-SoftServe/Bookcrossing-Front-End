@@ -55,7 +55,7 @@ import { GenreService } from './core/services/genre/genre';
 import { HomeComponent } from './shared/components/home/home.component';
 import { RulesComponent } from './shared/components/rules/rules.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { GenreComponent } from './shared/components/genre/genre.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +84,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     ViewLocationComponent,
     ContentFilterPipe,
     HomeComponent,
-    RulesComponent
+    RulesComponent,
+    GenreComponent
   ],
   imports: [
     BrowserModule,
