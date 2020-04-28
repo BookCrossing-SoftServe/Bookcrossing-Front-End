@@ -8,6 +8,7 @@ import {PaginationService} from "../pagination/pagination.service";
 import {PaginationParameters} from "../../../core/models/Pagination/paginationParameters";
 import {IPage} from "../../models/page";
 import {IAuthor} from "../../models/author";
+import { BookParameters } from '../../models/Pagination/bookParameters';
 
 @Injectable()
 export class BookService {
@@ -18,8 +19,8 @@ export class BookService {
     private pagination: PaginationService
   ) {}
 
-  getBooksPage(paginationParameters : PaginationParameters): Observable<IPage<IBook>> {
-    return this.pagination.getPage<IBook>(bookUrl,paginationParameters);
+  getBooksPage(bookParams : BookParameters): Observable<IPage<IBook>> {
+    return this.pagination.getPageBooks<IBook>(bookUrl,bookParams);
   }
 
   getBookById(id: number): Observable<IBook> {

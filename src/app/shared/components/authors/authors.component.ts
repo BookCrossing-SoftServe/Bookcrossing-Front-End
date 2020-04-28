@@ -37,7 +37,7 @@ export class AuthorsComponent implements OnInit {
   ngOnInit() {
     this.onAuthorEditted();
     this.routeActive.queryParams.subscribe((params : Params) => {
-      this.queryParams = this.paginationService.mapToPaginationParams(params)
+      this.queryParams = this.paginationService.mapFromqQueryToPaginationParams(params)
       this.searchText = this.queryParams?.filters[0]?.value;
       this.getAuthors(this.queryParams);
     })
@@ -74,7 +74,7 @@ export class AuthorsComponent implements OnInit {
     this.router.navigate(['.'],
       {
         relativeTo: this.routeActive,
-        queryParams: this.paginationService.mapToParams(params)
+        queryParams: this.paginationService.mapToQueryObjectPagination(params)
       });
   }
   //Form
