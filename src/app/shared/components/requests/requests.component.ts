@@ -43,7 +43,7 @@ export class RequestsComponent implements OnInit {
   )
   .subscribe(data=> this.bookId = +data);
   this.route.queryParams.subscribe((params : Params) => {
-    this.queryParams = this.paginationService.mapToPaginationParams(params)
+    this.queryParams = this.paginationService.mapFromqQueryToPaginationParams(params)
     this.searchText = this.queryParams?.filters[0]?.value;
     this.getAllUserRequests(this.queryParams);
   })
@@ -105,7 +105,7 @@ export class RequestsComponent implements OnInit {
     this.router.navigate(['.'], 
       {
         relativeTo: this.route, 
-        queryParams: this.paginationService.mapToParams(params),
+        queryParams: this.paginationService.mapToQueryObjectPagination(params),
         queryParamsHandling: 'merge',
       });
   }  

@@ -5,8 +5,9 @@ import { PaginationParameters } from 'src/app/core/models/Pagination/paginationP
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { FilterParameters } from '../../models/Pagination/FilterParameters';
 import { SortParameters } from '../../models/Pagination/SortParameters';
+import { PageableParameters } from '../../models/Pagination/pageableParameters';
+import { BookParameters } from '../../models/Pagination/bookParameters';
 import { filter } from 'rxjs/operators';
-import { Params } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +23,12 @@ export class PaginationService {
   private filterMethod = "Method";
   private filterOperand = "Operand"
   private filterName = "Filters"
+  private showAvailable = "showAvailable"
 
   constructor(private http: HttpClient) { }
   getPage<T>(getUrl: string, paginationParameters: PaginationParameters): Observable<IPage<T>> {
-    let params = new HttpParams()
-      .set(this.page, paginationParameters.page.toString())
-      .set(this.pageSize, paginationParameters.pageSize.toString())
-      .set(this.firstRequest, paginationParameters.firstRequest.toString())
+    let params = new HttpParams();
+    params = this.mapPagination(params, paginationParameters)
     if (paginationParameters.filters) {
       params = this.mapFilter(params, paginationParameters.filters);
     }
@@ -37,8 +37,26 @@ export class PaginationService {
     }
     return this.http.get<IPage<T>>(getUrl, { params });
   }
-
-  public mapFilter(params: HttpParams, filters: FilterParameters[], filterName = this.filterName): HttpParams {
+  getPageBooks<T>(getUrl: string, bookParams: BookParameters): Observable<IPage<T>> {
+    let params = new HttpParams();
+    params = this.mapPagination(params, bookParams)
+    if(bookParams.authorFilters){
+      params = this.mapFilter(params, bookParams.authorFilters, "authorFilters")
+    }
+    if(bookParams.genreFilters){
+      params = this.mapFilter(params, bookParams.genreFilters, "genreFilters")
+    }
+    if(bookParams.bookFilters){
+      params = this.mapFilter(params, bookParams.bookFilters, "bookFilters")
+    }
+    if(bookParams.locationFilters){
+      params = this.mapFilter(params, bookParams.locationFilters, "locationFilters")
+    }
+    
+    return this.http.get<IPage<T>>(getUrl, { params });
+  }
+  //Map to query string, for get request
+  private mapFilter(params: HttpParams, filters: FilterParameters[], filterName = this.filterName): HttpParams {    
     for (let i = 0; i < filters.length; i++) {
       if (filters[i].propertyName && filters[i].value) {
         params = params
@@ -55,7 +73,57 @@ export class PaginationService {
     }
     return params;
   }
-  public mapFromFilter(queryParams : any, filters : FilterParameters[], filterName = this.filterName) : any {
+  private mapSort(params: HttpParams, sort: SortParameters): HttpParams {
+    if (sort.orderByField) {
+      params = params.set(this.sortField, sort.orderByField)
+        .set(this.sortAscending, sort.orderByAscending.toString())
+    }
+    return params;
+  }
+  private mapPagination(params: HttpParams, paginationParameters: PageableParameters): HttpParams {
+    return params.set(this.page, paginationParameters.page.toString())
+      .set(this.pageSize, paginationParameters.pageSize.toString())
+      .set(this.firstRequest, paginationParameters.firstRequest.toString())
+  }
+
+  //Map to queryParams, for navigation
+  public mapToQueryObjectPagination(params: PaginationParameters): object {
+    let result = {};
+    result = this.mapPaginationToQuery(result, params);
+    if (params.sort) {
+      result = this.mapSortToQuery(result, params.sort);
+    }
+    if (params.filters)
+      result = this.mapFilterToQuery(result, params.filters);
+    return result;
+  }
+  public mapToQueryObjectBookParams(params: BookParameters): object {
+    let result = new BookParameters();
+    result[this.showAvailable] = params.showAvailable;
+    result = this.mapPaginationToQuery(result, params);
+    if(params.authorFilters?.length > 0){
+      result = this.mapFilterToQuery(result, params.authorFilters, "authorFilters")
+    }
+    if(params.genreFilters?.length > 0){
+      result = this.mapFilterToQuery(result, params.genreFilters, "genreFilters")
+    }
+    if(params.bookFilters?.length > 0){
+      result = this.mapFilterToQuery(result, params.bookFilters, "bookFilters")
+    }
+    if(params.locationFilters?.length > 0){
+      result = this.mapFilterToQuery(result, params.locationFilters, "locationFilters")
+    } 
+    return result;
+    
+  }
+  
+  private mapPaginationToQuery(queryParams: any, pagination: PageableParameters): any {
+    queryParams.page = pagination.page;
+    queryParams.pageSize = pagination.pageSize;
+    queryParams.firstRequest = pagination.firstRequest;
+    return queryParams;
+  }
+  private mapFilterToQuery(queryParams: any, filters: FilterParameters[], filterName = this.filterName): any { 
     for (let i = 0; i < filters.length; i++) {
       if (filters[i].propertyName && filters[i].value) {
         queryParams[this.getFilterName(i, filterName, this.filterPropertyName)] = filters[i].propertyName;
@@ -71,47 +139,59 @@ export class PaginationService {
     }
     return queryParams;
   }
-  public mapSort(params: HttpParams, sort: SortParameters) {
-    if (sort.orderByField) {
-      params = params.set(this.sortField, sort.orderByField)
-        .set(this.sortAscending, sort.orderByAscending.toString())
+  private mapSortToQuery(queryParams: any, sort: SortParameters): any {
+    if (sort.orderByField && sort.orderByAscending) {
+      queryParams[this.sortField] = sort.orderByField;
+      queryParams[this.sortAscending] = sort.orderByAscending;
     }
-    return params;
+    return queryParams;
   }
-  public mapToPaginationParams(params: Params, defaultPage: number = 1, defultPageSize: number = 10, filterName = this.filterName): PaginationParameters {
+
+  //Map params from URL
+  public mapFromqQueryToPaginationParams(params: any, defaultPage: number = 1, defultPageSize: number = 10, filterName = this.filterName): PaginationParameters {
     let p = new PaginationParameters;
     p.sort = new SortParameters;
-    p.filters = [];
     p.page = params.page ? +params.page : defaultPage;
     p.pageSize = params.pageSize ? +params.pageSize : defultPageSize;
     p.sort.orderByField = params[this.sortField] ? params[this.sortField] : null;
     p.sort.orderByAscending = params[this.sortAscending] ? params[this.sortAscending] : true;
-    let filterCount = 0;
 
-    while (params[this.getFilterName(filterCount, filterName, this.filterPropertyName)]) {
-      p.filters[filterCount] = new FilterParameters;
-      p.filters[filterCount].propertyName = params[this.getFilterName(filterCount, this.filterName, this.filterPropertyName)]
-      p.filters[filterCount].value = params[this.getFilterName(filterCount, this.filterName, this.filterValue)]
-        ? params[this.getFilterName(filterCount, this.filterName, this.filterValue)]
-        : null;
-      filterCount++;
-    }
+    p.filters = this.mapFilterFromQuery(params, filterName);
     return p;
   }
-  public mapToParams(params : PaginationParameters) : object {
-    let paramsTemp = {
-      page: params.page,
-      pageSize: params.pageSize,
-      firstRequest: params.firstRequest
-    };
-    if(params.sort){
-      paramsTemp["Sort.OrderByField"] = params.sort.orderByField;      
-      paramsTemp["Sort.OrderByAscending"] = params.sort.orderByAscending;
-    }
-    if(params.filters)
-    paramsTemp = this.mapFromFilter(paramsTemp, params.filters);
-    return paramsTemp;
+  public mapFromqQueryToBookParams(params: any, defaultPage: number = 1, defultPageSize: number = 8): BookParameters {
+    let book = new BookParameters;
+    book.page = params.page ? +params.page : defaultPage;
+    book.pageSize = params.pageSize ? +params.pageSize : defultPageSize;
+    book.showAvailable = params.showAvailable != null ? JSON.parse(params.showAvailable) : true;
+
+    book.authorFilters = this.mapFilterFromQuery(params, "authorFilters");    
+    book.genreFilters = this.mapFilterFromQuery(params, "genreFilters");
+    book.bookFilters = this.mapFilterFromQuery(params, "bookFilters");
+    book.locationFilters = this.mapFilterFromQuery(params, "locationFilters");    
+    return book;
   }
+  private mapFilterFromQuery(params: any, filterName: string): FilterParameters[] {
+    let filterCount = 0;
+    let filters = [];
+    while (params[this.getFilterName(filterCount, filterName, this.filterPropertyName)] && params[this.getFilterName(filterCount, filterName, this.filterValue)]) {
+      filters[filterCount] = new FilterParameters;
+      filters[filterCount].propertyName = params[this.getFilterName(filterCount, filterName, this.filterPropertyName)]
+      filters[filterCount].value = params[this.getFilterName(filterCount, filterName, this.filterValue)]
+        ? params[this.getFilterName(filterCount, filterName, this.filterValue)]
+        : null;
+      if(params[this.getFilterName(filterCount, filterName, this.filterMethod)]){
+        filters[filterCount].method = params[this.getFilterName(filterCount, filterName, this.filterMethod)];
+      }
+      if(params[this.getFilterName(filterCount, filterName, this.filterOperand)]){
+        filters[filterCount].operand = params[this.getFilterName(filterCount, filterName, this.filterOperand)];
+      }
+      filterCount++;
+    }
+    return filters;
+  }
+
+
   private getFilterName(index: number, name: string, property: string): string {
     return name + "[" + index + "]." + property;
   }

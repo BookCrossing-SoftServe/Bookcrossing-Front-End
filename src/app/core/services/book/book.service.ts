@@ -7,6 +7,11 @@ import { IBook } from "../../models/book";
 import { bookStatus } from '../../models/bookStatus.enum';
 import { RequestService } from '../request/request.service';
 import { IRequest } from '../../models/request';
+import {PaginationService} from "../pagination/pagination.service";
+import {PaginationParameters} from "../../../core/models/Pagination/paginationParameters";
+import {IPage} from "../../models/page";
+import {IAuthor} from "../../models/author";
+import { BookParameters } from '../../models/Pagination/bookParameters';
 
 @Injectable()
 export class BookService {
@@ -18,11 +23,12 @@ export class BookService {
   receiveDate: Date;
 
   constructor(private http: HttpClient,
+    private pagination: PaginationService,
     private requestService:RequestService,
     ) {}
 
-  getBooks(): Observable<IBook[]> {
-    return this.http.get<IBook[]>(this.apiUrl);
+  getBooksPage(bookParams : BookParameters): Observable<IPage<IBook>> {
+    return this.pagination.getPageBooks<IBook>(bookUrl,bookParams);
   }
 
   getBookById(id: number): Observable<IBook> {
