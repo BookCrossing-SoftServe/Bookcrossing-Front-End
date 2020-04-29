@@ -60,6 +60,9 @@ import { RulesComponent } from './shared/components/rules/rules.component';
 import { GenreComponent } from './shared/components/genre/genre.component';
 import { DialogService } from './core/services/dialog/dialog.service';
 import { LanguagesComponent } from './shared/components/languages/languages.component';
+import { AvatarModule } from 'ngx-avatar';
+import { SearchBarComponent } from './shared/components/search-bar/search-bar.component';
+import { ProfileAvatarComponent } from './shared/components/profile-avatar/profile-avatar.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +94,9 @@ import { LanguagesComponent } from './shared/components/languages/languages.comp
     RulesComponent,
     GenreComponent,
     ConfirmDialogComponent,
-    LanguagesComponent
+    LanguagesComponent,
+    SearchBarComponent,
+    ProfileAvatarComponent
   ],
   imports: [
     BrowserModule,
@@ -108,6 +113,7 @@ import { LanguagesComponent } from './shared/components/languages/languages.comp
     MatIconModule,
     MatSortModule,
     NgxPaginationModule,
+    AvatarModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
