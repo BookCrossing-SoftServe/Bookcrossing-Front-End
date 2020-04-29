@@ -15,13 +15,17 @@ import { AuthenticationService } from 'src/app/core/services/authentication/auth
 export class NavbarComponent implements OnInit {
   @ViewChild('menu', {static: false}) menu: any;
   languages: Language[];
-  isAuthenticated : boolean = false;
+  isAuthorized : Boolean = false;  
+  loginSubscription : any;
+
   constructor(  private authenticationService : AuthenticationService,
     private translate: TranslateService,
     public languageService: LanguageService) { }  
   
-  ngOnInit() {
-    // this.authenticationService.currentUser.subscribe
+  ngOnInit() { 
+    this.loginSubscription = this.authenticationService.userLoggedIn.subscribe(userLoggedin => {
+      this.isAuthorized = userLoggedin;
+    });
     this.languages = this.languageService.languages;
   }
   changeLang(lang: Language): void {
