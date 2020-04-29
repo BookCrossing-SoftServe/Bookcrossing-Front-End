@@ -1,4 +1,4 @@
-import { IUser } from './../../models/user';
+import { RequestQueryParams } from './../../models/requestQueryParams';
 import { bookUrl } from '../../../configs/api-endpoint.constants';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
@@ -17,14 +17,11 @@ import { BookParameters } from '../../models/Pagination/bookParameters';
 export class BookService {
   private apiUrl: string = bookUrl;
   status: bookStatus;
-  currentOwner: IUser;
-  firstOwner: IUser;
-  userWhoRequested: IUser;
   receiveDate: Date;
 
   constructor(private http: HttpClient,
     private pagination: PaginationService,
-    private requestService:RequestService,
+    private requestService:RequestService
     ) {}
 
   getBooksPage(bookParams : BookParameters): Observable<IPage<IBook>> {
@@ -38,9 +35,17 @@ export class BookService {
   postBook(book: IBook) {
     return this.http.post<IBook>(this.apiUrl, book);
   }
+  putBook(bookId: number, book: IBook) {
+    return this.http.put<IBook>(this.apiUrl + bookId, {
+      Id: bookId,
+      book
+    });
+  }
 
-  isBeingReding(book: IBook) : boolean {      
-     this.requestService.getRequestForBook(book.id)
+  isBeingReding(book: IBook) : boolean {  
+     var query: RequestQueryParams = new RequestQueryParams();
+     query.last = true;    
+     this.requestService.getRequestForBook(book.id, query)
     .subscribe((value: IRequest) => {
       this.receiveDate = value.receiveDate
       });
@@ -49,18 +54,6 @@ export class BookService {
       }
       return false;
   };
-
-  getFirstOwner(): IUser{
-    return null;
-  }
-
-  getCurrentOwner(userId: number) : IUser{
-    return null;
-  }
-
-  getUserWhoRequested(userId: number): IUser {
-    return null;
-  }
 
   getStatus(book : IBook) : bookStatus{
     this.status = bookStatus.available;

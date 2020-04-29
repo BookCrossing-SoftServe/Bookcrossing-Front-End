@@ -1,3 +1,4 @@
+import { UserService } from './../../../core/services/user/user.service';
 import { Component, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -11,6 +12,8 @@ import {TranslateService} from "@ngx-translate/core";
 import { IRequest } from 'src/app/core/models/request';
 import { bookStatus } from 'src/app/core/models/bookStatus.enum';
 import { DialogService } from 'src/app/core/services/dialog/dialog.service';
+import { RequestQueryParams } from 'src/app/core/models/requestQueryParams';
+import { IUser } from 'src/app/core/models/user';
 
 @Component({
   selector: 'app-book',
@@ -23,10 +26,14 @@ export class BookComponent implements OnInit {
     readonly baseUrl = bookUrl;
     book: IBook;
     bookId: number;
+    userId: number;
     request: IRequest;
     requestId: number;
     bookStatus: bookStatus;
     status: string;
+    currentOwner: IUser;
+    userWhoRequested: IUser;
+    firstOwner: IUser;
 
   constructor(
     private translate: TranslateService,
@@ -34,7 +41,8 @@ export class BookComponent implements OnInit {
     private route: ActivatedRoute,
     private bookService:BookService,
     private requestService:RequestService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private userService: UserService
     ) {}
   
   ngOnInit() {
@@ -47,9 +55,35 @@ export class BookComponent implements OnInit {
   this.bookService.getBookById(this.bookId).subscribe((value: IBook) => {
     this.book = value;
     this.status = this.getStatus(value);
+    this.getCurrentOwner(this.book.userId);
+    this.getFirstOwner();
+    this.getUserWhoRequested();
   });
-  }
+}
+getCurrentOwner(userId: number){
+  this.userService.getUserById(userId)
+  .subscribe((value: IUser) => {
+    this.currentOwner = value;
+    });
+}
+getFirstOwner(){
+  var requestQuery = new RequestQueryParams();
+          requestQuery.last = false;
+          requestQuery.first = true;
+          this.requestService.getRequestForBook(this.bookId, requestQuery).subscribe((value: IRequest) => {
+            this.firstOwner = value.owner;
+            });
+}
 
+getUserWhoRequested(){
+  var requestQuery = new RequestQueryParams();
+          requestQuery.last = true;
+          requestQuery.first = false;
+          this.requestService.getRequestForBook(this.bookId, requestQuery).subscribe((value: IRequest) => {
+            this.userWhoRequested = value.user;
+            console.log(value)
+            });
+}
   getStatus(book: IBook): string{
     this.bookStatus = this.bookService.getStatus(book);
     if(this.bookStatus == bookStatus.available){
@@ -63,6 +97,24 @@ export class BookComponent implements OnInit {
     }
   }
 
+  async makeAvailable() {
+    this.dialogService
+      .openConfirmDialog(
+        await this.translate.get("Do you want to share book? The book will be available for request!").toPromise()
+      )
+      .afterClosed()
+      .subscribe(async res => {
+        if (res) {
+          this.book.available = true;
+          this.bookService.putBook(this.bookId, this.book).subscribe(() => {
+          }, err => {
+            this.notificationService.warn(this.translate
+              .instant("Something went wrong!"));
+          });
+        }
+      });
+
+  }
   async cancelRequest() {
     this.dialogService
       .openConfirmDialog(
@@ -71,7 +123,10 @@ export class BookComponent implements OnInit {
       .afterClosed()
       .subscribe(async res => {
         if (res) {
-          this.requestService.getRequestForBook(this.bookId).subscribe((value: IRequest) => {
+          var requestQuery = new RequestQueryParams();
+          requestQuery.last = true;
+          requestQuery.first = false;
+          this.requestService.getRequestForBook(this.bookId, requestQuery).subscribe((value: IRequest) => {
             this.requestId = value.id;
             });
           this.requestService.deleteRequest(this.requestId).subscribe((value: boolean) => {

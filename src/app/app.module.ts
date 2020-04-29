@@ -1,3 +1,4 @@
+import { UserService } from './core/services/user/user.service';
 import { RequestService } from 'src/app/core/services/request/request.service';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { assetsUrl } from './configs/api-endpoint.constants';
@@ -138,7 +139,8 @@ import { LanguagesComponent } from './shared/components/languages/languages.comp
     JwtHelperService,
     LocationService,
     GenreService, 
-    DialogService
+    DialogService,
+    UserService
 
   ],
   entryComponents: [AuthorFormComponent],
