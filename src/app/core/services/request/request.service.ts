@@ -22,15 +22,18 @@ export class RequestService {
     });
   }
 
-  getAllRequestesByBookId(bookId: number, paginationParameters : PaginationParameters) :Observable<IPage<IRequest>>{
-    return this.pagination.getPage<IRequest>(`${this.baseUrl}/${bookId}`, paginationParameters);
+  getRequestForBook(bookId: number) :Observable<IRequest>{
+    return this.http.get<IRequest>(this.baseUrl + `/${bookId}`);
+  }
+  getAllUserRequests(paginationParameters : PaginationParameters) :Observable<IPage<IRequest>>{
+    return this.pagination.getPage<IRequest>(`${this.baseUrl}/`, paginationParameters);
   }
 
-  deleteRequest(requestId: number) {
+  deleteRequest(requestId: number) :Observable<boolean>{
     return this.http.delete<boolean>(this.baseUrl + `/${requestId}`);
   }
 
-  approveRequest(requestId: number) {
+  approveReceive(requestId: number) :Observable<boolean>{
     return this.http.put<boolean>(this.baseUrl + `/${requestId}`, {
       requestId: requestId,
     });

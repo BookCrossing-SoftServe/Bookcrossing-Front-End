@@ -9,18 +9,19 @@ import { RequestService } from 'src/app/core/services/request/request.service'
 import { PaginationService } from 'src/app/core/services/pagination/pagination.service';
 import { FilterParameters } from 'src/app/core/models/Pagination/FilterParameters';
 import { SortParameters } from 'src/app/core/models/Pagination/SortParameters';
+import { DialogService } from 'src/app/core/services/dialog/dialog.service';
 
 @Component({
   selector: 'app-requests',
   templateUrl: './requests.component.html',
   styleUrls: ['./requests.component.scss'],
-  providers: [RequestService]
+  providers: []
 })
 export class RequestsComponent implements OnInit {
   
   bookId: number;
   requests: IRequest[];
-  queryParams : PaginationParameters = new PaginationParameters();
+  queryParams : PaginationParameters = new PaginationParameters()
   searchText : string;
   searchField :string = "id";
   totalSize : number;  
@@ -32,6 +33,7 @@ export class RequestsComponent implements OnInit {
     private requestService: RequestService,
     private paginationService : PaginationService,
     private router : Router,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -43,11 +45,11 @@ export class RequestsComponent implements OnInit {
   this.route.queryParams.subscribe((params : Params) => {
     this.queryParams = this.paginationService.mapToPaginationParams(params)
     this.searchText = this.queryParams?.filters[0]?.value;
-    this.getAllRequestsByBookId(this.bookId, this.queryParams);
+    this.getAllUserRequests(this.queryParams);
   })
   }
-  getAllRequestsByBookId(bookId: number, params : PaginationParameters) : void {      
-    this.requestService.getAllRequestesByBookId(bookId, params)
+  getAllUserRequests(params : PaginationParameters) : void {      
+    this.requestService.getAllUserRequests(params)
     .subscribe( {
       next: pageData => {
       this.requests = pageData.page;
@@ -60,29 +62,27 @@ export class RequestsComponent implements OnInit {
    });   
   };
 
-  approveRequest(requestId: number) {
-    this.requestService.approveRequest(requestId).subscribe((value: boolean) => {
-      if(value){
-        this.notificationService.success(this.translate
-          .instant("Request successfully approved"))
-      }
+  async cancelRequest(requestId: number) {
+    this.dialogService
+      .openConfirmDialog(
+        await this.translate.get("Do you want to cancel request? Current owner will be notified about your cancelation.").toPromise()
+      )
+      .afterClosed()
+      .subscribe(async res => {
+        if (res) {
+          this.requestService.deleteRequest(requestId).subscribe((value: boolean) => {
+            let canceled = value;
+            if(canceled){
+              this.notificationService.success(this.translate
+                .instant("Request is cancelled."));
+            }
+            }, err => {
+              this.notificationService.warn(this.translate
+                .instant("Something went wrong!"));
+            });
+        }
+      });
 
-      }, err => {
-        this.notificationService.warn(this.translate
-          .instant("Something went wrong!"))
-      })
-  }
-
-  deleteRequest(requestId: number) {
-    this.requestService.deleteRequest(requestId).subscribe((value: boolean) => {
-      if(value) {
-        this.notificationService.success(this.translate
-          .instant("Request successfully deleted"))
-      }
-      }, err => {
-        this.notificationService.warn(this.translate
-          .instant("Something went wrong!"));
-      })
   }
   search() : void{
     if(this.queryParams?.filters[0]?.value == this.searchText){
