@@ -22,8 +22,7 @@ export class PaginationService {
   private filterMethod = "Method";
   private filterOperand = "Operand"
   private filterName = "Filters"
-  private showAvailable = "showAvailable"
-  private bookAuthorFilterName = "bookAuthorFilters";
+  private bookAuthorFilterName = "authorFilters";
   private bookFilterName = "bookFilters";
   private bookLocationFilterName = "locationFilters";
   private bookGenreFitlerName = "genreFilters";
@@ -173,8 +172,7 @@ export class PaginationService {
     let book = new BookParameters;
     book.page = params.page ? +params.page : defaultPage;
     book.pageSize = params.pageSize ? +params.pageSize : defultPageSize;
-    book.showAvailable = params.showAvailable;
-    
+    book.showAvailable = typeof params.showAvailable === "undefined" ? undefined : JSON.parse(params.showAvailable);
     book.authorFilters = this.mapFilterFromQuery(params, this.bookAuthorFilterName);    
     book.genreFilters = this.mapFilterFromQuery(params, this.bookGenreFitlerName);
     book.bookFilters = this.mapFilterFromQuery(params, this.bookFilterName);

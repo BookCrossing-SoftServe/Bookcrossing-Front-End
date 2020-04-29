@@ -2,55 +2,39 @@
 
   <div class="container">
 
-    <a class="navbar-brand md-tabs nav-justified py-0" routerLink=""><i class="fas white-text fa-book"> Bookcrossing</i></a>
+    <a class="navbar-brand md-tabs nav-justified py-0" routerLink=""><i class="fas white-text fa-book">
+        Bookcrossing</i></a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
-            aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
 
     <div class="collapse navbar-collapse" id="basicExampleNav">
 
-
       <ul class="navbar-nav mr-auto text-uppercase">
 
         <!--add new links here  -->
-          <li class="nav-item">
-            <a class="nav-link" routerLink="">{{'common.home' | translate}}</a>
-          </li>
-          <li class="nav-item">
-             <a class="nav-link" routerLink="demo">{{'common.routes' | translate}}</a>
-          </li>
-
+        <li class="nav-item">
+          <a class="nav-link" routerLink="">{{'common.home' | translate}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="demo">{{'common.routes' | translate}}</a>
+        </li>
+        <ng-container #login>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="login">login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="registration">registration</a>
+            </li>
+        </ng-container>
       </ul>
-      <div class="form-inline ml-auto pr-3">
-        <div class="md-form my-0 ">
-          
-          <ng-template [ngIf]="searchTerm?.length > 0">
-            <i class="fas red-text fa-times pr-2" (click)="resertSearch()" aria-hidden="true"></i>
-          </ng-template>          
-          <input class="form-control text-white" type="text" placeholder="Search" aria-label="Search"
-          [(ngModel)]="searchTerm" (keyup.enter)="navigateToBooks(searchTerm)">
-          <i class="fas fa-search text-white ml-3" aria-hidden="true" (click)="navigateToBooks(searchTerm)"></i>
-        </div>
-      </div>
-
-      <li class="nav-item avatar dropdown">
-        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          <img src="" class="rounded-circle z-depth-0"
-            alt="avatar image">
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
-          aria-labelledby="navbarDropdownMenuLink-55">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-
-
+      <ng-template [ngIf]="!isAuthenticated" [ngIfElse]="login">
+        <app-search-bar> </app-search-bar>
+        <app-profile-avatar></app-profile-avatar>
+      </ng-template>
     </div>
 
     <!-- <button class="btn blue-gradient" mat-button [matMenuTriggerFor]="menu">
@@ -67,7 +51,7 @@
         <span>{{'common.languages.ua'|translate}}</span>
       </button>
     </mat-menu> -->
-    
+
   </div>
 
 </nav>

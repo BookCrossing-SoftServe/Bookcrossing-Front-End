@@ -24,7 +24,6 @@
               {{location.officeName}}, {{location.street}}</mat-option>
           </mat-select>
         </div>
-
         <div class="form-check ml-auto p-2">
           <input type="checkbox" class="form-check-input" id="showAvailableOnly" [checked]="queryParams.showAvailable"
             (change)="toggleAvailable($event.target.checked)">
