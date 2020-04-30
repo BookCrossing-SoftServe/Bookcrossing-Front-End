@@ -32,8 +32,11 @@ export class SearchBarComponent implements OnInit {
     )
   }
   clearInput(){
+    setTimeout(() =>{
+      
     if(!this.router.url.startsWith("/books"))
     this.searchTerm = null;
+  },100)
   }
   trimInput() {
     this.searchTerm = this.searchTerm.trim();
