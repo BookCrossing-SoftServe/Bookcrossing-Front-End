@@ -49,8 +49,9 @@ export class BookService {
     .subscribe((value: IRequest) => {
       this.receiveDate = value.receiveDate
       });
-      if(this.receiveDate !== null){
-        return true;
+      if(this.receiveDate){
+        this.status = bookStatus.reading;
+      return true;
       }
       return false;
   };
@@ -61,10 +62,10 @@ export class BookService {
     if(requested){
       let received = this.isBeingReding(book);
       if(received){
-        return bookStatus.reading;
+        return this.status;
       }
       else {
-        return bookStatus.requested;
+        return this.status;
       }
     }
     return this.status;

@@ -81,7 +81,6 @@ getUserWhoRequested(){
           requestQuery.first = false;
           this.requestService.getRequestForBook(this.bookId, requestQuery).subscribe((value: IRequest) => {
             this.userWhoRequested = value.user;
-            console.log(value)
             });
 }
   getStatus(book: IBook): string{
@@ -127,17 +126,16 @@ getUserWhoRequested(){
           requestQuery.last = true;
           requestQuery.first = false;
           this.requestService.getRequestForBook(this.bookId, requestQuery).subscribe((value: IRequest) => {
-            this.requestId = value.id;
-            });
-          this.requestService.deleteRequest(this.requestId).subscribe((value: boolean) => {
-            let canceled = value;
-            if(canceled){
-              this.notificationService.success(this.translate
-                .instant("Request is cancelled."));
-            }
-            }, err => {
-              this.notificationService.warn(this.translate
-                .instant("Something went wrong!"));
+            this.requestService.deleteRequest(value.id).subscribe((value: boolean) => {
+              let canceled = value;
+              if(canceled){
+                this.notificationService.success(this.translate
+                  .instant("Request is cancelled."));
+              }
+              }, err => {
+                this.notificationService.warn(this.translate
+                  .instant("Something went wrong!"));
+              });
             });
         }
       });
@@ -151,15 +149,20 @@ getUserWhoRequested(){
       .afterClosed()
       .subscribe(async res => {
         if (res) {
-          this.requestService.approveReceive(this.bookId).subscribe((value: boolean) => {
-            let received = value;
-            if(received){
-              this.notificationService.success(this.translate
-                .instant("Request is cancelled."));
-            }
-            }, err => {
-              this.notificationService.warn(this.translate
-                .instant("Something went wrong!"));
+          var requestQuery = new RequestQueryParams();
+          requestQuery.last = true;
+          requestQuery.first = false;
+          this.requestService.getRequestForBook(this.bookId, requestQuery).subscribe((value: IRequest) => {
+            this.requestService.approveReceive(value.id).subscribe((value: boolean) => {
+              let received = value;
+              if(received){
+                this.notificationService.success(this.translate
+                  .instant("Request is cancelled."));
+              }
+              }, err => {
+                this.notificationService.warn(this.translate
+                  .instant("Something went wrong!"));
+              });
             });
         }
       });
