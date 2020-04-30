@@ -57,6 +57,7 @@ export class BooksComponent implements OnInit {
       params.showAvailable = this.queryParams.showAvailable;
     }
     this.queryParams = params;
+    if(this.queryParams.authorFilters[0]?.value)
     this.searchBarService.changeSearchTerm(this.queryParams.authorFilters[0]?.value)
     this.getCategoriesFromQuery();
     this.getLocationFromQuery();
@@ -119,7 +120,6 @@ export class BooksComponent implements OnInit {
       this.selectedLocation = +this.queryParams.locationFilters?.find(x=>x.propertyName == "Location.Id")?.value;
     }
   }
-
 
   //Available
   toggleAvailable(checked : boolean) {
