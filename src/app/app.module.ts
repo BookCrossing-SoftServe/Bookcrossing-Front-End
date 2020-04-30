@@ -56,6 +56,9 @@ import { HomeComponent } from './shared/components/home/home.component';
 import { RulesComponent } from './shared/components/rules/rules.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GenreComponent } from './shared/components/genre/genre.component';
+import { AvatarModule } from 'ngx-avatar';
+import { SearchBarComponent } from './shared/components/search-bar/search-bar.component';
+import { ProfileAvatarComponent } from './shared/components/profile-avatar/profile-avatar.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +88,9 @@ import { GenreComponent } from './shared/components/genre/genre.component';
     ContentFilterPipe,
     HomeComponent,
     RulesComponent,
-    GenreComponent
+    GenreComponent,
+    SearchBarComponent,
+    ProfileAvatarComponent
   ],
   imports: [
     BrowserModule,
@@ -102,6 +107,7 @@ import { GenreComponent } from './shared/components/genre/genre.component';
     MatIconModule,
     MatSortModule,
     NgxPaginationModule,
+    AvatarModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
