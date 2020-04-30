@@ -1,32 +1,53 @@
-import {HttpClient} from '@angular/common/http';
+import { RequestQueryParams } from './../../models/requestQueryParams';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import { Observable } from 'rxjs';
 import { requestUrl } from "src/app/configs/api-endpoint.constants";
 import { IRequest } from 'src/app/core/models/request';
+import { PaginationParameters } from 'src/app/core/models/Pagination/paginationParameters';
+import { PaginationService } from '../pagination/pagination.service';
+import { IPage } from '../../models/page';
+import { BookParameters } from '../../models/Pagination/bookParameters';
 
 @Injectable()
 export class RequestService {
   constructor(
     private http: HttpClient,
+    private pagination: PaginationService
   ) {}
 
   readonly baseUrl = requestUrl;
 
   requestBook(bookId: number) {
-    this.http.post<IRequest>(this.baseUrl + `/${bookId}`, {
+    return this.http.post<IRequest>(this.baseUrl + `/${bookId}`, {
       bookId: bookId,
     });
   }
 
-  getAllRequestesByBookId(bookId: number) {
-    return this.http.get<IRequest[]>(this.baseUrl + `/${bookId}`);
+  getRequestForBook(bookId: number, param?: RequestQueryParams) :Observable<IRequest>{
+    var params = new HttpParams();
+    if(param.first){
+      params = new HttpParams()
+    .set("first", "true");
+    }
+    else if(param.last){
+      params = new HttpParams()
+    .set("first", "true");
+    }
+    
+    return this.http.get<IRequest>(this.baseUrl + `/${bookId}`, { params } );
   }
 
-  deleteRequest(requestId: number) {
-    return this.http.delete<IRequest>(this.baseUrl + `/${requestId}`);
+  getUserRequestsPage(bookParams : BookParameters): Observable<IPage<IRequest>> {
+    return this.pagination.getPageBooks<IRequest>(`${this.baseUrl}/`,bookParams);
   }
 
-  approveRequest(requestId: number) {
-    return this.http.put<IRequest>(this.baseUrl + `/${requestId}`, {
+  deleteRequest(requestId: number) :Observable<boolean>{
+    return this.http.delete<boolean>(this.baseUrl + `/${requestId}`);
+  }
+
+  approveReceive(requestId: number) :Observable<boolean>{
+    return this.http.put<boolean>(this.baseUrl + `/${requestId}`, {
       requestId: requestId,
     });
   }
