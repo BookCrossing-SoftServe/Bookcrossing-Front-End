@@ -8,5 +8,6 @@ export interface IBook {
   available: boolean;
   authors: IAuthor[];
   genres: IGenre[];
+  description?: string;
   img?: File;
 }
