@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, OnDestroy } from '@angular/core';
 import { IBook } from 'src/app/core/models/book';
 import { BookService } from 'src/app/core/services/book/book.service';
 import { ActivatedRoute, Params, Router } from "@angular/router";
@@ -16,7 +16,7 @@ import { SearchBarService } from 'src/app/core/services/searchBar/searchBar.serv
   templateUrl: './books.component.html',
   styleUrls: ['./books.component.scss']
 })
-export class BooksComponent implements OnInit {
+export class BooksComponent implements OnInit,OnDestroy {
 
   books: IBook[];
   queryParams: BookParameters = new BookParameters;
@@ -194,5 +194,9 @@ export class BooksComponent implements OnInit {
   }
   makeRequest(bookId: number): void {
     alert(bookId);
+  }
+
+  ngOnDestroy(){
+    this.searchBarService.changeSearchTerm(null)
   }
 }
