@@ -50,3 +50,25 @@
    font-size: 11px;
    box-shadow: 0 6px 12px rgba(0,0,0,.175);
 }
+
+@media (max-width: 780px){
+  .select-dropdown{
+    min-width: 8rem;
+    width: auto;
+  }
+}
+@media (max-width: 550px){
+  .card-header.d-flex{
+    display: block !important;
+  .select-dropdown{
+    width:88%;
+    margin: 0.5rem;
+    }
+  .custom-control-label{
+    margin-left:24px;
+  }
+  .form-inline{
+    flex-flow:nowrap;
+  }
+  }
+}
