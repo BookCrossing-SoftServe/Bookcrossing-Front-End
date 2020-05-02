@@ -17,14 +17,10 @@ import { SearchBarService } from 'src/app/core/services/searchBar/searchBar.serv
 export class BooksComponent implements OnInit,OnDestroy {
 
   books: IBook[];
+  totalSize: number;
   queryParams: BookQueryParams = new BookQueryParams;
-  //locations: ILocation[] = [];
 
   selectedGenres: number[];
-  //genres: IGenre[];
-
-  totalSize: number;
-  showAvailableOnly: boolean = true;
 
 
   constructor(private routeActive: ActivatedRoute,

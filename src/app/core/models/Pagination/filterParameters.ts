@@ -46,7 +46,7 @@ export class FilterParameters {
       }
       filterCount++;
     }
-    return params;
+    return filters;
   }
 
   static mapFilterToQuery(queryParams: any, filters: FilterParameters[], filterName : string): any {

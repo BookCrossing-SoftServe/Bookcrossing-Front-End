@@ -35,9 +35,7 @@ export class AuthorsComponent implements OnInit {
   ngOnInit() {
     this.onAuthorEditted();
     this.routeActive.queryParams.subscribe((params : Params) => {
-      console.log(params);
       this.queryParams = this.queryParams.mapFromQuery(params)
-      console.log(this.queryParams);
       this.searchText = this.queryParams?.filters[0]?.value;
       this.getAuthors(this.queryParams);
     })
@@ -58,19 +56,20 @@ export class AuthorsComponent implements OnInit {
       return
     }
     this.queryParams.page = 1;
+    this.queryParams.filters = [];
     this.queryParams.filters[0] = <FilterParameters> {propertyName:this.searchField, value: this.searchText}
-    this.changeUrl(this.queryParams);
+    this.changeUrl();
   }
   changeSort(selectedHeader : string){
     this.queryParams.sort = <SortParameters> {orderByField:selectedHeader, orderByAscending: !this.queryParams.sort.orderByAscending}
-    this.changeUrl(this.queryParams);
+    this.changeUrl();
   }
   pageChanged(currentPage : number) : void{
       this.queryParams.page = currentPage;
       this.queryParams.firstRequest = false;
-      this.changeUrl(this.queryParams);
+      this.changeUrl();
   }
-  private changeUrl(params : CompletePaginationParams)  : void{
+  private changeUrl()  : void{
     this.router.navigate(['.'],
       {
         relativeTo: this.routeActive,

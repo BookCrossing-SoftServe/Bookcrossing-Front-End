@@ -32,7 +32,6 @@ export class BookFilterBarComponent implements OnInit {
   ngOnInit(): void {
     this.getAllGenres();
     this.getLocation();
-    console.log(this.selectedGenres);
   }
   notifyFilterChange() {
     this.filterChange.emit(true);
@@ -41,7 +40,6 @@ export class BookFilterBarComponent implements OnInit {
   //Categories
   onCategoriesChange(isOpened: boolean) {
     if (!isOpened) {
-      console.log(this.selectedGenres)
       this.selectedGenresChange.emit(this.selectedGenres);
       this.notifyFilterChange();
     }

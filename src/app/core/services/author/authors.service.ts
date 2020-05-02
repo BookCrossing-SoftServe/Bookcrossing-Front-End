@@ -25,7 +25,7 @@ export class AuthorService {
   }
 
   getAuthorsPage(paginationParameters : CompletePaginationParams):Observable<IPage<IAuthor>>{
-    return this.pagination.getPage<IAuthor>(authorUrl,paginationParameters);
+    return this.pagination.getPaginatedPage<IAuthor>(authorUrl,paginationParameters);
   }
   getAuthorById(authorId: number) {
     return this.http.get<IAuthor[]>(authorUrl + `/${authorId}`);
