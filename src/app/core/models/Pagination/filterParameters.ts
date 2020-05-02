@@ -1,3 +1,5 @@
+import { HttpParams } from '@angular/common/http';
+
 export class FilterParameters {
   private static filterPropertyName = "PropertyName";
   private static filterValue = "Value";
@@ -8,6 +10,24 @@ export class FilterParameters {
   value: string;
   method?: string;
   operand?: string;
+
+  static mapFilter(params: HttpParams, filters: FilterParameters[], filterName: string): HttpParams {    
+    for (let i = 0; i < filters.length; i++) {
+      if (filters[i].propertyName && filters[i].value) {
+        params = params
+          .set(this.getFilterName(i, filterName, this.filterPropertyName), filters[i].propertyName)
+          .set(this.getFilterName(i, filterName, this.filterValue), filters[i].value);
+
+        if (filters[i].method) {
+          params = params.set(this.getFilterName(i, filterName, this.filterMethod), filters[i].method)
+        }
+        if (filters[i].operand) {
+          params = params.set(this.getFilterName(i, filterName, this.filterOperand), filters[i].operand)
+        }
+      }
+    }
+    return params;
+  }  
 
   static mapFilterFromQuery(params: any, filterName: string): FilterParameters[] {
     let filterCount = 0;
@@ -26,7 +46,7 @@ export class FilterParameters {
       }
       filterCount++;
     }
-    return filters;
+    return params;
   }
 
   static mapFilterToQuery(queryParams: any, filters: FilterParameters[], filterName : string): any {
@@ -46,7 +66,7 @@ export class FilterParameters {
     return queryParams;
   }
 
-  private static  getFilterName(index: number, name: string, property: string): string {
+  private static getFilterName(index: number, name: string, property: string): string {
     return name + "[" + index + "]." + property;
   }
 }

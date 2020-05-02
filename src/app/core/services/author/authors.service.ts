@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { IAuthor } from 'src/app/core/models/author'
 import { authorUrl } from "src/app/configs/api-endpoint.constants";
 import { IPage } from '../../models/page';
-import { PaginationParameters } from 'src/app/core/models/Pagination/paginationParameters';
+import { CompletePaginationParams } from 'src/app/core/models/completePaginationParameters';
 import { PaginationService } from '../pagination/pagination.service';
 
 @Injectable({
@@ -24,7 +24,7 @@ export class AuthorService {
     this.authorEditedSource.next(author);
   }
 
-  getAuthorsPage(paginationParameters : PaginationParameters):Observable<IPage<IAuthor>>{
+  getAuthorsPage(paginationParameters : CompletePaginationParams):Observable<IPage<IAuthor>>{
     return this.pagination.getPage<IAuthor>(authorUrl,paginationParameters);
   }
   getAuthorById(authorId: number) {

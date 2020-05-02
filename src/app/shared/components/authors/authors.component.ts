@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ComponentFactoryResolver} from '@angular/core';
 import { IAuthor } from "src/app/core/models/author";
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {AuthorService} from "src/app/core/services/author/authors.service";
 import { AuthorFormComponent } from '../author-form/author-form.component';
 import { RefDirective } from '../../directives/ref.derictive';
-import { PaginationParameters } from 'src/app/core/models/Pagination/paginationParameters';
+import { CompletePaginationParams } from 'src/app/core/models/completePaginationParameters';
 import { SortParameters } from 'src/app/core/models/Pagination/SortParameters';
-import { PaginationService } from 'src/app/core/services/pagination/pagination.service';
 import { FilterParameters } from 'src/app/core/models/Pagination/FilterParameters';
 
 @Component({
@@ -19,7 +18,7 @@ export class AuthorsComponent implements OnInit {
   @ViewChild(RefDirective, {static: false}) refDir : RefDirective
 
   authors : IAuthor[];
-  queryParams : PaginationParameters = new PaginationParameters();
+  queryParams : CompletePaginationParams = new CompletePaginationParams();
   searchText : string;
   searchField : string = "lastname";
   totalSize : number;
@@ -36,7 +35,9 @@ export class AuthorsComponent implements OnInit {
   ngOnInit() {
     this.onAuthorEditted();
     this.routeActive.queryParams.subscribe((params : Params) => {
+      console.log(params);
       this.queryParams = this.queryParams.mapFromQuery(params)
+      console.log(this.queryParams);
       this.searchText = this.queryParams?.filters[0]?.value;
       this.getAuthors(this.queryParams);
     })
@@ -69,11 +70,11 @@ export class AuthorsComponent implements OnInit {
       this.queryParams.firstRequest = false;
       this.changeUrl(this.queryParams);
   }
-  private changeUrl(params : PaginationParameters)  : void{
+  private changeUrl(params : CompletePaginationParams)  : void{
     this.router.navigate(['.'],
       {
         relativeTo: this.routeActive,
-        queryParams: this.queryParams.getQueryObject(params)
+        queryParams: this.queryParams.getQueryObject()
       });
   }
   //Form
@@ -86,7 +87,7 @@ export class AuthorsComponent implements OnInit {
   };
 
   //Get
-  getAuthors(params : PaginationParameters) : void {
+  getAuthors(params : CompletePaginationParams) : void {
     this.authorService.getAuthorsPage(params)
     .subscribe( {
       next: pageData => {

@@ -1,11 +1,9 @@
-import { Component, ComponentFactoryResolver, OnInit, OnDestroy } from '@angular/core';
+import { Component,OnInit, OnDestroy } from '@angular/core';
 import { IBook } from 'src/app/core/models/book';
 import { BookService } from 'src/app/core/services/book/book.service';
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { PaginationService } from 'src/app/core/services/pagination/pagination.service';
-import { BookParameters } from 'src/app/core/models/Pagination/bookParameters';
+import { BookQueryParams } from 'src/app/core/models/bookQueryParams';
 import { IGenre } from 'src/app/core/models/genre';
-import { FilterParameters } from 'src/app/core/models/Pagination/FilterParameters';
 import { ILocation } from 'src/app/core/models/location';
 import { GenreService } from 'src/app/core/services/genre/genre';
 import { LocationService } from 'src/app/core/services/location/location.service';
@@ -19,7 +17,7 @@ import { SearchBarService } from 'src/app/core/services/searchBar/searchBar.serv
 export class BooksComponent implements OnInit,OnDestroy {
 
   books: IBook[];
-  queryParams: BookParameters = new BookParameters;
+  queryParams: BookQueryParams = new BookQueryParams;
 
   locations: ILocation[] = [];
 
@@ -43,9 +41,12 @@ export class BooksComponent implements OnInit,OnDestroy {
     this.getAllGenres();
     this.getLocation();
     this.routeActive.queryParams.subscribe((params: Params) => {
-      this.queryParams = this.queryParams.mapFromQuery(params, 1, 5)  
+      this.queryParams = BookQueryParams.mapFromQuery(params, 1, 5)  
       if(this.queryParams.searchTerm){
         this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)      
+      }
+      if(typeof this.queryParams.showAvailable === "undefined"){
+        this.queryParams.showAvailable = true;
       }
       this.populateCategoriesFromQuery();
       this.getBooks(this.queryParams);
@@ -107,17 +108,17 @@ export class BooksComponent implements OnInit,OnDestroy {
     this.queryParams.page = 1;
     this.queryParams.firstRequest = true;
   }
-  private changeUrl(params: BookParameters): void {
+  private changeUrl(params: BookQueryParams): void {
     this.router.navigate(['.'],
       {
         relativeTo: this.routeActive,
-        queryParams: this.queryParams.getQueryObject(params),
+        queryParams: this.queryParams,
       });
   }
 
 
   //get
-  getBooks(params: BookParameters): void {
+  getBooks(params: BookQueryParams): void {
     this.bookService.getBooksPage(params)
       .subscribe({
         next: pageData => {

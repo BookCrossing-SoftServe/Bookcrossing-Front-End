@@ -2,10 +2,6 @@ import {Component, OnInit, ViewChild, Input} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {LanguageService} from "../../../core/services/language/language.service";
 import {Language} from "../../../core/models/languages.enum";
-import { BookParameters } from 'src/app/core/models/Pagination/bookParameters';
-import { FilterParameters } from 'src/app/core/models/Pagination/FilterParameters';
-import { PaginationService } from 'src/app/core/services/pagination/pagination.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/core/services/authentication/authentication.service';
 @Component({
   selector: 'app-navbar',

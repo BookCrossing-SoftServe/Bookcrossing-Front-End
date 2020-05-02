@@ -7,7 +7,7 @@ import { RequestService } from 'src/app/core/services/request/request.service'
 import { PaginationService } from 'src/app/core/services/pagination/pagination.service';
 import { FilterParameters } from 'src/app/core/models/Pagination/FilterParameters';
 import { DialogService } from 'src/app/core/services/dialog/dialog.service';
-import { BookParameters } from 'src/app/core/models/Pagination/bookParameters';
+import { BookQueryParams } from 'src/app/core/models/bookQueryParams';
 import { ILocation } from 'src/app/core/models/location';
 import { IGenre } from 'src/app/core/models/genre';
 import { LocationService } from 'src/app/core/services/location/location.service';
@@ -22,7 +22,7 @@ import { GenreService } from 'src/app/core/services/genre/genre';
 export class RequestsComponent implements OnInit {
   
   requests: IRequest[];
-  queryParams: BookParameters = new BookParameters;
+  queryParams: BookQueryParams = new BookQueryParams;
   searchText: string;
 
   selectedLocation: number;

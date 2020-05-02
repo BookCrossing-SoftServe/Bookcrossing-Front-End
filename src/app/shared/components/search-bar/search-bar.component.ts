@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { BookParameters } from 'src/app/core/models/Pagination/bookParameters';
-import { PaginationService } from 'src/app/core/services/pagination/pagination.service';
-import { LanguageService } from 'src/app/core/services/language/language.service';
-import { TranslateService } from '@ngx-translate/core';
+import { BookQueryParams } from 'src/app/core/models/bookQueryParams';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FilterParameters } from 'src/app/core/models/Pagination/FilterParameters';
 import { SearchBarService } from 'src/app/core/services/searchBar/searchBar.service';
 
 @Component({
@@ -14,6 +10,7 @@ import { SearchBarService } from 'src/app/core/services/searchBar/searchBar.serv
 })
 export class SearchBarComponent implements OnInit {
 
+  bookParams = new BookQueryParams;  
   searchQuery = {};
   searchTerm : string;
   
@@ -28,7 +25,8 @@ export class SearchBarComponent implements OnInit {
     )
   }
   clearInput(){
-    setTimeout(() =>{      
+    setTimeout(() =>{
+      
     if(!this.router.url.startsWith("/books"))
     this.searchTerm = null;
   },100)
@@ -38,13 +36,14 @@ export class SearchBarComponent implements OnInit {
   }
   resertSearch() {
     this.searchTerm = null;    
-    this.navigateToBooks(this.searchTerm);
+    this.navigateToBooks(null);
   }
   navigateToBooks(name : string){
+    this.bookParams.searchTerm = name;
     this.router.navigate(['/books'],
     {
       relativeTo: this.routeActive,
-      queryParams: {searchTerm: name},
+      queryParams: this.bookParams,
       queryParamsHandling: 'merge'
     });
   }
