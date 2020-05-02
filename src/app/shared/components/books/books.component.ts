@@ -21,17 +21,14 @@ export class BooksComponent implements OnInit,OnDestroy {
   books: IBook[];
   queryParams: BookParameters = new BookParameters;
 
-  selectedLocation: number;
-  loadedLocation: number;
   locations: ILocation[] = [];
 
-  selectedGenres: string[];
-  loadedGenres: string[];
+  selectedGenres: number[];
+  loadedGenres: number[];
   genres: IGenre[] = [];
 
   totalSize: number;
   showAvailableOnly: boolean = true;
-  availableFilter: FilterParameters = { propertyName: "Available", value: true + '', method: "Equal" };
 
 
   constructor(private routeActive: ActivatedRoute,
@@ -39,7 +36,6 @@ export class BooksComponent implements OnInit,OnDestroy {
     private bookService: BookService,
     private genreService: GenreService,
     private locationService: LocationService,
-    private paginationService: PaginationService,
     private searchBarService : SearchBarService,
   ) { }
 
@@ -47,23 +43,14 @@ export class BooksComponent implements OnInit,OnDestroy {
     this.getAllGenres();
     this.getLocation();
     this.routeActive.queryParams.subscribe((params: Params) => {
-      let result = this.paginationService.mapFromqQueryToBookParams(params, 1, 5)  
-      this.recreateState(result);
+      this.queryParams = this.queryParams.mapFromQuery(params, 1, 5)  
+      if(this.queryParams.searchTerm){
+        this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)      
+      }
+      this.populateCategoriesFromQuery();
       this.getBooks(this.queryParams);
     })
   }
-  private recreateState(params : BookParameters){
-    if(typeof this.queryParams.showAvailable !== "undefined" && typeof params.showAvailable === "undefined"){
-      params.showAvailable = this.queryParams.showAvailable;
-    }
-    this.queryParams = params;
-    if(this.queryParams.authorFilters[0]?.value)
-    this.searchBarService.changeSearchTerm(this.queryParams.authorFilters[0]?.value)
-    this.getCategoriesFromQuery();
-    this.getLocationFromQuery();
-    this.toggleAvailableFilter(this.queryParams.showAvailable)
-  }
-
   //Categories
   onCategoryOpened(isOpened: Boolean) {
     if (!isOpened && this.selectedGenres != this.loadedGenres) {
@@ -76,49 +63,32 @@ export class BooksComponent implements OnInit,OnDestroy {
     this.loadedGenres = [];
     this.addCategoryFilters(this.selectedGenres)
   }
-  addCategoryFilters(genreNames: string[]) {
-    this.queryParams.genreFilters = [];
-    for (let name of genreNames) {
-      this.queryParams.genreFilters.push(<FilterParameters>{ propertyName: "Genre.Name", value: name });
-    }
+  addCategoryFilters(genreId: number[]) {
+    this.queryParams.genres = genreId;
     this.resetPageIndex();
     this.changeUrl(this.queryParams);
   }
-  private getCategoriesFromQuery() {
-    if(this.queryParams.genreFilters){
-      this.selectedGenres = [];
-      for(let genre of this.queryParams.genreFilters?.filter(x=>x.propertyName == "Genre.Name"))
-      {
-        this.selectedGenres.push(genre.value);
-      }
+  private populateCategoriesFromQuery() {
+    if(this.queryParams.genres){
+      let genres: number[];
+      if(Array.isArray(this.queryParams.genres))
+       genres = this.queryParams.genres.map(v=>+v);
+       else{
+         genres = [+this.queryParams.genres];
+       }
+        this.selectedGenres =  genres;
+        this.loadedGenres = genres;
     }
   }
   
   //Locations
-  onLocationOpened(isOpened: Boolean) {
-    if (!isOpened && this.selectedLocation != this.loadedLocation) {
-      this.loadedLocation = this.selectedLocation;
-      this.addLocationFilter(this.selectedLocation)
-    }
-  }
   resetLocation(): void {
-    this.selectedLocation = null;
-    this.loadedLocation = null;
-    this.addLocationFilter(this.selectedLocation)
+    this.queryParams.location = null;
+    this.addLocation()
   }
-  addLocationFilter(locationId: number) {    
-    this.queryParams.locationFilters = [];
-    if(locationId){
-      this.queryParams.locationFilters[0] = <FilterParameters>{ propertyName: "Location.Id", value: locationId + '', method: "Equal" };
-    }    
+  addLocation() {    
     this.resetPageIndex();
     this.changeUrl(this.queryParams);
-  }
-  private getLocationFromQuery() {
-    this.selectedLocation = null;
-    if(this.queryParams.locationFilters && !this.selectedLocation){
-      this.selectedLocation = +this.queryParams.locationFilters?.find(x=>x.propertyName == "Location.Id")?.value;
-    }
   }
 
   //Available
@@ -126,17 +96,6 @@ export class BooksComponent implements OnInit,OnDestroy {
     this.queryParams.showAvailable = checked;
     this.resetPageIndex();
     this.changeUrl(this.queryParams);
-  }
-  private toggleAvailableFilter(showAvailableOnly?: boolean) {
-    if (showAvailableOnly || typeof showAvailableOnly === 'undefined') {
-      this.queryParams.bookFilters = [];
-      this.queryParams.bookFilters.push(this.availableFilter);
-      this.queryParams.showAvailable = true;
-    }
-    else {
-        this.queryParams.bookFilters = [];
-        this.queryParams.showAvailable = false;
-      }
   }
   //Navigation
   pageChanged(currentPage: number): void {
@@ -152,7 +111,7 @@ export class BooksComponent implements OnInit,OnDestroy {
     this.router.navigate(['.'],
       {
         relativeTo: this.routeActive,
-        queryParams: this.paginationService.mapToQueryObjectBookParams(params),
+        queryParams: this.queryParams.getQueryObject(params),
       });
   }
 

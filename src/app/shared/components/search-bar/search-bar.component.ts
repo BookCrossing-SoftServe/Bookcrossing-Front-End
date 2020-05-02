@@ -14,26 +14,21 @@ import { SearchBarService } from 'src/app/core/services/searchBar/searchBar.serv
 })
 export class SearchBarComponent implements OnInit {
 
-  bookParams = new BookParameters;  
   searchQuery = {};
   searchTerm : string;
-  currentTerm : string;
   
   constructor(  private routeActive: ActivatedRoute,
     private searchBarService: SearchBarService,
-    private router: Router,
-    private paginationService : PaginationService) { }  
+    private router: Router) { }  
 
   ngOnInit(): void {
     this.searchBarService.currentTerm.subscribe(term => {
       this.searchTerm = term;
-      console.log(term);
      }
     )
   }
   clearInput(){
-    setTimeout(() =>{
-      
+    setTimeout(() =>{      
     if(!this.router.url.startsWith("/books"))
     this.searchTerm = null;
   },100)
@@ -43,32 +38,14 @@ export class SearchBarComponent implements OnInit {
   }
   resertSearch() {
     this.searchTerm = null;    
-    this.navigateToBooks(null);
+    this.navigateToBooks(this.searchTerm);
   }
   navigateToBooks(name : string){
-    this.currentTerm = name;
-    this.bookParams.page= 1;
-    this.bookParams.pageSize = 8;
-    this.bookParams.authorFilters = [];
-    this.createFiltersForSearchTerm(name);
     this.router.navigate(['/books'],
     {
       relativeTo: this.routeActive,
-      queryParams: this.paginationService.mapToQueryObjectBookParams(this.bookParams),
+      queryParams: {searchTerm: name},
+      queryParamsHandling: 'merge'
     });
-  }
-  private createFiltersForSearchTerm(term : string){
-    if(term == null){
-      return;
-    }
-    let temp = term.split(' ');
-    this.bookParams.authorFilters[0] = <FilterParameters> {propertyName: "Book.Name", value: term}
-    if(temp.length==1){
-      this.bookParams.authorFilters[1] = <FilterParameters> {propertyName: "Author.LastName", value: temp[0]}
-      this.bookParams.authorFilters[2] = <FilterParameters> {propertyName: "Author.FirstName", value: temp[0]}
-    }else if(temp.length>1){
-      this.bookParams.authorFilters[1] = <FilterParameters> {propertyName: "Author.FirstName", value: temp[0], operand: "And"}
-      this.bookParams.authorFilters[2] = <FilterParameters> {propertyName: "Author.LastName", value: temp[temp.length-1]}
-    }
   }
 }

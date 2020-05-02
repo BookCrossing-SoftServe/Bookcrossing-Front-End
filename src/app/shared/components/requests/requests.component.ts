@@ -36,7 +36,6 @@ export class RequestsComponent implements OnInit {
   totalSize: number;
 
   showAvailableOnly: boolean = true;
-  availableFilter: FilterParameters = { propertyName: "Available", value: true + '', method: "Equal" };
   
   constructor(
     private translate: TranslateService,
@@ -51,124 +50,124 @@ export class RequestsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getAllGenres();
-    this.getLocation();
-    this.route.queryParams.subscribe((params: Params) => {
-      this.queryParams = this.paginationService.mapFromqQueryToBookParams(params, 1, 5)
-      this.getUserRequests(this.queryParams);
-    })
+    // this.getAllGenres();
+    // this.getLocation();
+    // this.route.queryParams.subscribe((params: Params) => {
+    //   this.queryParams = this.paginationService.mapFromqQueryToBookParams(params, 1, 5)
+    //   this.getUserRequests(this.queryParams);
+    // })
   }
 
-  getUserRequests(params: BookParameters) : void {      
-    this.requestService.getUserRequestsPage(params)
-    .subscribe( {
-      next: pageData => {
-      this.requests = pageData.page;
-      if(pageData.totalCount){
-        this.totalSize = pageData.totalCount;
-      }
-    },
-    error: error => this.notificationService.warn(this.translate
-      .instant("An error has occured, please try again!"))
-   });   
-  };
+  // getUserRequests(params: BookParameters) : void {      
+  //   this.requestService.getUserRequestsPage(params)
+  //   .subscribe( {
+  //     next: pageData => {
+  //     this.requests = pageData.page;
+  //     if(pageData.totalCount){
+  //       this.totalSize = pageData.totalCount;
+  //     }
+  //   },
+  //   error: error => this.notificationService.warn(this.translate
+  //     .instant("An error has occured, please try again!"))
+  //  });   
+  // };
 
-  async cancelRequest(requestId: number) {
-    this.dialogService
-      .openConfirmDialog(
-        await this.translate.get("Do you want to cancel request? Current owner will be notified about your cancelation.").toPromise()
-      )
-      .afterClosed()
-      .subscribe(async res => {
-        if (res) {
-          this.requestService.deleteRequest(requestId).subscribe((value: boolean) => {
-            let canceled = value;
-            if(canceled){
-              this.notificationService.success(this.translate
-                .instant("Request is cancelled."));
-            }
-            }, err => {
-              this.notificationService.warn(this.translate
-                .instant("Something went wrong!"));
-            });
-        }
-      });
+  // async cancelRequest(requestId: number) {
+  //   this.dialogService
+  //     .openConfirmDialog(
+  //       await this.translate.get("Do you want to cancel request? Current owner will be notified about your cancelation.").toPromise()
+  //     )
+  //     .afterClosed()
+  //     .subscribe(async res => {
+  //       if (res) {
+  //         this.requestService.deleteRequest(requestId).subscribe((value: boolean) => {
+  //           let canceled = value;
+  //           if(canceled){
+  //             this.notificationService.success(this.translate
+  //               .instant("Request is cancelled."));
+  //           }
+  //           }, err => {
+  //             this.notificationService.warn(this.translate
+  //               .instant("Something went wrong!"));
+  //           });
+  //       }
+  //     });
 
-  }
-  onCategoryOpened(isOpened: Boolean) {
-    if (!isOpened && this.selectedGenres != this.loadedGenres) {
-      this.loadedGenres = this.selectedGenres;
-      this.addCategoryFilters(this.selectedGenres)
-    }
-  }
-  resetCategories(): void {
-    this.selectedGenres = [];
-    this.loadedGenres = [];
-    this.addCategoryFilters(this.selectedGenres)
-  }
-  addCategoryFilters(genreNames: string[]) {
-    this.queryParams.genreFilters = [];
-    for (let name of genreNames) {
-      this.queryParams.genreFilters.push(<FilterParameters>{ propertyName: "Genre.Name", value: name });
-    }
-    this.resetPageIndex();
-    this.changeUrl(this.queryParams);
-  }
+  // }
+  // onCategoryOpened(isOpened: Boolean) {
+  //   if (!isOpened && this.selectedGenres != this.loadedGenres) {
+  //     this.loadedGenres = this.selectedGenres;
+  //     this.addCategoryFilters(this.selectedGenres)
+  //   }
+  // }
+  // resetCategories(): void {
+  //   this.selectedGenres = [];
+  //   this.loadedGenres = [];
+  //   this.addCategoryFilters(this.selectedGenres)
+  // }
+  // addCategoryFilters(genreNames: string[]) {
+  //   this.queryParams.genreFilters = [];
+  //   for (let name of genreNames) {
+  //     this.queryParams.genreFilters.push(<FilterParameters>{ propertyName: "Genre.Name", value: name });
+  //   }
+  //   this.resetPageIndex();
+  //   this.changeUrl(this.queryParams);
+  // }
 
-  onLocationOpened(isOpened: Boolean) {
-    if (!isOpened && this.selectedLocation != this.loadedLocation) {
-      this.loadedLocation = this.selectedLocation;
-      this.addLocationFilter(this.selectedLocation)
-    }
-  }
-  resetLocation(): void {
-    this.selectedLocation = null;
-    this.loadedLocation = null;
-    this.addLocationFilter(this.selectedLocation)
-  }
-  addLocationFilter(locationId: number) {    
-    this.queryParams.locationFilters = [];
-    if(locationId){
-      this.queryParams.locationFilters[0] = <FilterParameters>{ propertyName: "Location.Id", value: locationId + '', method: "Equal" };
-    }    
-    this.resetPageIndex();
-    this.changeUrl(this.queryParams);
-  }
+  // onLocationOpened(isOpened: Boolean) {
+  //   if (!isOpened && this.selectedLocation != this.loadedLocation) {
+  //     this.loadedLocation = this.selectedLocation;
+  //     this.addLocationFilter(this.selectedLocation)
+  //   }
+  // }
+  // resetLocation(): void {
+  //   this.selectedLocation = null;
+  //   this.loadedLocation = null;
+  //   this.addLocationFilter(this.selectedLocation)
+  // }
+  // addLocationFilter(locationId: number) {    
+  //   this.queryParams.locationFilters = [];
+  //   if(locationId){
+  //     this.queryParams.locationFilters[0] = <FilterParameters>{ propertyName: "Location.Id", value: locationId + '', method: "Equal" };
+  //   }    
+  //   this.resetPageIndex();
+  //   this.changeUrl(this.queryParams);
+  // }
 
-  resetPageIndex() : void {
-    this.queryParams.page = 1;
-    this.queryParams.firstRequest = true;
-  }
-  pageChanged(currentPage: number): void {
-    this.queryParams.page = currentPage;
-    this.queryParams.firstRequest = false;
-    this.changeUrl(this.queryParams);
-  }
-  private changeUrl(params: BookParameters): void {
-    this.router.navigate(['.'],
-      {
-        relativeTo: this.route,
-        queryParams: this.paginationService.mapToQueryObjectBookParams(params),
-      });
-  }
-  getLocation() {
-    this.locationService.getLocation().subscribe(
-      (data) => {
-        this.locations = data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
-  getAllGenres() {
-    this.genreService.getGenre().subscribe(
-      (data) => {
-        this.genres = data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
+  // resetPageIndex() : void {
+  //   this.queryParams.page = 1;
+  //   this.queryParams.firstRequest = true;
+  // }
+  // pageChanged(currentPage: number): void {
+  //   this.queryParams.page = currentPage;
+  //   this.queryParams.firstRequest = false;
+  //   this.changeUrl(this.queryParams);
+  // }
+  // private changeUrl(params: BookParameters): void {
+  //   this.router.navigate(['.'],
+  //     {
+  //       relativeTo: this.route,
+  //       queryParams: this.paginationService.mapToQueryObjectBookParams(params),
+  //     });
+  // }
+  // getLocation() {
+  //   this.locationService.getLocation().subscribe(
+  //     (data) => {
+  //       this.locations = data;
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }
+  // getAllGenres() {
+  //   this.genreService.getGenre().subscribe(
+  //     (data) => {
+  //       this.genres = data;
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }
 }
