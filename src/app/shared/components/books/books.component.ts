@@ -18,12 +18,10 @@ export class BooksComponent implements OnInit,OnDestroy {
 
   books: IBook[];
   queryParams: BookQueryParams = new BookQueryParams;
-
-  locations: ILocation[] = [];
+  //locations: ILocation[] = [];
 
   selectedGenres: number[];
-  loadedGenres: number[];
-  genres: IGenre[] = [];
+  //genres: IGenre[];
 
   totalSize: number;
   showAvailableOnly: boolean = true;
@@ -32,44 +30,30 @@ export class BooksComponent implements OnInit,OnDestroy {
   constructor(private routeActive: ActivatedRoute,
     private router: Router,
     private bookService: BookService,
-    private genreService: GenreService,
-    private locationService: LocationService,
     private searchBarService : SearchBarService,
   ) { }
 
   ngOnInit(): void {
-    this.getAllGenres();
-    this.getLocation();
     this.routeActive.queryParams.subscribe((params: Params) => {
       this.queryParams = BookQueryParams.mapFromQuery(params, 1, 5)  
-      if(this.queryParams.searchTerm){
-        this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)      
-      }
-      if(typeof this.queryParams.showAvailable === "undefined"){
-        this.queryParams.showAvailable = true;
-      }
-      this.populateCategoriesFromQuery();
+      this.populateDataFromQuery();
       this.getBooks(this.queryParams);
     })
   }
-  //Categories
-  onCategoryOpened(isOpened: Boolean) {
-    if (!isOpened && this.selectedGenres != this.loadedGenres) {
-      this.loadedGenres = this.selectedGenres;
-      this.addCategoryFilters(this.selectedGenres)
+  onFilterChange(filterChanged : boolean){
+    this.queryParams.genres = this.selectedGenres
+    if(filterChanged){
+      this.resetPageIndex()
+      this.changeUrl();
     }
   }
-  resetCategories(): void {
-    this.selectedGenres = [];
-    this.loadedGenres = [];
-    this.addCategoryFilters(this.selectedGenres)
-  }
-  addCategoryFilters(genreId: number[]) {
-    this.queryParams.genres = genreId;
-    this.resetPageIndex();
-    this.changeUrl(this.queryParams);
-  }
-  private populateCategoriesFromQuery() {
+  private populateDataFromQuery() {
+    if(this.queryParams.searchTerm){
+      this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)      
+    }
+    if(typeof this.queryParams.showAvailable === "undefined"){
+      this.queryParams.showAvailable = true;
+    }      
     if(this.queryParams.genres){
       let genres: number[];
       if(Array.isArray(this.queryParams.genres))
@@ -78,37 +62,20 @@ export class BooksComponent implements OnInit,OnDestroy {
          genres = [+this.queryParams.genres];
        }
         this.selectedGenres =  genres;
-        this.loadedGenres = genres;
     }
   }
   
-  //Locations
-  resetLocation(): void {
-    this.queryParams.location = null;
-    this.addLocation()
-  }
-  addLocation() {    
-    this.resetPageIndex();
-    this.changeUrl(this.queryParams);
-  }
-
-  //Available
-  toggleAvailable(checked : boolean) {
-    this.queryParams.showAvailable = checked;
-    this.resetPageIndex();
-    this.changeUrl(this.queryParams);
-  }
   //Navigation
   pageChanged(currentPage: number): void {
     this.queryParams.page = currentPage;
     this.queryParams.firstRequest = false;
-    this.changeUrl(this.queryParams);
+    this.changeUrl();
   }
   private resetPageIndex() : void {
     this.queryParams.page = 1;
     this.queryParams.firstRequest = true;
   }
-  private changeUrl(params: BookQueryParams): void {
+  private changeUrl(): void {
     this.router.navigate(['.'],
       {
         relativeTo: this.routeActive,
@@ -132,26 +99,6 @@ export class BooksComponent implements OnInit,OnDestroy {
         }
       });
   };
-  getLocation() {
-    this.locationService.getLocation().subscribe(
-      (data) => {
-        this.locations = data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
-  getAllGenres() {
-    this.genreService.getGenre().subscribe(
-      (data) => {
-        this.genres = data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
   makeRequest(bookId: number): void {
     alert(bookId);
   }
