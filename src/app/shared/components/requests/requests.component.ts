@@ -86,9 +86,7 @@ export class RequestsComponent implements OnInit {
     if(this.queryParams.searchTerm){
       this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)      
     }
-    if(typeof this.queryParams.showAvailable === "undefined"){
-      this.queryParams.showAvailable = true;
-    }      
+    this.queryParams.showAvailable = false;   
     if(this.queryParams.genres){
       let genres: number[];
       if(Array.isArray(this.queryParams.genres))

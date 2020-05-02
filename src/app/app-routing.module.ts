@@ -26,9 +26,9 @@ const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
 
   {path: 'admin',component:AdminComponent,children:
-  [
-    {path: 'authors', component: AuthorsComponent}
-  ]
+      [
+        {path: 'authors', component: AuthorsComponent}
+      ]
   },
 
   {path: 'book/:id', component: BookComponent},
@@ -42,10 +42,10 @@ const routes: Routes = [
   {path: 'genres', component: GenreComponent},
   {path: 'books/registered', component: RegisteredBookComponent},
   { path: 'password', children:
-    [
-      { path: 'forgot', component: ForgotPasswordComponent },
-      { path: 'reset', component: ResetPasswordComponent },
-    ]
+      [
+        { path: 'forgot', component: ForgotPasswordComponent },
+        { path: 'reset', component: ResetPasswordComponent },
+      ]
   },
 ];
 
