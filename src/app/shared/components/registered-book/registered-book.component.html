@@ -23,7 +23,7 @@
           Status : <ng-template [ngIf]="book.available" [ngIfElse]="notAvailable">
             <font color="green">Available</font>
             <br>
-            <a role="button" class="btn btn-primary" *ngIf="book.available" (click)="makeRequest(book.id)">Request</a>
+            <a role="button" class="btn btn-primary" *ngIf="book.available" >Request</a>
           </ng-template>
           <ng-template #notAvailable>
             <font color="red">Requested</font>
