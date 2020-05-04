@@ -27,7 +27,6 @@ export class BooksComponent implements OnInit,OnDestroy {
   books: IBook[];
   totalSize: number;
   bookStatus: bookStatus[] = [1,1,1,1,1]
-  status: string[] = ['1', '1', '1', '1', '1']
   queryParams: BookQueryParams = new BookQueryParams;
 
   selectedGenres: number[];
@@ -57,7 +56,6 @@ export class BooksComponent implements OnInit,OnDestroy {
   getStatus(book : IBook, index: number){
     if(book.available){
       this.bookStatus[index] = bookStatus.available
-      this.status[index] = "Available"
     }
     else{
       let query = new RequestQueryParams();
@@ -67,11 +65,9 @@ export class BooksComponent implements OnInit,OnDestroy {
      .subscribe((value: IRequest) => {
          if(value.receiveDate){
            this.bookStatus[index] = bookStatus.reading
-           this.status[index] = "Reeding"
          }
          else{
            this.bookStatus[index] = bookStatus.requested
-           this.status[index] = "Requested"
          }
        }, error => {})
     }
