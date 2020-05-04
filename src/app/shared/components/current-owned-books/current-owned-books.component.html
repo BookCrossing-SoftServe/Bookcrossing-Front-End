@@ -1,8 +1,8 @@
 <div class="container my-5">
-  <app-book-filter-bar 
-    [(selectedGenres)]="selectedGenres" 
+  <app-book-filter-bar
+    [(selectedGenres)]="selectedGenres"
     [(selectedLocation)]="queryParams.location"
-    [(availableSelected)]="queryParams.showAvailable" 
+    [(availableSelected)]="queryParams.showAvailable"
     (filterChange)="onFilterChange($event)">
   </app-book-filter-bar>
 
@@ -10,15 +10,15 @@
     <div class="row no-gutters">
       <div class="col-auto">
         <img class="rounded"
-          src="https://static1.squarespace.com/static/582caad246c3c4568a7e562e/582cef45bebafbcbcdd6ba24/58497122e6f2e14dcf3ae40c/1562091847195/booktitle.jpg?format=1500w"
-          height="200" width="200" alt="rf">
+             src="https://static1.squarespace.com/static/582caad246c3c4568a7e562e/582cef45bebafbcbcdd6ba24/58497122e6f2e14dcf3ae40c/1562091847195/booktitle.jpg?format=1500w"
+             height="200" width="200" alt="rf">
       </div>
       <div class="col m-2">
         <div class="card-block px-2">
           <a [routerLink]="['/book/', book.id]"><h4 class="card-title"><strong>{{book.name}}</strong></h4></a>
           <p class="card-text"> Authors : <a [href]="author.id" *ngFor="let author of book.authors; let i = index">
-              <ng-template [ngIf]="i!=0"> , </ng-template>{{author.firstName}} {{author.lastName}}
-            </a>
+            <ng-template [ngIf]="i!=0"> , </ng-template>{{author.firstName}} {{author.lastName}}
+          </a>
             <br>
             <ng-template [ngIf]="book.genres.length==1" [ngIfElse]="manyGenres">Category </ng-template>
             <ng-template #manyGenres>Categories : </ng-template>
@@ -27,6 +27,7 @@
             <br>
             Location : {{ book?.locations[0]?.location?.city + " " +  book?.locations[0]?.location?.officeName }}
             <br>
+
             Status : 
             <span [ngSwitch]="bookStatus[key]">
               <ng-template ngSwitchCase="1"><span class="badge badge-success product ml-2">Available</span>
@@ -35,7 +36,6 @@
               <ng-template ngSwitchCase="2"><span class="badge badge-info product ml-2">Requested</span></ng-template>
               <ng-template ngSwitchCase="3"><span class="badge badge-info product ml-2">Reeding</span></ng-template>
             </span>
-
           </p>
 
         </div>
@@ -43,6 +43,6 @@
     </div>
   </div>
   <app-pagination *ngIf="books && books.length > 0" [arraySize]="totalSize" [pageSize]="queryParams.pageSize"
-    [selectedPage]="queryParams.page" (onPageChange)="pageChanged($event)">
+                  [selectedPage]="queryParams.page" (onPageChange)="pageChanged($event)">
   </app-pagination>
 </div>
