@@ -46,7 +46,6 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
       this.getBooks(this.queryParams);
     });
   }
-<<<<<<< HEAD
 
   isAuthenticated(){
     return this.authentication.isAuthenticated();
