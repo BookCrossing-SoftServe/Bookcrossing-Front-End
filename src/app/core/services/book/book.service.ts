@@ -44,44 +44,44 @@ export class BookService {
     return this.http.put(this.apiUrl + bookId, book);
   }
 
-  async isBeingReding(bookId: number): Promise<boolean>{  
-     let received: boolean;
-     var query: RequestQueryParams = new RequestQueryParams();
-     query.last = true;    
-     let promise = new Promise<boolean>((resolve) => {
-       this.requestService.getRequestForBook(bookId, query).subscribe({
-         next: value => {
-           if(value.receiveDate){
-             resolve(true);
-           }
-         },
-         error: () => {
-           resolve(false);
-         }
-       })
-     })
-     await promise.then(value=> received = value)
-     return received;
-  }
+  // async isBeingReding(bookId: number): Promise<boolean>{  
+  //    let received: boolean;
+  //    var query: RequestQueryParams = new RequestQueryParams();
+  //    query.last = true;    
+  //    let promise = new Promise<boolean>((resolve) => {
+  //      awaitthis.requestService.getRequestForBook(bookId, query).subscribe({
+  //        next: value => {
+  //          if(value.receiveDate){
+  //            resolve(true);
+  //          }
+  //        },
+  //        error: () => {
+  //          resolve(false);
+  //        }
+  //      })
+  //    })
+  //    await promise.then(value=> received = value)
+  //    return received;
+  // }
 
-  getStatus(book : IBook) : bookStatus{
-    let requested = this.isRequested(book);
-    if(requested){
-      let received = this.isBeingReding(book.id);
-      if(received){
-        return bookStatus.reading;
-      }
-      else {
-        return bookStatus.requested;
-      }
-    }
-    return bookStatus.available;
-  }
+  // getStatus(book : IBook) : bookStatus{
+  //   let requested = this.isRequested(book);
+  //   if(requested){
+  //     let received = this.isBeingReding(book.id);
+  //     if(received){
+  //       return bookStatus.reading;
+  //     }
+  //     else {
+  //       return bookStatus.requested;
+  //     }
+  //   }
+  //   return bookStatus.available;
+  // }
   
-  isRequested(book: IBook) : boolean {      
-    if(book.available === false) {
-      return true;
-    }
-    return false;
-  };
+  // isRequested(book: IBook) : boolean {      
+  //   if(book.available === false) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
 }
