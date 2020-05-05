@@ -25,23 +25,18 @@ li{
         margin-left: 2px;
         margin-right: 5px;
     }
-    i{
-        color: lighten($color-danger, 20%);
-    }
-    i:hover{
-        color: $color-danger;
-    }
 }
 
 }
-
 
 .title{
     text-align: left;
+    font-size: 20pt;
 }
 
 .input-label{
     text-align: left;
+    font-size: 14pt;
 }
 
 .new-author-warning{
