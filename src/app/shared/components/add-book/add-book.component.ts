@@ -146,6 +146,7 @@ export class AddBookComponent implements OnInit {
       this.selectedAuthors.splice(index, 1);
     }
   }
+  
 
   addAuthor(author) {
     const index = this.selectedAuthors.findIndex((elem) => {
