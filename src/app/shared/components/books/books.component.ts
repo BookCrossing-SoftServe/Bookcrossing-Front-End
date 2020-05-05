@@ -81,6 +81,7 @@ export class BooksComponent implements OnInit,OnDestroy {
       .subscribe(async res => {
         if (res) {
           this.requestService.requestBook(bookId).subscribe((value: IRequest) => {
+            this.ngOnInit();
             this.notificationService.success(this.translate
               .instant("Book is successfully requested. Please contact with current owner to receive a book"), "X");
             }, err => {
@@ -155,9 +156,6 @@ export class BooksComponent implements OnInit,OnDestroy {
         }
       });
   };
-  makeRequest(bookId: number): void {
-    alert(bookId);
-  }
 
   ngOnDestroy(){
     this.searchBarService.changeSearchTerm(null)
