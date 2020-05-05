@@ -13,6 +13,7 @@ import { AuthenticationService } from 'src/app/core/services/authentication/auth
 import { bookStatus } from 'src/app/core/models/bookStatus.enum';
 import { RequestQueryParams } from 'src/app/core/models/requestQueryParams';
 import { IRequest } from 'src/app/core/models/request';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-current-owned-books',
@@ -23,10 +24,10 @@ import { IRequest } from 'src/app/core/models/request';
 export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
 
   books: IBook[];
-  user: IUser;
   totalSize: number;
   bookStatus: bookStatus[] = [1,1,1,1,1]
   queryParams: BookQueryParams = new BookQueryParams;
+  apiUrl: string = environment.apiUrl;
 
   selectedGenres: number[];
 
