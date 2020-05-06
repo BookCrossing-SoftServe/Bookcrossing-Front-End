@@ -5,11 +5,11 @@
     (ngSubmit)="onSubmit()"
     class="text-center border border-light p-5"
   >
-    <p class="mb-4 title">Register book</p>
+    <p class="h2 mb-4 title">Register book</p>
     <div>
       <div class="form-row mb-4">
         <div class="col-3">
-          <p class="input-label">Book title:*</p>
+          <p class="input-label">Book title:<span class="asterisk"> *</span></p>
         </div>
         <div class="col-4">
           <!-- Book title -->
@@ -17,7 +17,6 @@
             formControlName="title"
             type="text"
             class="form-control"
-            placeholder="Color of magic"
             [ngClass]="{
               'is-invalid': submitted && addBookForm.controls.title.errors
             }"
@@ -36,7 +35,7 @@
       <!-- Author -->
       <div class="form-row mb-4">
         <div class="col-3">
-          <p class="input-label">Author:*</p>
+          <p class="input-label">Author:<span class="asterisk"> *</span></p>
         </div>
         <div class="col-4">
           <input
@@ -44,7 +43,6 @@
             #authorSearch
             type="text"
             class="form-control"
-            placeholder="Terry Pratchett"
             [matAutocomplete]="auto"
             [ngClass]="{
               'is-invalid':
@@ -52,6 +50,8 @@
                 !selectedAuthors.length &&
                 !addBookForm.controls.author.value
             }"
+            (focus)="authorFocused=true"
+            (blur)="authorFocused=false"
           />
           <div
             *ngIf="
@@ -70,7 +70,7 @@
             </div>
           </div>
           <div
-            *ngIf="addBookForm.controls.author.value"
+            *ngIf="addBookForm.controls.author.value && !authorFocused"
             class="new-author-warning"
           >
             Entered author is saved as 'not confirmed'
@@ -90,7 +90,12 @@
                     "  " +
                     author.lastName
                 }}</span>
-                <span type="button" class="close" aria-label="Close" (click)="onDeleteAuthor(author)" >
+                <span
+                  type="button"
+                  class="close"
+                  aria-label="Close"
+                  (click)="onDeleteAuthor(author)"
+                >
                   <span aria-hidden="true">×</span>
                 </span>
               </li>
@@ -120,7 +125,7 @@
       <!-- Category -->
       <div class="form-row mb-4">
         <div class="col-3">
-          <p class="input-label">Category:*</p>
+          <p class="input-label">Category:<span class="asterisk"> *</span></p>
         </div>
         <!-- Select multiple genres -->
         <div class="col-4">
@@ -171,12 +176,7 @@
           <p class="input-label">Publishing house:</p>
         </div>
         <div class="col-4">
-          <input
-            formControlName="publisher"
-            type="text"
-            class="form-control"
-            placeholder="Machaon"
-          />
+          <input formControlName="publisher" type="text" class="form-control" />
         </div>
       </div>
 
@@ -213,14 +213,20 @@
             (change)="onFileSelected($event)"
           />
         </div>
-        <div class="col-4" *ngIf="selectedFile">
-          <p class="input-label">
-            {{ selectedFile.name }} ({{ selectedFile.size / 1000 }}kb)
-          </p>
+        <div class="col-4">
+          <div *ngIf="selectedFile">
+            <span>{{ selectedFile.name }} ({{ selectedFile.size / 1000 }}kb)</span>
+            <span
+              *ngIf="selectedFile"
+              type="button"
+              class="close"
+              aria-label="Close"
+              (click)="onFileClear()"
+            >
+              <span aria-hidden="true">×</span>
+            </span>
+          </div>
         </div>
-        <span *ngIf="selectedFile" type="button" class="close" aria-label="Close" (click)="onFileClear()" >
-          <span aria-hidden="true">×</span>
-        </span>
       </div>
     </div>
 
@@ -228,8 +234,6 @@
     <button class="btn btn-info" type="submit" name="submit">
       Save
     </button>
-    <button class="btn" (click)="goToPage('books')">
-      Cancel
-    </button>
+    <input type="button" class="btn" (click)="onCancel()" value="Cancel" />
   </form>
 </div>

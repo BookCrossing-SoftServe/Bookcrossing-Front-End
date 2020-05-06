@@ -10,6 +10,9 @@ import { SubscriptionLike } from "rxjs";
 import { Router } from "@angular/router";
 import { IBookPost } from "src/app/core/models/bookPost";
 import { AuthenticationService } from "src/app/core/services/authentication/authentication.service";
+import { DialogService } from "src/app/core/services/dialog/dialog.service";
+import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from 'src/app/core/services/notification/notification.service';
 
 @Component({
   selector: "app-add-book",
@@ -18,22 +21,26 @@ import { AuthenticationService } from "src/app/core/services/authentication/auth
 })
 export class AddBookComponent implements OnInit {
   constructor(
+    private translate: TranslateService,
+    private notificationService: NotificationService,
     private bookService: BookService,
     private genreService: GenreService,
     private authorService: AuthorService,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private dialogService: DialogService
   ) {}
 
   addBookForm: FormGroup;
 
   userId: number;
   genres: IGenre[] = [];
-  selectedAuthors: IAuthor[] = [{firstName: 'AAAAAAA', lastName: 'AAAAAAAAA'}];
+  selectedAuthors: IAuthor[] = [];
   authors: IAuthor[] = [];
   selectedFile = null;
   authorsSubscription: SubscriptionLike;
   submitted = false;
+  authorFocused: boolean = false;
 
   ngOnInit(): void {
     this.buildForm();
@@ -126,17 +133,17 @@ export class AddBookComponent implements OnInit {
 
     this.bookService.postBook(formData).subscribe(
       (data: IBook) => {
-        alert("Book is registered successfully");
+        this.notificationService.success(this.translate.instant("Book is registered successfully"), "X");
         this.goToPage("book", data.id);
       },
       (error) => {
         console.log(error);
-        alert('something went wrong');
+        this.notificationService.warn(this.translate.instant("Something went wrong"), "X");
       }
     );
 
     // this.goToPage("books");
-    // this.selectedAuthors = [];
+    this.selectedAuthors = [];
 
     // after submmit subscription stops work
     this.authorsSubscription.unsubscribe();
@@ -149,7 +156,7 @@ export class AddBookComponent implements OnInit {
 
   validateForm(form: FormGroup): boolean {
     if (!this.userId) {
-      alert("You have to be logged in to register book");
+      this.notificationService.warn(this.translate.instant("You have to be logged in to register book"), "X");
       return true;
     } else if (!form.get("author").value && !this.selectedAuthors.length) {
       return true;
@@ -185,9 +192,9 @@ export class AddBookComponent implements OnInit {
   addAuthor(author) {
     const index = this.selectedAuthors.findIndex((elem) => {
       return (
-        elem.firstName.toLowerCase() === author.firstName.toLowerCase() &&
-        elem.middleName.toLowerCase() === author.middleName.toLowerCase() &&
-        elem.lastName.toLowerCase() === author.lastName.toLowerCase()
+        elem.firstName?.toLowerCase() === author.firstName?.toLowerCase() &&
+        elem.middleName?.toLowerCase() === author.middleName?.toLowerCase() &&
+        elem.lastName?.toLowerCase() === author.lastName?.toLowerCase()
       );
     });
     if (index < 0) {
@@ -236,7 +243,7 @@ export class AddBookComponent implements OnInit {
 
   // redirecting method
   goToPage(pageName: string, id?: number) {
-    this.router.navigate([`${pageName}/${id?id:''}`]);
+    this.router.navigate([`${pageName}/${id ? id : ""}`]);
   }
 
   getFormData(book: IBookPost): FormData {
@@ -257,5 +264,18 @@ export class AddBookComponent implements OnInit {
 
   onFileClear() {
     this.selectedFile = null;
+  }
+
+ async onCancel() {
+    this.dialogService
+      .openConfirmDialog(
+        await this.translate.get("Are yo sure want to cancel?").toPromise()
+      )
+      .afterClosed()
+      .subscribe(async (res) => {
+        if (res) {
+          this.goToPage('books');
+          }
+      });
   }
 }
