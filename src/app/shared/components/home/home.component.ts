@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from 'src/app/core/services/authentication/authentication.service';
-import { Router } from '@angular/router';
+import {AuthenticationService} from '../../../core/services/authentication/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -8,22 +7,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor(
-    private authenticationService: AuthenticationService,
-    private router: Router
-  ) {}
+  constructor(private authentication: AuthenticationService) { }
 
   ngOnInit(): void {}
 
   isAuthenticated() {
-    return this.authenticationService.isAuthenticated();
+    return this.authentication.isAuthenticated();
   }
 
-  onRegisterBook(expectedRoute: string, defaultRoute: string) {
-    if (this.isAuthenticated()) {
-      this.router.navigate([`${expectedRoute}`]);
-    } else {
-      this.router.navigate([`${defaultRoute}`]);
-    }
-  }
 }
+
