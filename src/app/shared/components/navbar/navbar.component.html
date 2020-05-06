@@ -19,6 +19,9 @@
           <a class="nav-link" routerLink="">{{'common.home' | translate}}</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" routerLink="books">{{'common.books' | translate}}</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" routerLink="demo">{{'common.routes' | translate}}</a>
         </li>
         <ng-template #login>
@@ -35,12 +38,11 @@
           </div>
         </ng-template>
       </ul>
-      <ng-template [ngIf]="isAuthorized" [ngIfElse]="login">
+      <ng-template [ngIf]="isLoggedIn" [ngIfElse]="login">
         <app-search-bar> </app-search-bar>
         <app-profile-avatar></app-profile-avatar>
       </ng-template>
     </div>
-    
   </div>
 
 </nav>

@@ -1,35 +1,35 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { IBook } from 'src/app/core/models/book';
-import { BookService } from 'src/app/core/services/book/book.service';
-import { AuthenticationService } from 'src/app/core/services/authentication/authentication.service';
-import { DialogService } from 'src/app/core/services/dialog/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from 'src/app/core/services/notification/notification.service';
+import {IBook} from '../../../core/models/book';
+import {BookQueryParams} from '../../../core/models/bookQueryParams';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {BookService} from '../../../core/services/book/book.service';
+import {SearchBarService} from '../../../core/services/searchBar/searchBar.service';
 import { RequestService } from 'src/app/core/services/request/request.service';
+import { NotificationService } from 'src/app/core/services/notification/notification.service';
+import { TranslateService } from '@ngx-translate/core';
+import { DialogService } from 'src/app/core/services/dialog/dialog.service';
+import { AuthenticationService } from 'src/app/core/services/authentication/authentication.service';
 import { bookStatus } from 'src/app/core/models/bookStatus.enum';
 import { RequestQueryParams } from 'src/app/core/models/requestQueryParams';
 import { IRequest } from 'src/app/core/models/request';
-import {IUser} from '../../../core/models/user';
-import {BookQueryParams} from '../../../core/models/bookQueryParams';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {SearchBarService} from '../../../core/services/searchBar/searchBar.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-registered-book',
-  templateUrl: './registered-book.component.html',
-  styleUrls: ['./registered-book.component.scss']
+  selector: 'app-current-owned-books',
+  templateUrl: './current-owned-books.component.html',
+  styleUrls: ['./current-owned-books.component.scss']
 })
 
-export class RegisteredBookComponent implements OnInit, OnDestroy {
+export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
 
   books: IBook[];
-  userId: number;
   totalSize: number;
-  bookStatus: bookStatus[] = [1, 1, 1, 1, 1];
+  bookStatus: bookStatus[] = [1, 1, 1, 1, 1]
   queryParams: BookQueryParams = new BookQueryParams;
-  selectedGenres: number[];
   apiUrl: string = environment.apiUrl;
+
+  selectedGenres: number[];
+
 
   constructor(private bookService: BookService,
               private routeActive: ActivatedRoute,
@@ -39,24 +39,24 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
               private translate: TranslateService,
               private searchBarService: SearchBarService,
               private notificationService: NotificationService,
-              private requestService: RequestService) { }
+              private requestService: RequestService
+  ) {}
 
   ngOnInit(): void {
     this.routeActive.queryParams.subscribe((params: Params) => {
-      this.queryParams = BookQueryParams.mapFromQuery(params, 1, 5);
+      this.queryParams = BookQueryParams.mapFromQuery(params, 1, 5)
       this.populateDataFromQuery();
       this.getBooks(this.queryParams);
     });
   }
-
   isAuthenticated() {
     return this.authentication.isAuthenticated();
   }
-
   getStatus(book: IBook, index: number) {
     if (book.available) {
       this.bookStatus[index] = bookStatus.available;
-    } else {
+    }
+    else{
       const query = new RequestQueryParams();
       query.first = false;
       query.last = true;
@@ -64,7 +64,8 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
      .subscribe((value: IRequest) => {
          if (value.receiveDate) {
            this.bookStatus[index] = bookStatus.reading;
-         } else {
+         }
+         else {
            this.bookStatus[index] = bookStatus.requested;
          }
        }, error => {});
@@ -88,17 +89,16 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
         }
       });
     }
-
   onFilterChange(filterChanged: boolean) {
-    this.queryParams.genres = this.selectedGenres;
+    this.queryParams.genres = this.selectedGenres
     if (filterChanged) {
-      this.resetPageIndex();
+      this.resetPageIndex()
       this.changeUrl();
     }
   }
   private populateDataFromQuery() {
     if (this.queryParams.searchTerm) {
-      this.searchBarService.changeSearchTerm(this.queryParams.searchTerm);
+      this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)
     }
     if (typeof this.queryParams.showAvailable === 'undefined') {
       this.queryParams.showAvailable = true;
@@ -107,14 +107,15 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
       let genres: number[];
       if (Array.isArray(this.queryParams.genres)) {
         genres = this.queryParams.genres.map(v => +v);
-      } else {
+      }
+      else {
         genres = [+this.queryParams.genres];
       }
       this.selectedGenres =  genres;
     }
   }
 
-  // Navigation
+  //Navigation
   pageChanged(currentPage: number): void {
     this.queryParams.page = currentPage;
     this.queryParams.firstRequest = false;
@@ -133,12 +134,16 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
   }
 
 
-  // get
+  //get
   getBooks(params: BookQueryParams): void {
-    this.bookService.getRegisteredBooks(params)
+    this.bookService.getCurrentOwnedBooks(params)
       .subscribe({
         next: pageData => {
           this.books = pageData.page;
+          for ( var i = 0; i < pageData.page.length; i++) {
+
+            this.getStatus(pageData.page[i], i)
+          }
           if (pageData.totalCount) {
             this.totalSize = pageData.totalCount;
           }
@@ -147,6 +152,9 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
           alert('An error has occured, please try again');
         }
       });
+  }
+  makeRequest(bookId: number): void {
+    alert(bookId);
   }
 
   ngOnDestroy() {

@@ -4,10 +4,9 @@ import {Injectable} from '@angular/core';
 import { Observable } from 'rxjs';
 import { requestUrl } from "src/app/configs/api-endpoint.constants";
 import { IRequest } from 'src/app/core/models/request';
-import { PaginationParameters } from 'src/app/core/models/Pagination/paginationParameters';
 import { PaginationService } from '../pagination/pagination.service';
 import { IPage } from '../../models/page';
-import { BookParameters } from '../../models/Pagination/bookParameters';
+import { BookQueryParams } from '../../models/bookQueryParams';
 
 @Injectable()
 export class RequestService {
@@ -24,22 +23,21 @@ export class RequestService {
     });
   }
 
-  getRequestForBook(bookId: number, param?: RequestQueryParams) :Observable<IRequest>{
+  getRequestForBook(bookId: number, param?: RequestQueryParams): Observable<IRequest>{
     var params = new HttpParams();
-    if(param.first){
+    if(param.first === true){
       params = new HttpParams()
     .set("first", "true");
     }
-    else if(param.last){
+    else if(param.last === true){
       params = new HttpParams()
-    .set("first", "true");
+    .set("last", "true");
     }
-    
     return this.http.get<IRequest>(this.baseUrl + `/${bookId}`, { params } );
   }
 
-  getUserRequestsPage(bookParams : BookParameters): Observable<IPage<IRequest>> {
-    return this.pagination.getPageBooks<IRequest>(`${this.baseUrl}/`,bookParams);
+  getUserRequestsPage(bookParams : BookQueryParams): Observable<IPage<IRequest>> {
+    return this.pagination.getBookPage<IRequest>(`${this.baseUrl}/`,bookParams);
   }
 
   deleteRequest(requestId: number) :Observable<boolean>{

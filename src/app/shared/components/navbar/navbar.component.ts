@@ -2,10 +2,6 @@ import {Component, OnInit, ViewChild, Input} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {LanguageService} from '../../../core/services/language/language.service';
 import {Language} from '../../../core/models/languages.enum';
-import {BookParameters} from 'src/app/core/models/Pagination/bookParameters';
-import {FilterParameters} from 'src/app/core/models/Pagination/FilterParameters';
-import {PaginationService} from 'src/app/core/services/pagination/pagination.service';
-import {Router, ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from 'src/app/core/services/authentication/authentication.service';
 
 @Component({
@@ -16,8 +12,7 @@ import {AuthenticationService} from 'src/app/core/services/authentication/authen
 export class NavbarComponent implements OnInit {
   @ViewChild('menu', {static: false}) menu: any;
   languages: Language[];
-  isAuthorized: Boolean = false;
-  loginSubscription: any;
+  isLoggedIn: Boolean;
 
   constructor(private authenticationService: AuthenticationService,
               private translate: TranslateService,
@@ -25,8 +20,14 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.isLoggedIn = this.authenticationService.currentUserValue?.token != null;
     this.languages = this.languageService.languages;
+    this.authenticationService.getLoginEmitter().subscribe(()=>{
+      this.isLoggedIn = true;
+    }); 
+    this.authenticationService.getLogoutEmitter().subscribe(()=>{
+      this.isLoggedIn = false;
+    }); 
   }
 
   changeLang(lang: Language): void {

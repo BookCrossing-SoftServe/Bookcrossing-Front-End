@@ -1,3 +1,4 @@
+import { AuthGuard } from './core/guards/auth.guard';
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {LoginComponent} from './shared/components/login/login.component';
@@ -17,6 +18,7 @@ import {HomeComponent} from './shared/components/home/home.component';
 import {RulesComponent} from './shared/components/rules/rules.component';
 import {GenreComponent} from './shared/components/genre/genre.component';
 import {RegisteredBookComponent} from './shared/components/registered-book/registered-book.component';
+import {CurrentOwnedBooksComponent} from './shared/components/current-owned-books/current-owned-books.component';
 
 
 
@@ -33,7 +35,7 @@ const routes: Routes = [
 
   {path: 'book/:id', component: BookComponent},
   {path: 'book', component: AddBookComponent},
-  {path: 'requests', component: RequestsComponent},
+  {path: 'requests', component: RequestsComponent, canActivate: [AuthGuard]},
   {path: 'books', component: BooksComponent},
   {path: 'add-location', component: AddLocationComponent },
   {path: '', component: HomeComponent},
@@ -41,6 +43,7 @@ const routes: Routes = [
   {path: 'demo', component: DemoComponent},
   {path: 'genres', component: GenreComponent},
   {path: 'books/registered', component: RegisteredBookComponent},
+  {path: 'books/current', component: CurrentOwnedBooksComponent},
   { path: 'password', children:
       [
         { path: 'forgot', component: ForgotPasswordComponent },
