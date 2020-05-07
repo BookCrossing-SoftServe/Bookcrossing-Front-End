@@ -1,3 +1,6 @@
+<ng-template appRef>
+  <!--Add Form-->
+</ng-template>
 <div class="container my-5 py-5 z-depth-1">
 
     <section class="text-center">
@@ -38,7 +41,7 @@
             </div>
         </div>
   
-        <div class="col-lg-8 text-center text-md-left">
+        <div class="col-lg-7 text-center text-md-left">
   
           <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-text mb-1 ml-xl-0 ml-4" style="font-size: 24px;">{{ book?.name }}</h2>
         <br>
@@ -68,10 +71,16 @@
                 <ng-template ngSwitchCase="3"><span class="badge badge-info product mb-4 ml-2">Reeding</span></ng-template>
               </span>
             </div>
-            <p class="ml-xl-0 ml-4"><strong>Notice: </strong> {{ book?.notice }} </p>
+            <p [hidden]="!book.notice" class="ml-xl-0 ml-4"><strong>Notice: </strong> {{ book?.notice }} </p>
   
           </div>
   
+        </div>
+        <div class="col-lg-1">
+          <div class=" row d-flex">
+            <button [hidden]="!isAdmin()" class="btn btn-md btn-md px-3 m-1" (click)="showEditForm(book)"> <i
+                class="far fa-edit"></i></button>
+          </div>
         </div>
       </div>
   

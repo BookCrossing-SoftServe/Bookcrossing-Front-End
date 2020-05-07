@@ -54,6 +54,7 @@ export class BooksComponent implements OnInit,OnDestroy {
   isAuthenticated(){
     return this.authentication.isAuthenticated();
   }
+
   getStatus(book : IBook, index: number){
     if(book.available){
       this.bookStatus[index] = bookStatus.available
