@@ -98,7 +98,7 @@ showEditForm(book : IBook){
   let formFactory = this.resolver.resolveComponentFactory(BookEditFormComponent);
   let instance = this.refDir.containerRef.createComponent(formFactory).instance;
   instance.book = book;
-  instance.onCancel.subscribe(()=> this.refDir.containerRef.clear());
+  instance.onCancel.subscribe(()=> {this.refDir.containerRef.clear(); this.ngOnInit()});
 };
 
 getUserWhoRequested(){
