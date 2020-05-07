@@ -1,3 +1,4 @@
+import { BookEditFormComponent } from './shared/components/book-edit-form/book-edit-form.component';
 import { UserService } from './core/services/user/user.service';
 import { RequestService } from 'src/app/core/services/request/request.service';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
@@ -95,6 +96,7 @@ import { ContactsComponent } from './shared/components/contacts/contacts.compone
     ResetPasswordComponent,
     AdminComponent,
     DemoComponent,
+    BookEditFormComponent,
     ViewLocationComponent,
     ContentFilterPipe,
     HomeComponent,
