@@ -43,13 +43,13 @@ export class AddBookComponent implements OnInit {
   authorsSubscription: SubscriptionLike;
   submitted = false;
   authorFocused: boolean = false;
-  lastnameInput: boolean = false;
+  lastnameInputVisible: boolean = false;
 
   ngOnInit(): void {
     this.buildForm();
     this.getAllGenres();
     this.authorsSubscription = this.addBookForm
-      .get("author")
+      .get("authorFirstname")
       .valueChanges.subscribe((input) => {
         this.filterAuthors(input);
       });
@@ -93,6 +93,8 @@ export class AddBookComponent implements OnInit {
       genres: new FormControl(null, Validators.required),
       publisher: new FormControl(null),
       author: new FormControl(null),
+      authorLastname: new FormControl(null),
+      authorFirstname: new FormControl(null),
       description: new FormControl(null),
     });
   }
@@ -287,8 +289,13 @@ filterConfirmedAuthors(){
     return this.authors.filter(x => x.isConfirmed === true);
 }
 onPressSpace(){
-  this.lastnameInput=true;
+  this.lastnameInputVisible=true;
   setTimeout(()=> { this.authorFocused = false; this.inputLastname.nativeElement.focus();  }, 0);
 }
+
+//   hideLastnameInput(){
+//     if()
+//     lastnameInputVisible=false;
+// }
 
 }

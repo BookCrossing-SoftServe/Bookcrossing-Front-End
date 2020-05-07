@@ -37,59 +37,61 @@
         <div class="col-3">
           <p class="input-label">Author:<span class="asterisk"> *</span></p>
         </div>
-        <div class="col-8" >
+        <div  [ngClass]="{ 'col-4':  (!lastnameInputVisible && !lastnameInput.value), 'col-8':  (lastnameInputVisible || lastnameInput.value)}" >
           <div class="form-row">
-          <div class="col">
-            <input
-              formControlName="author"
-              #firstnameInput
-              type="text"
-              class="form-control"
-              [matAutocomplete]="FirstNameAuto"
-              [ngClass]="{
-                'is-invalid':
-                  submitted &&
-                  !selectedAuthors.length &&
-                  !addBookForm.controls.author.value
-              }"
-              (keyup.Space)="onPressSpace();"
-              (focus)="authorFocused = true"
-              (blur)="authorFocused = false"
-            />
-          </div>
-          <div class="col" [ngClass]="{'hide-input': !lastnameInput}">
-            <input 
-            formControlName="author"
-              #lastnameInput
-              type="text"
-              class="form-control"
-              [matAutocomplete]="LastNameAuto"
-
-            />
+            <div class="col">
+              <input
+                formControlName="author"
+                formControlName="authorFirstname"
+                #firstnameInput
+                type="text"
+                class="form-control"
+                [matAutocomplete]="FirstNameAuto"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted &&
+                    !selectedAuthors.length &&
+                    !addBookForm.controls.authorFirstname.value
+                }"
+                (keyup.Space)="onPressSpace()"
+                (focus)="authorFocused = true"
+                (blur)="authorFocused = false"
+              />
+            </div>
+            <div class="col" [ngClass]="{ 'hide-input':  (!lastnameInputVisible && !lastnameInput.value)}">
+              <input
+                formControlName="author"
+                formControlName="authorLastname"
+                #lastnameInput
+                type="text"
+                class="form-control"
+                [matAutocomplete]="LastNameAuto"
+                (blur)="lastnameInputVisible=false"
+              />
+            </div>
+            <!-- <div
+              *ngIf="
+                submitted &&
+                !selectedAuthors.length &&
+                !addBookForm.controls.author.value
+              "
+              class="invalid-feedback"
+            >
+              <div
+                *ngIf="
+                  !selectedAuthors.length && !addBookForm.controls.author.value
+                "
+              >
+                Field is required.
+              </div>
+            </div> -->
           </div>
           <div
-            *ngIf="
-              submitted &&
-              !selectedAuthors.length &&
-              !addBookForm.controls.author.value
-            "
-            class="invalid-feedback"
+            *ngIf="(addBookForm.controls.authorFirstname.value || addBookForm.controls.authorLastname.value) && !authorFocused"
+            class="new-author-warning"
           >
-            <div
-              *ngIf="
-                !selectedAuthors.length && !addBookForm.controls.author.value
-              "
-            >
-              Field is required.
-            </div>
+            <span>Entered author is saved as 'not confirmed'</span>
           </div>
-        </div>
-        <div
-        *ngIf="addBookForm.controls.author.value && !authorFocused"
-        class="new-author-warning"
-      >
-        <span>Entered author is saved as 'not confirmed'</span>
-      </div>
         </div>
         <div class="col">
           <div>
@@ -120,8 +122,8 @@
       </div>
       <mat-autocomplete
         #FirstNameAuto="matAutocomplete"
-        (optionSelected)="onAuthorSelect($event); firstnameInput.value = ''; "
-        [ngClass]="{'hide-input': !authorFocused}"
+        (optionSelected)="onAuthorSelect($event); firstnameInput.value = ''; !lastnameInput.value=''"
+
       >
         <mat-option
           *ngFor="
@@ -131,7 +133,7 @@
                 : ['firstName', 'lastName', 'middleName']
           "
           [value]="author"
-          [ngClass]="{'hide-input': !authorFocused}"
+          [ngClass]="{ 'hide-input': lastnameInputVisible}"
         >
           {{
             author.firstName + " " + author.middleName + " " + author.lastName
@@ -140,11 +142,14 @@
       </mat-autocomplete>
       <mat-autocomplete
         #LastNameAuto="matAutocomplete"
-        (optionSelected)="onAuthorSelect($event); lastnameInput.value = ''"
+        (optionSelected)="onAuthorSelect($event); lastnameInput.value = ''; !lastnameInput.value=''"
       >
         <mat-option
           *ngFor="
             let author of filterConfirmedAuthors()
+              | contentFilter
+                : firstnameInput.value.trim()
+                : ['firstName', 'lastName', 'middleName']
               | contentFilter
                 : lastnameInput.value.trim()
                 : ['firstName', 'lastName', 'middleName']
@@ -157,7 +162,6 @@
         </mat-option>
       </mat-autocomplete>
 
-
       <!-- Category -->
       <div class="form-row mb-4">
         <div class="col-3">
@@ -166,7 +170,6 @@
         <!-- Select multiple genres -->
         <div class="col-4">
           <mat-select
-          
             formControlName="genres"
             class="form-control"
             multiple
