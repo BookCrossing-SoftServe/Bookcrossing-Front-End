@@ -49,11 +49,14 @@
           <div class="font-weight-normal">
             
             <p class="ml-xl-0 ml-4">
-              <strong>{{ 'components.book.authors' | translate }}: </strong><span *ngFor="let author of book?.authors">{{author?.firstName}} {{author?.lastName}}</span></p>
+              <ng-template [ngIf]="book.authors.length==1" [ngIfElse]="manyAuthors"><strong>Author: </strong></ng-template>
+              <ng-template #manyAuthors><strong>Authors: </strong></ng-template>
+              <span *ngFor="let author of book?.authors; let i = index"><ng-template [ngIf]="i!=0">, </ng-template>{{author?.firstName}} {{author?.lastName}}</span></p>
             <p class="ml-xl-0 ml-4">
-              <strong>Category: </strong><span *ngFor="let genre of book?.genres">{{ genre?.name }}</span></p>
+              <ng-template [ngIf]="book.genres.length==1" [ngIfElse]="manyGenres"><strong>Category: </strong></ng-template>
+              <ng-template #manyGenres><strong>Categories: </strong></ng-template>
+              <span *ngFor="let genre of book?.genres; let i = index"><ng-template [ngIf]="i!=0">, </ng-template>{{ genre?.name }}</span></p>
               <p class="ml-xl-0 ml-4">
-                <!-- <strong>Location: </strong> {{ book.locations[0]?.location.city + " " + book.locations[0]?.location.officeName}} </p> -->
                 <strong>Location: </strong> {{ currentOwner?.userLocation[0]?.location?.city + " " +  currentOwner?.userLocation[0]?.location?.officeName}} </p>
               <p class="ml-xl-0 ml-4">
                 <strong>Current owner: </strong> {{ currentOwner?.firstName + " " + currentOwner?.lastName }} </p>
@@ -68,7 +71,7 @@
               <span [ngSwitch]="bookStatus">
                 <ng-template ngSwitchCase="1"><span class="badge badge-success product mb-4 ml-2">Available</span></ng-template>
                 <ng-template ngSwitchCase="2"><span class="badge badge-info product mb-4 ml-2">Requested</span></ng-template>
-                <ng-template ngSwitchCase="3"><span class="badge badge-info product mb-4 ml-2">Reeding</span></ng-template>
+                <ng-template ngSwitchCase="3"><span class="badge badge-info product mb-4 ml-2">Reading</span></ng-template>
               </span>
             </div>
             <p [hidden]="!book.notice" class="ml-xl-0 ml-4"><strong>Notice: </strong> {{ book?.notice }} </p>

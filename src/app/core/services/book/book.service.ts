@@ -46,9 +46,6 @@ export class BookService {
   putBook(bookId: number, book: IBookPost){
     return this.http.put(this.apiUrl + bookId, book);
   }
-  editBook(bookId: number, book: FormData){
-    return this.http.put(this.apiUrl + bookId, book);
-  }
 
   async isBeingReding(bookId: number): Promise<boolean>{  
     var query: RequestQueryParams = new RequestQueryParams();
