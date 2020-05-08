@@ -16,7 +16,7 @@ export class ContentFilterPipe implements PipeTransform {
       let itemFound: Boolean;
       for (let i = 0; i < properties.length; i++) {
         if (
-          item[properties[i]].toLowerCase().indexOf(keyword.toLowerCase()) !==
+          item[properties[i]]?.toLowerCase().indexOf(keyword.toLowerCase()) !==
           -1
         ) {
           itemFound = true;

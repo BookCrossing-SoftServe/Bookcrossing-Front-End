@@ -26,22 +26,25 @@
             class="invalid-feedback"
           >
             <div *ngIf="addBookForm.controls.title.errors.required">
-              Field is required.
+              This field is required.
             </div>
           </div>
         </div>
       </div>
-
       <!-- Author -->
       <div class="form-row mb-4">
         <div class="col-3">
           <p class="input-label">Author:<span class="asterisk"> *</span></p>
         </div>
-        <div  [ngClass]="{ 'col-4':  (!lastnameInputVisible && !lastnameInput.value), 'col-8':  (lastnameInputVisible || lastnameInput.value)}" >
+        <div
+          [ngClass]="{
+            'col-4': !lastnameInputVisible && !lastnameInput.value,
+            'col-8': lastnameInputVisible || lastnameInput.value
+          }"
+        >
           <div class="form-row">
             <div class="col">
               <input
-                formControlName="author"
                 formControlName="authorFirstname"
                 #firstnameInput
                 type="text"
@@ -51,43 +54,54 @@
                   'is-invalid':
                     submitted &&
                     !selectedAuthors.length &&
-                    !addBookForm.controls.authorFirstname.value
+                    (!addBookForm.controls.authorFirstname.value?.trim() || !addBookForm.controls.authorLastname.value?.trim() )
                 }"
                 (keyup.Space)="onPressSpace()"
                 (focus)="authorFocused = true"
                 (blur)="authorFocused = false"
               />
+              <div
+                *ngIf="
+                  submitted &&
+                  !selectedAuthors.length &&
+                  !addBookForm.controls.authorFirstname.value?.trim()
+                "
+                class="invalid-feedback"
+              >
+                This field is required.
+              </div>
+              <div
+              *ngIf="
+                submitted &&
+                !selectedAuthors.length &&
+                !addBookForm.controls.authorLastname.value
+              "
+              class="invalid-feedback"
+            >
+              Lastname is required.
             </div>
-            <div class="col" [ngClass]="{ 'hide-input':  (!lastnameInputVisible && !lastnameInput.value)}">
+            </div>
+            <div
+              class="col"
+              [ngClass]="{
+                'hide-input': !lastnameInputVisible && !lastnameInput.value
+              }"
+            >
               <input
-                formControlName="author"
                 formControlName="authorLastname"
                 #lastnameInput
                 type="text"
                 class="form-control"
                 [matAutocomplete]="LastNameAuto"
-                (blur)="lastnameInputVisible=false"
+                (blur)="lastnameInputVisible = false"
               />
             </div>
-            <!-- <div
-              *ngIf="
-                submitted &&
-                !selectedAuthors.length &&
-                !addBookForm.controls.author.value
-              "
-              class="invalid-feedback"
-            >
-              <div
-                *ngIf="
-                  !selectedAuthors.length && !addBookForm.controls.author.value
-                "
-              >
-                Field is required.
-              </div>
-            </div> -->
           </div>
           <div
-            *ngIf="(addBookForm.controls.authorFirstname.value || addBookForm.controls.authorLastname.value) && !authorFocused"
+            *ngIf="
+              (addBookForm.controls.authorFirstname.value) &&
+              !authorFocused
+            "
             class="new-author-warning"
           >
             <span>Entered author is saved as 'not confirmed'</span>
@@ -122,8 +136,11 @@
       </div>
       <mat-autocomplete
         #FirstNameAuto="matAutocomplete"
-        (optionSelected)="onAuthorSelect($event); firstnameInput.value = ''; !lastnameInput.value=''"
-
+        (optionSelected)="
+          onAuthorSelect($event);
+          firstnameInput.value = '';
+          lastnameInput.value = ''
+        "
       >
         <mat-option
           *ngFor="
@@ -133,7 +150,7 @@
                 : ['firstName', 'lastName', 'middleName']
           "
           [value]="author"
-          [ngClass]="{ 'hide-input': lastnameInputVisible}"
+          [ngClass]="{ 'hide-input': lastnameInputVisible }"
         >
           {{
             author.firstName + " " + author.middleName + " " + author.lastName
@@ -142,7 +159,11 @@
       </mat-autocomplete>
       <mat-autocomplete
         #LastNameAuto="matAutocomplete"
-        (optionSelected)="onAuthorSelect($event); lastnameInput.value = ''; !lastnameInput.value=''"
+        (optionSelected)="
+          onAuthorSelect($event);
+          lastnameInput.value = '';
+          lastnameInput.value = ''
+        "
       >
         <mat-option
           *ngFor="
@@ -205,7 +226,7 @@
             class="invalid-feedback"
           >
             <div *ngIf="addBookForm.controls.genres.errors.required">
-              Field is required.
+              This field is required.
             </div>
           </div>
         </div>
