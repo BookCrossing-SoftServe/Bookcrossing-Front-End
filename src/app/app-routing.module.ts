@@ -22,7 +22,6 @@ import {NgContentAst} from "@angular/compiler";
 import {ContactsComponent} from "./shared/components/contacts/contacts.component";
 import {LocationsComponent} from './shared/components/admin/locations/locations.component';
 import {GenresComponent} from './shared/components/admin/genres/genres.component';
-import {ContactsComponent} from './shared/components/contacts/contacts.component';
 import {DashboardComponent} from './shared/components/admin/dashboard/dashboard.component';
 
 
