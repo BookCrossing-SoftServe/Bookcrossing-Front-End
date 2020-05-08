@@ -19,6 +19,7 @@ import {RulesComponent} from './shared/components/rules/rules.component';
 import {GenreComponent} from './shared/components/genre/genre.component';
 import {RegisteredBookComponent} from './shared/components/registered-book/registered-book.component';
 import {CurrentOwnedBooksComponent} from './shared/components/current-owned-books/current-owned-books.component';
+import {ReadBooksComponent} from './shared/components/read-books/read-books.component';
 import {NgContentAst} from "@angular/compiler";
 import {ContactsComponent} from "./shared/components/contacts/contacts.component";
 
@@ -46,6 +47,7 @@ const routes: Routes = [
   {path: 'genres', component: GenreComponent},
   {path: 'books/registered', component: RegisteredBookComponent},
   {path: 'books/current', component: CurrentOwnedBooksComponent},
+  {path: 'books/read', component: ReadBooksComponent},
   {path: 'contacts', component: ContactsComponent},
   { path: 'password', children:
       [

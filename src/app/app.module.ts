@@ -70,6 +70,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { BookFilterBarComponent } from './shared/components/book-filter-bar/book-filter-bar.component';
 import { CurrentOwnedBooksComponent } from './shared/components/current-owned-books/current-owned-books.component';
 import { ContactsComponent } from './shared/components/contacts/contacts.component';
+import { ReadBooksComponent } from './shared/components/read-books/read-books.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +110,8 @@ import { ContactsComponent } from './shared/components/contacts/contacts.compone
     ProfileAvatarComponent,
     BookFilterBarComponent,
     CurrentOwnedBooksComponent,
-    ContactsComponent
+    ContactsComponent,
+    ReadBooksComponent
 
   ],
   imports: [
