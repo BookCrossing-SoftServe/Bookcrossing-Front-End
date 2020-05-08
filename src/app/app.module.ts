@@ -116,7 +116,7 @@ import { DashboardComponent } from './shared/components/admin/dashboard/dashboar
     BookFilterBarComponent,
     CurrentOwnedBooksComponent,
     ContactsComponent,
-    ReadBooksComponent
+    ReadBooksComponent,
     AdminTableComponent,
     GenresComponent,
     LocationsComponent,
