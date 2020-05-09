@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, ComponentFactoryResolver} from '@angular/core';
-import { IAuthor } from 'src/app/core/models/author';
-import {Router, ActivatedRoute, Params} from '@angular/router';
+import {Component, ComponentFactoryResolver, OnInit, ViewChild} from '@angular/core';
+import {IAuthor} from 'src/app/core/models/author';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {AuthorService} from 'src/app/core/services/author/authors.service';
-import { AuthorFormComponent } from '../author-form/author-form.component';
-import { RefDirective } from '../../../directives/ref.derictive';
-import { CompletePaginationParams } from 'src/app/core/models/completePaginationParameters';
-import { SortParameters } from 'src/app/core/models/Pagination/sortParameters';
-import { FilterParameters } from 'src/app/core/models/Pagination/filterParameters';
+import {AuthorFormComponent, FormAction} from '../author-form/author-form.component';
+import {RefDirective} from '../../../directives/ref.derictive';
+import {CompletePaginationParams} from 'src/app/core/models/Pagination/completePaginationParameters';
+import {SortParameters} from 'src/app/core/models/Pagination/sortParameters';
+import {FilterParameters} from 'src/app/core/models/Pagination/filterParameters';
 import {TranslateService} from '@ngx-translate/core';
 import {NotificationService} from '../../../../core/services/notification/notification.service';
 
@@ -20,8 +20,8 @@ export class AuthorsComponent implements OnInit {
   @ViewChild(RefDirective, {static: false}) refDir: RefDirective;
 
   authors: IAuthor[];
-  authorDisplayColumns: string[] = ['#', 'First Name', 'Last Name', 'Middle Name'];
-  authorProperties: string[] = ['id', 'firstName', 'lastName', 'middleName'];
+  authorDisplayColumns: string[] = ['#', 'First Name', 'Last Name', 'Middle Name', 'Approved'];
+  authorProperties: string[] = ['id', 'firstName', 'lastName', 'middleName', 'isConfirmed'];
   queryParams: CompletePaginationParams = new CompletePaginationParams();
   searchText: string;
   searchField = 'lastName';
@@ -49,7 +49,8 @@ export class AuthorsComponent implements OnInit {
   }
 
   private onAuthorEdited() {
-    this.authorService.authorEdited$.subscribe((author) => {
+    this.authorService.authorSubmitted.subscribe((author) => {
+      author.isConfirmed = null;
       const editedAuthor = this.authors.find((x) => x.id === author.id);
       if (editedAuthor) {
         const index = this.authors.indexOf(editedAuthor);
@@ -88,7 +89,7 @@ export class AuthorsComponent implements OnInit {
     this.selectedRows = [];
   }
   merge() {
-    console.log(this.selectedRows);
+    this.showForm(this.selectedRows[0], FormAction.Merge, this.selectedRows);
   }
 
   // Form
@@ -98,17 +99,17 @@ export class AuthorsComponent implements OnInit {
       lastName: '',
       middleName: ''
     };
-    this.showForm(newAuthor, 'Add Author');
+    this.showForm(newAuthor, FormAction.Add);
   }
   showEditForm(author: IAuthor) {
-    this.showForm(author, 'Edit Author', true);
+    this.showForm(author, FormAction.Edit);
   }
-  showForm(author: IAuthor, title: string, isEdited = false) {
+  showForm(author: IAuthor, action: FormAction = FormAction.Add, selectedAuthors: IAuthor[] = null) {
     const formFactory = this.resolver.resolveComponentFactory(AuthorFormComponent);
     const instance = this.refDir.containerRef.createComponent(formFactory).instance;
-    instance.isEdited = isEdited;
-    instance.title = title;
+    instance.action = action;
     instance.author = author;
+    instance.authorsMerge = selectedAuthors;
     instance.onCancel.subscribe(() => this.refDir.containerRef.clear());
   }
 
@@ -118,6 +119,13 @@ export class AuthorsComponent implements OnInit {
     .subscribe( {
       next: pageData => {
       this.authors = pageData.page;
+      this.authors.forEach(a => {
+        if (a.isConfirmed) {
+          a.isConfirmed = null;
+        } else {
+          a.isConfirmed = 'unapproved';
+        }
+      });
       if (pageData.totalCount) {
         this.totalSize = pageData.totalCount;
       }

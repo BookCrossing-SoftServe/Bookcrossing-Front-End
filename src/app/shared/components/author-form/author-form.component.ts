@@ -57,12 +57,12 @@ title : string = "Add Author";
     this.authorService.updateAuthor(author).subscribe(
       (data: IAuthor) => {
         alert("Changes accepted");
-        this.authorService.editAuthor(author);
+        this.authorService.submitAuthor(author);
         this.cancel();
       },
       (error) => {
         alert(error.message);
-      },      
+      },
     )
   }
 }

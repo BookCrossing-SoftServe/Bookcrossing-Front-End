@@ -5,6 +5,13 @@ import { AuthorService } from 'src/app/core/services/author/authors.service';
 import {TranslateService} from '@ngx-translate/core';
 import {NotificationService} from '../../../../core/services/notification/notification.service';
 
+export enum FormAction {
+  Edit,
+  Add,
+  Merge
+}
+
+
 @Component({
   selector: 'app-author-form',
   templateUrl: './author-form.component.html',
@@ -14,10 +21,12 @@ export class AuthorFormComponent implements OnInit {
 
 @Output() onCancel: EventEmitter<void> = new EventEmitter<void>();
 @Input() author: IAuthor;
+@Input() action: FormAction;
+@Input() authorsMerge: IAuthor[];
 
-isEdited = false;
+
+title: string;
 form: FormGroup;
-title = 'Add Author';
 
   constructor(
     private authorService: AuthorService,
@@ -25,6 +34,20 @@ title = 'Add Author';
     private notificationService: NotificationService) { }
 
   ngOnInit(): void {
+    this.buildForm();
+    switch (+this.action) {
+      case FormAction.Edit:
+        this.title = 'Edit Author';
+        break;
+      case FormAction.Merge:
+        this.title = 'Merge Authors';
+        break;
+      default:
+        this.title = 'Add Author';
+        break;
+    }
+  }
+  buildForm(): void {
     this.form = new FormGroup({
       id : new FormControl({value: this.author.id, disabled: true}),
       firstName : new FormControl(this.author.firstName, [
@@ -45,17 +68,25 @@ title = 'Add Author';
   }
 
   submit(): void {
-    const newAuthor: IAuthor = {
+    const author: IAuthor = {
       firstName: this.form.get('firstName').value,
       lastName: this.form.get('lastName').value,
       middleName: this.form.get('middleName').value
     };
-    if (this.isEdited) {
-      newAuthor.id = this.form.get('id').value;
-      this.updateAuthor(newAuthor);
-      console.log(newAuthor);
-    } else {
-      this.addAuthor(newAuthor);
+    if (this.action !== FormAction.Add) {
+      author.id = this.form.get('id').value;
+    }
+    author.isConfirmed = true;
+    switch (+this.action) {
+      case FormAction.Edit:
+        this.updateAuthor(author);
+        break;
+      case FormAction.Merge:
+        this.mergeAuthors(author, this.authorsMerge.map(a => a.id));
+        break;
+      default:
+        this.addAuthor(author);
+        break;
     }
   }
 
@@ -63,10 +94,22 @@ title = 'Add Author';
     this.onCancel.emit();
     this.form.reset();
   }
+  mergeAuthors(author: IAuthor, authorIds: number[]) {
+    this.authorService.mergeAuthors(author, authorIds).subscribe(
+      () => {
+        this.authorService.submitAuthor(author);
+        this.cancel();
+      },
+      (error) => {
+        this.notificationService.warn(this.translate
+          .instant('Something went wrong!'), 'X');
+      },
+    );
+  }
   addAuthor(author: IAuthor) {
     this.authorService.addAuthor(author).subscribe(
       (data: IAuthor) => {
-        this.authorService.editAuthor(author);
+        this.authorService.submitAuthor(author);
         this.cancel();
       },
       (error) => {
@@ -78,7 +121,7 @@ title = 'Add Author';
   updateAuthor(author: IAuthor) {
     this.authorService.updateAuthor(author).subscribe(
       (data: IAuthor) => {
-        this.authorService.editAuthor(author);
+        this.authorService.submitAuthor(author);
         this.cancel();
       },
       (error) => {

@@ -118,7 +118,7 @@ import { DashboardComponent } from './shared/components/admin/dashboard/dashboar
     LocationsComponent,
     GenreFormComponent,
     ContactsComponent,
-    DashboardComponent
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
