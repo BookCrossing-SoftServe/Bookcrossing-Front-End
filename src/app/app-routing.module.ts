@@ -21,6 +21,7 @@ import {LocationsComponent} from './shared/components/admin/locations/locations.
 import {GenresComponent} from './shared/components/admin/genres/genres.component';
 import {ContactsComponent} from './shared/components/contacts/contacts.component';
 import {DashboardComponent} from './shared/components/admin/dashboard/dashboard.component';
+import {AuthorFormComponent} from './shared/components/admin/author-form/author-form.component';
 
 
 
@@ -35,7 +36,8 @@ const routes: Routes = [
         {path: 'authors', component: AuthorsComponent},
         {path: 'locations', component: LocationsComponent},
         {path: 'genres', component: GenresComponent},
-        {path: 'location-form', component: LocationFormComponent}
+        {path: 'location-form', component: LocationFormComponent},
+        {path: 'author-form', component: AuthorFormComponent}
       ]
   },
 

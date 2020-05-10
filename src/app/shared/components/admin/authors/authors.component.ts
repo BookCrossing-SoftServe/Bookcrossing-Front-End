@@ -2,7 +2,6 @@ import {Component, ComponentFactoryResolver, OnInit, ViewChild} from '@angular/c
 import {IAuthor} from 'src/app/core/models/author';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {AuthorService} from 'src/app/core/services/author/authors.service';
-import {AuthorFormComponent, FormAction} from '../author-form/author-form.component';
 import {RefDirective} from '../../../directives/ref.derictive';
 import {CompletePaginationParams} from 'src/app/core/models/Pagination/completePaginationParameters';
 import {SortParameters} from 'src/app/core/models/Pagination/sortParameters';
@@ -27,7 +26,7 @@ export class AuthorsComponent implements OnInit {
   searchField = 'lastName';
   totalSize: number;
 
-  selectedRows = [];
+  selectedRows: any = [];
 
   constructor(
     private translate: TranslateService,
@@ -35,7 +34,6 @@ export class AuthorsComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private router: Router,
     private authorService: AuthorService,
-    private resolver: ComponentFactoryResolver
     ) { }
 
 
@@ -88,29 +86,27 @@ export class AuthorsComponent implements OnInit {
   mergeClear() {
     this.selectedRows = [];
   }
-  merge() {
-    this.showForm(this.selectedRows[0], FormAction.Merge, this.selectedRows);
+  mergeAuthors() {
+    if (this.selectedRows?.length < 2) {
+      this.notificationService.warn(this.translate
+        .instant('Please select two or more authors'), 'X');
+      return;
+    }
+    this.authorService.formMergeAuthors = this.selectedRows;
+    this.router.navigate(['admin/author-form']);
   }
 
   // Form
-  showAddForm() {
-    const newAuthor: IAuthor = {
-      firstName: '',
-      lastName: '',
-      middleName: ''
-    };
-    this.showForm(newAuthor, FormAction.Add);
+  addAuthor() {
+    this.authorService.formMergeAuthors = null;
+    this.authorService.formAuthor = null;
+    this.router.navigate(['admin/author-form']);
   }
-  showEditForm(author: IAuthor) {
-    this.showForm(author, FormAction.Edit);
-  }
-  showForm(author: IAuthor, action: FormAction = FormAction.Add, selectedAuthors: IAuthor[] = null) {
-    const formFactory = this.resolver.resolveComponentFactory(AuthorFormComponent);
-    const instance = this.refDir.containerRef.createComponent(formFactory).instance;
-    instance.action = action;
-    instance.author = author;
-    instance.authorsMerge = selectedAuthors;
-    instance.onCancel.subscribe(() => this.refDir.containerRef.clear());
+  editAuthor(author: IAuthor) {
+    this.authorService.formMergeAuthors = null;
+    this.authorService.formAuthor = author;
+    this.router.navigate(['admin/author-form']);
+    console.log(this.authorService.formAuthor);
   }
 
   // Get
