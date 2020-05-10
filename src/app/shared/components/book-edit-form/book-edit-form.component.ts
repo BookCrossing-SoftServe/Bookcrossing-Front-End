@@ -299,7 +299,7 @@ constructor(
   async cancel() {
     this.dialogService
       .openConfirmDialog(
-        await this.translate.get("Are yo sure want to cancel?").toPromise()
+        await this.translate.get("Are yso sure want to cancel?").toPromise()
       )
       .afterClosed()
       .subscribe(async (res) => {
