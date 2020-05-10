@@ -75,7 +75,7 @@ import { GenreFormComponent } from './shared/components/admin/genre-form/genre-f
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { ContactsComponent } from './shared/components/contacts/contacts.component';
 import { DashboardComponent } from './shared/components/admin/dashboard/dashboard.component';
-
+//trying to fix CI error
 @NgModule({
   declarations: [
     AppComponent,
