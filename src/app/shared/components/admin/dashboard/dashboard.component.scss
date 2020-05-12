@@ -38,8 +38,13 @@ body {
   padding: 1.6rem 1rem;
   text-align: center;
 }
-
+.indigo-gradient-reverse{
+  color:white;
+  background: rgb(52,67,149);
+  background: linear-gradient(90deg, rgba(52,67,149,1) 0%, rgba(2,0,36,1) 100%);
+}
 .indigo-gradient{
+  color:white;
   background: rgb(2,0,36);
   background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(63,81,181,1) 100%, rgba(27,142,166,1) 100%);
 }
@@ -49,7 +54,17 @@ body {
 
 }
 
-
+.reset{
+  padding: 0;
+  max-width: 80px;
+  margin: -3rem 0 -1.25rem;
+}
+.reset-button{
+  width: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 20px;
+}
 .line-chart-header {
   margin-left: 7%;
   margin-right: 7%;
