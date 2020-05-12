@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
   barChart: Chart;
   lineChart: Chart;
 
-  totalBooksRegistered = 139;
+  totalBooksRegistered = 336;
   totalAmountOfUsers = 86;
   expiringRequests = 13;
 
