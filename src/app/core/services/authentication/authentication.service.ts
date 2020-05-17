@@ -80,6 +80,7 @@ export class AuthenticationService {
     return this.http.get(`${this.userUrl}/id/`)
   }
 
+
   isAdmin() {
     const token: string = localStorage.getItem("currentUser");
     if (token && !this.jwtHelper.isTokenExpired(token)) {
