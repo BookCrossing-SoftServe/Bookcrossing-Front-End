@@ -26,6 +26,7 @@ import {DashboardComponent} from './shared/components/admin/dashboard/dashboard.
 import {ProfileComponent} from './shared/components/profile/profile.component';
 import {AuthorFormComponent} from './shared/components/admin/author-form/author-form.component';
 import {Role} from './core/models/role.enum';
+import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 
 
 // @ts-ignore
@@ -66,6 +67,11 @@ const routes: Routes = [
         { path: 'reset', component: ResetPasswordComponent },
       ]
   },
+  {
+    path: "**",
+    component: NotFoundComponent,
+    pathMatch: "full"
+  }
 ];
 
 @NgModule({
