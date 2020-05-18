@@ -46,13 +46,13 @@
                             <ng-template #manyAuthors>Authors:</ng-template>
                             <ng-template [ngIf]="book.authors.length<=3" [ngIfElse]="manyAuthorsEllipsis">
                               <strong *ngFor="let author of book.authors; let i = index">
-                                <ng-template [ngIf]="i!=0">, </ng-template>
+                                <ng-template [ngIf]="i!=0">,</ng-template>
                                 {{author.firstName}} {{author.lastName}}
                               </strong>
                             </ng-template>
                             <ng-template #manyAuthorsEllipsis>
                               <strong *ngFor="let author of book.authors | slice:0:3; let i = index">
-                                <ng-template [ngIf]="i!=0">, </ng-template>
+                                <ng-template [ngIf]="i!=0">,</ng-template>
                                 {{author.firstName}} {{author.lastName}}
                               </strong>
                               <strong>
@@ -69,13 +69,13 @@
 
                             <ng-template [ngIf]="book.genres.length<=3" [ngIfElse]="manyGenresEllipsis">
                               <strong *ngFor="let genre of book.genres;let i = index">
-                                <ng-template [ngIf]="i!=0">, </ng-template>
+                                <ng-template [ngIf]="i!=0">,</ng-template>
                                 {{genre.name}}
                               </strong>
                             </ng-template>
                             <ng-template #manyGenresEllipsis>
                               <strong *ngFor="let genre of book.genres | slice:0:3;let i = index">
-                                <ng-template [ngIf]="i!=0">, </ng-template>
+                                <ng-template [ngIf]="i!=0">,</ng-template>
                                 {{genre.name}}
                               </strong>
                               <strong>
@@ -143,13 +143,13 @@
                 <ng-template #manyAuthors>Authors:</ng-template>
                 <ng-template [ngIf]="book.authors.length<=5" [ngIfElse]="manyAuthorsEllipsis">
                   <strong *ngFor="let author of book.authors; let i = index">
-                    <ng-template [ngIf]="i!=0">, </ng-template>
+                    <ng-template [ngIf]="i!=0">,</ng-template>
                     {{author.firstName}} {{author.lastName}}
                   </strong>
                 </ng-template>
                 <ng-template #manyAuthorsEllipsis>
                   <strong *ngFor="let author of book.authors | slice:0:5; let i = index">
-                    <ng-template [ngIf]="i!=0">, </ng-template>
+                    <ng-template [ngIf]="i!=0">,</ng-template>
                     {{author.firstName}} {{author.lastName}}
                   </strong>
                   <strong>
@@ -165,13 +165,13 @@
 
                 <ng-template [ngIf]="book.genres.length<=7" [ngIfElse]="manyGenresEllipsis">
                   <strong *ngFor="let genre of book.genres;let i = index">
-                    <ng-template [ngIf]="i!=0">, </ng-template>
+                    <ng-template [ngIf]="i!=0">,</ng-template>
                     {{genre.name}}
                   </strong>
                 </ng-template>
                 <ng-template #manyGenresEllipsis>
                   <strong *ngFor="let genre of book.genres | slice:0:7;let i = index">
-                    <ng-template [ngIf]="i!=0">, </ng-template>
+                    <ng-template [ngIf]="i!=0">,</ng-template>
                     {{genre.name}}
                   </strong>
                   <strong>
@@ -208,7 +208,7 @@
     </ng-template>
   </ng-template>
 
-  <app-pagination *ngIf="books && books.length > 0" [arraySize]="totalSize" [pageSize]="queryParams.pageSize"
+  <app-pagination *ngIf="books && totalSize > 8 " [arraySize]="totalSize" [pageSize]="queryParams.pageSize"
                   [selectedPage]="queryParams.page" (onPageChange)="pageChanged($event)">
   </app-pagination>
 </div>

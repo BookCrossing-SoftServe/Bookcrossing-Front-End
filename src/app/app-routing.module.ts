@@ -49,7 +49,7 @@ const routes: Routes = [
 
   {path: 'book/:id', component: BookComponent},
   {path: 'book', component: AddBookComponent},
-  {path: 'requests', component: RequestsComponent, canActivate: [AuthGuard]},
+  {path: 'books/requests', component: RequestsComponent, canActivate: [AuthGuard]},
   {path: 'books', component: BooksComponent},
   {path: 'location-form', component: LocationFormComponent },
   {path: '', component: HomeComponent},
