@@ -37,8 +37,18 @@
                         </div>
                         <div class="col-lg-8 photo-padding" >
                           <div class="card-body">
-                            <a [routerLink]="['/book/', book.id]"><h5 class="card-title"><strong>{{book.name}}</strong>
-                            </h5></a>
+                            <ng-template [ngIf]="book.name.length <= 24" [ngIfElse]="bookTitleElse">
+                              <a [routerLink]="['/book/', book.id]"><h5 class="card-title"><strong>{{book.name}}</strong>
+                              </h5></a>
+                            </ng-template>
+                            <ng-template #bookTitleElse>
+                              <a matTooltipHideDelay="1000" [matTooltip]="book.name | Ellipsis:'title':24"
+                                 matTooltipClass="mat-tooltip"
+                                 matTooltipPosition="right"
+                                 class="text-primary" [routerLink]="['/book/', book.id]"><h5 class="card-title"><strong>{{book.name.slice(0,24)}}...</strong>
+                              </h5>
+                              </a>
+                            </ng-template>
                             <ng-template [ngIf]="book.authors.length==1" [ngIfElse]="manyAuthors">
                               Author :
                             </ng-template>
