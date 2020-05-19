@@ -32,6 +32,7 @@ export class BookComponent implements OnInit {
     book: IBook;
     bookId: number;
     isRequester: boolean;
+    isBookOwner: boolean;
     requestId: number;
     bookStatus: bookStatus;
     currentOwner: IUser;
@@ -62,7 +63,9 @@ export class BookComponent implements OnInit {
     this.book = value;
     this.getOwners(this.book.userId);
     this.bookService.getStatus(this.book).then(res => this.bookStatus = res);
-    this.getUserWhoRequested();
+    if(!value.available){
+      this.getUserWhoRequested();
+    }
     this.imagePath = environment.apiUrl + '/' + this.book.imagePath;
   });
 }
@@ -79,14 +82,29 @@ getOwners(userId: number) {
   this.userService.getUserById(userId)
   .subscribe((value: IUser) => {
     this.currentOwner = value;
-    const query = new RequestQueryParams();
-    query.first = true;
-    query.last = false;
-    this.requestService.getRequestForBook(this.bookId, query).subscribe((value: IRequest) => {
-            this.firstOwner = value.owner;
-            }, err => {
-              this.firstOwner = value;
-            });
+    if (this.isAuthenticated()) {
+      this.authentication.getUserId().subscribe((value: number) => {
+          if (value === this.currentOwner.id) {
+            this.isBookOwner = true;
+          }
+        },
+        err => {
+          this.isBookOwner = false;
+        });
+    }
+    if(!this.book.available){
+      const query = new RequestQueryParams();
+      query.first = true;
+      query.last = false;
+      this.requestService.getRequestForBook(this.bookId, query).subscribe((value: IRequest) => {
+        this.firstOwner = value.owner;
+      }, err => {
+        this.firstOwner = value;
+      });
+    }
+    else{
+      this.firstOwner = value;
+    }
     if (this.firstOwner === undefined) {
               this.firstOwner = value;
             }
