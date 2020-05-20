@@ -275,10 +275,8 @@ constructor(
     let lastName = null;
 
     // if input string contains > 3 words - second is middleName
-    if (words.length > 2) {
-      lastName = words[2];
-    } else {
-      lastName = words[1];
+    if (words.length > 1) {
+      lastName = words[words.length - 1];
     }
     const author: IAuthor = {
       firstName: firstName,
