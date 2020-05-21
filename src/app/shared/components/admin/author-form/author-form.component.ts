@@ -52,7 +52,6 @@ form: FormGroup;
       const newAuthor: IAuthor = {
         firstName: '',
         lastName: '',
-        middleName: ''
       };
       this.title = 'Add Author';
       this.action = FormAction.Add;
@@ -90,16 +89,13 @@ form: FormGroup;
       firstName : new FormControl(this.author.firstName, [
         Validators.required,
         Validators.minLength(2),
-        Validators.maxLength(20),
+        Validators.maxLength(100),
         Validators.pattern('^([a-zA-Z \'-]+)$')]),
       lastName : new FormControl(this.author.lastName, [
         Validators.required,
         Validators.minLength(2),
-        Validators.maxLength(20),
-        Validators.pattern('^([a-zA-Z \'-]+)$')]),
-      middleName : new FormControl(this.author.middleName, [
-        Validators.maxLength(30),
-        Validators.pattern('&^|^([a-zA-Z \'-]+)$')]),
+        Validators.maxLength(100),
+        Validators.pattern('^([a-zA-Z \'-]+)$')])
     });
   }
 
@@ -107,8 +103,7 @@ form: FormGroup;
   submit(): void {
     this.author = {
       firstName: this.form.get('firstName').value,
-      lastName: this.form.get('lastName').value,
-      middleName: this.form.get('middleName').value
+      lastName: this.form.get('lastName').value
     };
     if (this.action !== FormAction.Add) {
       this.author.id = this.form.get('id').value;
@@ -136,9 +131,11 @@ form: FormGroup;
       () => {
         this.authorService.submitAuthor(author);
         this.cancel();
+        this.notificationService.success(this.translate
+          .instant('Authors were merged successfully'), 'X');
       },
       (error) => {
-        this.notificationService.warn(this.translate
+        this.notificationService.error(this.translate
           .instant('Something went wrong!'), 'X');
       },
     );
@@ -148,9 +145,11 @@ form: FormGroup;
       (data: IAuthor) => {
         this.authorService.submitAuthor(author);
         this.cancel();
+        this.notificationService.success(this.translate
+          .instant('New author was created successfully!'), 'X');
       },
       (error) => {
-        this.notificationService.warn(this.translate
+        this.notificationService.error(this.translate
           .instant('Something went wrong!'), 'X');
       },
     );
@@ -160,9 +159,11 @@ form: FormGroup;
       (data: IAuthor) => {
         this.authorService.submitAuthor(author);
         this.cancel();
+        this.notificationService.success(this.translate
+          .instant('Author was Edited successfully!'), 'X');
       },
       (error) => {
-        this.notificationService.warn(this.translate
+        this.notificationService.error(this.translate
           .instant('Something went wrong!'), 'X');
       },
     );
