@@ -14,6 +14,7 @@ import { bookStatus } from 'src/app/core/models/bookStatus.enum';
 import { RequestQueryParams } from 'src/app/core/models/requestQueryParams';
 import { IRequest } from 'src/app/core/models/request';
 import { environment } from 'src/environments/environment';
+import { booksPage } from 'src/app/core/models/booksPage.enum';
 
 @Component({
   selector: 'app-read-books',
@@ -24,10 +25,10 @@ import { environment } from 'src/environments/environment';
 export class ReadBooksComponent implements OnInit, OnDestroy {
 
   isBlockView: boolean = false;
-  isRequester: boolean = false;
+  booksPage: booksPage = booksPage.read;
   books: IBook[];
   totalSize: number;
-  bookStatus: bookStatus[] = [1,1,1,1,1]
+  bookStatus: bookStatus[] = [1,1,1,1,1,1,1,1]
   queryParams: BookQueryParams = new BookQueryParams;
   apiUrl: string = environment.apiUrl;
 
@@ -47,7 +48,7 @@ export class ReadBooksComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routeActive.queryParams.subscribe((params: Params) => {
-      this.queryParams = BookQueryParams.mapFromQuery(params, 1, 5)
+      this.queryParams = BookQueryParams.mapFromQuery(params, 1, 8)
       this.populateDataFromQuery();
       this.getBooks(this.queryParams);
     });
