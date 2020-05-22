@@ -58,12 +58,12 @@
               <span *ngFor="let genre of book?.genres; let i = index"><ng-template [ngIf]="i!=0">, </ng-template>{{ genre?.name }}</span></p>
               <p class="ml-xl-0 ml-4">
                 <strong>Location: </strong> {{ book?.location?.location?.city + " " +  book?.location?.location?.officeName}} </p>
-              <p class="ml-xl-0 ml-4">
-                <strong *ngIf="currentOwner">Current owner: </strong> {{ currentOwner?.firstName + " " + currentOwner?.lastName }} </p>
-              <p class="ml-xl-0 ml-4">
-                <strong *ngIf="firstOwner">Registered by: </strong> {{ firstOwner?.firstName + " " + firstOwner?.lastName }} </p>
+              <p *ngIf="currentOwner" class="ml-xl-0 ml-4">
+                <strong>Current owner: </strong> {{ currentOwner?.firstName + " " + currentOwner?.lastName }} </p>
+              <p *ngIf="firstOwner" class="ml-xl-0 ml-4">
+                <strong>Registered by: </strong> {{ firstOwner?.firstName + " " + firstOwner?.lastName }} </p>
               <p class="ml-xl-0 ml-4" *ngIf="userWhoRequested != null">
-                <strong *ngIf="userWhoRequested">Requested by: </strong> {{ userWhoRequested?.firstName + " " + userWhoRequested?.lastName }} </p>
+                <strong>Requested by: </strong> {{ userWhoRequested?.firstName + " " + userWhoRequested?.lastName }} </p>
             <p class="ml-xl-0 ml-4">
               <strong>{{ 'components.book.publisher' | translate }}: </strong> {{ book?.publisher }} </p>
             <div class="ml-xl-0 ml-4">

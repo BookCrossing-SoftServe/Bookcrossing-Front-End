@@ -33,11 +33,10 @@ export class BookComponent implements OnInit {
     bookId: number;
     isRequester: boolean;
     isBookOwner: boolean;
-    requestId: number;
     bookStatus: bookStatus;
-    currentOwner: IUser;
-    userWhoRequested: IUser;
-    firstOwner: IUser;
+    currentOwner: IUser = null;
+    userWhoRequested: IUser = null;
+    firstOwner: IUser = null;
     imagePath: string;
 
   constructor(
