@@ -26,7 +26,8 @@ export class BooksComponent implements OnInit,OnDestroy {
   books: IBook[];
   totalSize: number;
   booksPage: booksPage = booksPage.list;
-  bookStatus: bookStatus[] = [1,1,1,1,1,1,1,1]
+  bookStatus: bookStatus[] = [undefined,undefined,undefined,undefined,
+    undefined,undefined,undefined,undefined]
   queryParams: BookQueryParams = new BookQueryParams;
   apiUrl: string = environment.apiUrl;
   selectedGenres: number[];

@@ -28,7 +28,8 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
   books: IBook[];
   booksPage: booksPage = booksPage.currentOwned;
   totalSize: number;
-  bookStatus: bookStatus[] = [1,1,1,1,1,1,1,1]
+  bookStatus: bookStatus[] = [undefined,undefined,undefined,undefined,
+    undefined,undefined,undefined,undefined]
   queryParams: BookQueryParams = new BookQueryParams;
   apiUrl: string = environment.apiUrl;
 
@@ -67,14 +68,14 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
       query.first = false;
       query.last = true;
       this.requestService.getRequestForBook(book.id, query)
-     .subscribe((value: IRequest) => {
-         if(value.receiveDate){
-           this.bookStatus[index] = bookStatus.reading
-         }
-         else{
-           this.bookStatus[index] = bookStatus.requested
-         }
-       }, error => {})
+        .subscribe((value: IRequest) => {
+          if(value.receiveDate){
+            this.bookStatus[index] = bookStatus.reading
+          }
+          else{
+            this.bookStatus[index] = bookStatus.requested
+          }
+        }, error => {})
     }
   }
   async requestBook(bookId: number) {
@@ -108,7 +109,7 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
       this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)
     }
     if (typeof this.queryParams.showAvailable === 'undefined') {
-      this.queryParams.showAvailable = true;
+      this.queryParams.showAvailable = false;
     }
     if (this.queryParams.genres) {
       let genres: number[];
@@ -127,8 +128,12 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
     this.queryParams.page = currentPage;
     this.queryParams.firstRequest = false;
     this.changeUrl();
+    window.scrollTo({
+      top: 0,
+      behavior:'smooth'
+    });
   }
-  private resetPageIndex(): void {
+  private resetPageIndex() : void {
     this.queryParams.page = 1;
     this.queryParams.firstRequest = true;
   }
@@ -150,16 +155,17 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
           for(var i = 0; i<pageData.page.length; i++){
 
             this.getStatus(pageData.page[i], i)
-        }
+          }
           if (pageData.totalCount) {
             this.totalSize = pageData.totalCount;
           }
         },
-        error: error => {
-          alert('An error has occured, please try again');
+        error: err => {
+          this.notificationService.error(this.translate
+            .instant("Something went wrong!"), "X");
         }
       });
-  }
+  };
 
   ngOnDestroy() {
     this.searchBarService.changeSearchTerm(null);

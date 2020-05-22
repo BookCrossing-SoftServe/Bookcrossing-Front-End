@@ -33,7 +33,7 @@ export class BookComponent implements OnInit {
     bookId: number;
     isRequester: boolean;
     isBookOwner: boolean;
-    bookStatus: bookStatus;
+    bookStatus: bookStatus = null;
     currentOwner: IUser = null;
     userWhoRequested: IUser = null;
     firstOwner: IUser = null;

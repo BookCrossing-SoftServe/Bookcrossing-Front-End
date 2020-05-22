@@ -28,7 +28,8 @@ export class ReadBooksComponent implements OnInit, OnDestroy {
   booksPage: booksPage = booksPage.read;
   books: IBook[];
   totalSize: number;
-  bookStatus: bookStatus[] = [1,1,1,1,1,1,1,1]
+  bookStatus: bookStatus[] = [undefined,undefined,undefined,undefined,
+    undefined,undefined,undefined,undefined]
   queryParams: BookQueryParams = new BookQueryParams;
   apiUrl: string = environment.apiUrl;
 
@@ -116,7 +117,7 @@ export class ReadBooksComponent implements OnInit, OnDestroy {
       this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)
     }
     if (typeof this.queryParams.showAvailable === 'undefined') {
-      this.queryParams.showAvailable = true;
+      this.queryParams.showAvailable = false;
     }
     if (this.queryParams.genres) {
       let genres: number[];
