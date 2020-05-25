@@ -13,7 +13,7 @@ export class FilterParameters {
 
   static mapFilter(params: HttpParams, filters: FilterParameters[], filterName: string): HttpParams {
     for (let i = 0; i < filters.length; i++) {
-      if (filters[i].propertyName && filters[i].value) {
+      if (filters[i] && filters[i].propertyName && filters[i].value) {
         params = params
           .set(this.getFilterName(i, filterName, this.filterPropertyName), filters[i].propertyName)
           .set(this.getFilterName(i, filterName, this.filterValue), filters[i].value);

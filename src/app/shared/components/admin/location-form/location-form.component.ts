@@ -16,7 +16,6 @@ export class LocationFormComponent implements OnInit {
   public address: ILocation;
   public locationEdit: ILocation = {};
   public isEdited = false;
-  public formSubmitted = false;
   public submitButtonText: string;
 
   constructor(
@@ -65,7 +64,7 @@ export class LocationFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.formSubmitted = true;
+    this.addLocationForm.markAllAsTouched();
     if (this.addLocationForm.invalid) {
       return;
     }
@@ -75,14 +74,12 @@ export class LocationFormComponent implements OnInit {
       officeName: this.addLocationForm.get('officeName').value,
       isActive: this.addLocationForm.get('isActive').value,
     };
-    console.log(location);
     if (!this.isEdited) {
       this.postLocation(location);
     } else {
       location.id = this.locationEdit.id;
       this.editLocation(location);
     }
-    this.onCancel();
   }
 
   postLocation(location: ILocation) {
@@ -91,6 +88,7 @@ export class LocationFormComponent implements OnInit {
         this.locationService.submitLocation(data);
         this.notificationService.success(this.translate
           .instant('New location was created successfully'), 'X');
+        this.onCancel();
       },
       () => {
         this.notificationService.error(this.translate
@@ -105,6 +103,7 @@ export class LocationFormComponent implements OnInit {
         this.locationService.submitLocation(location);
         this.notificationService.success(this.translate
           .instant('Location was updated successfully'), 'X');
+        this.onCancel();
       },
       () => {
         this.notificationService.error(this.translate

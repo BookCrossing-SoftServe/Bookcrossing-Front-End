@@ -7,7 +7,6 @@
   <div>
     <form
       [formGroup]="addLocationForm"
-      [class.submitted]="formSubmitted"
       (ngSubmit)="onSubmit()"
       class="text-center border border-light p-5 form-background"
     >
@@ -25,11 +24,11 @@
           type="text"
           class="form-control"/>
         </div>
-          <div *ngIf="addLocationForm.get('city').errors && addLocationForm.get('city').touched || formSubmitted">
+          <div *ngIf="addLocationForm.get('city').errors && addLocationForm.get('city').touched">
             <div *ngIf="addLocationForm.get('city').errors?.required" class="validation-error">
               This Field is required.
             </div>
-            <div *ngIf="addLocationForm.get('city').errors.maxlength" class="validation-error">
+            <div *ngIf="addLocationForm.get('city').errors?.maxlength" class="validation-error">
               This Field less than {{addLocationForm.get('city').errors?.maxlength?.requiredLength}} characters
             </div>
           </div>
@@ -45,11 +44,11 @@
           type="text"
           class="form-control" />
         </div>
-        <div *ngIf="addLocationForm.get('street').errors && addLocationForm.get('street').touched || formSubmitted">
+        <div *ngIf="addLocationForm.get('street').errors && addLocationForm.get('street').touched">
           <div *ngIf="addLocationForm.get('street').errors?.required" class="validation-error">
             This Field is required.
           </div>
-          <div *ngIf="addLocationForm.get('street').errors.maxlength" class="validation-error">
+          <div *ngIf="addLocationForm.get('street').errors?.maxlength" class="validation-error">
             This Field less than {{addLocationForm.get('street').errors?.maxlength?.requiredLength}} characters
           </div>
         </div>
@@ -67,11 +66,11 @@
             class="form-control"
           />
         </div>
-        <div *ngIf="addLocationForm.get('officeName').errors && addLocationForm.get('officeName').touched || formSubmitted">
+        <div *ngIf="addLocationForm.get('officeName').errors && addLocationForm.get('officeName').touched">
           <div *ngIf="addLocationForm.get('officeName').errors?.required" class="validation-error">
             This Field is required.
           </div>
-          <div *ngIf="addLocationForm.get('officeName').errors.maxlength" class="validation-error">
+          <div *ngIf="addLocationForm.get('officeName').errors?.maxlength" class="validation-error">
             This Field less than {{addLocationForm.get('officeName').errors?.maxlength?.requiredLength}} characters
           </div>
         </div>
@@ -90,7 +89,7 @@
           </div>
         </div>
 
-        <div *ngIf="addLocationForm.get('isActive').errors && addLocationForm.get('isActive').touched || formSubmitted">
+        <div *ngIf="addLocationForm.get('isActive').errors && addLocationForm.get('isActive').touched">
           <div *ngIf="addLocationForm.get('isActive').errors?.required" class="validation-error">
             This Field is required.
           </div>
