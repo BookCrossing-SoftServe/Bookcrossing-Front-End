@@ -20,6 +20,7 @@ export class LocationsComponent implements OnInit {
   searchText: string;
   searchField = 'street';
   totalSize: number;
+  showInactive = false;
 
 
   constructor(
@@ -30,10 +31,13 @@ export class LocationsComponent implements OnInit {
 
 
   ngOnInit() {
+    this.queryParams.filters = [];
     this.routeActive.queryParams.subscribe((params: Params) => {
       this.queryParams = this.queryParams.mapFromQuery(params);
-      this.searchText = this.queryParams?.filters[0]?.value;
       this.queryParams.sort.orderByField = this.queryParams.sort.orderByField ? this.queryParams.sort.orderByField : 'id';
+      this.searchText = this.queryParams?.filters[1]?.value;
+      this.showInactive = this.queryParams?.filters[0]?.value === 'true';
+      this.setInactiveFilter(this.showInactive);
       this.getLocations(this.queryParams);
     });
     this.onLocationSubmitted();
@@ -45,10 +49,21 @@ export class LocationsComponent implements OnInit {
       if (editedLocation) {
         const index = this.locations?.indexOf(editedLocation);
         this.locations[index] = location;
+        this.locations = this.locations.filter(x => x.isActive !== this.showInactive);
       } else {
         this.locations?.push(location);
       }
     });
+  }
+
+  toggleInactive() {
+    this.queryParams.page = 1;
+    this.showInactive = !this.showInactive;
+    this.setInactiveFilter(this.showInactive);
+    this.changeUrl();
+  }
+  private setInactiveFilter(showInactive: boolean) {
+    this.queryParams.filters[0] = {propertyName: 'isActive', value: showInactive + '', method: 'NotEqual', operand: 'And'} as FilterParameters;
   }
   // Pagination/URL
   search(): void {
@@ -56,8 +71,7 @@ export class LocationsComponent implements OnInit {
       return;
     }
     this.queryParams.page = 1;
-    this.queryParams.filters = [];
-    this.queryParams.filters[0] = {propertyName: this.searchField, value: this.searchText} as FilterParameters;
+    this.queryParams.filters[1] = {propertyName: this.searchField, value: this.searchText} as FilterParameters;
     this.changeUrl();
   }
   changeSort(selectedHeader: string) {
@@ -70,6 +84,7 @@ export class LocationsComponent implements OnInit {
     this.changeUrl();
   }
   private changeUrl(): void {
+    console.log(this.queryParams.getQueryObject());
     this.router.navigate(['.'],
       {
         relativeTo: this.routeActive,
@@ -80,7 +95,7 @@ export class LocationsComponent implements OnInit {
   AddLocation(): void {
     this.router.navigate(['admin/location-form']);
   }
-  EditLocation(location: ILocation): void{
+  EditLocation(location: ILocation): void {
     this.router.navigate(['admin/location-form', location]);
   }
   // Get

@@ -16,3 +16,25 @@
 .asterisk {
   color: red;
 }
+input,select {
+  &.ng-invalid.ng-touched {
+    border: 1px solid red;
+  }
+  &.ng-valid.ng-touched {
+    border: 1px solid green;
+  }
+}
+form.submitted input,form.submitted select {
+  &.ng-invalid {
+    border: 1px solid red;
+  }
+}
+.row {
+  margin-right: 0;
+  margin-left: 0;
+}
+.validation-error{
+  width: 100%;
+  font-size: 80%;
+  color: #dc3545;
+}
