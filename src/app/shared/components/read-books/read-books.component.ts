@@ -25,6 +25,8 @@ import { booksPage } from 'src/app/core/models/booksPage.enum';
 export class ReadBooksComponent implements OnInit, OnDestroy {
 
   isBlockView: boolean = false;
+  userId: number;
+  isRequester: boolean[] = [undefined, undefined, undefined, undefined, undefined ,undefined, undefined, undefined];
   disabledButton: boolean = false;
   booksPage: booksPage = booksPage.read;
   books: IBook[];
@@ -47,11 +49,33 @@ export class ReadBooksComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.getUserId()
     this.routeActive.queryParams.subscribe((params: Params) => {
       this.queryParams = BookQueryParams.mapFromQuery(params, 1, 8)
       this.populateDataFromQuery();
       this.getBooks(this.queryParams);
     });
+  }
+
+  getUserId(){
+    if (this.isAuthenticated()) {
+      this.authentication.getUserId().subscribe((value: number) => {
+        this.userId = value;
+      });
+    }
+  }
+
+  getUserWhoRequested(book: IBook, key: number) {
+    if (book.state === bookState.requested) {
+      const query = new RequestQueryParams();
+      query.first = false;
+      query.last = true;
+      this.requestService.getRequestForBook(book.id, query).subscribe((value: IRequest) => {
+        if (this.userId === value.user.id) {
+          this.isRequester[key] = true;
+        }
+      });
+    }
   }
   onViewModeChange(viewModeChanged: string) {
     if(viewModeChanged === 'block'){
@@ -160,6 +184,10 @@ export class ReadBooksComponent implements OnInit, OnDestroy {
       .subscribe({
         next: pageData => {
           this.books = pageData.page;
+          for(var i = 0; i<pageData.page.length; i++){
+
+            this.getUserWhoRequested(pageData.page[i], i)
+          }
           if (pageData.totalCount) {
             this.totalSize = pageData.totalCount;
           }

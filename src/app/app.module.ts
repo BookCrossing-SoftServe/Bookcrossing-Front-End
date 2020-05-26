@@ -86,7 +86,10 @@ import {MatLineModule} from '@angular/material/core';
 import {MatListModule} from '@angular/material/list';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 import {UserNamePipe} from './shared/pipes/userName.pipe';
+<<<<<<< HEAD
 import {StarRatingModule} from '@sreyaj/ng-star-rating';
+=======
+>>>>>>> ca0123940034bdd816f9b85b284c6dbb129e2eb7
 
 
 @NgModule({

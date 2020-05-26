@@ -6,14 +6,14 @@ import {DialogService} from 'src/app/core/services/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
 import {NotificationService} from 'src/app/core/services/notification/notification.service';
 import {RequestService} from 'src/app/core/services/request/request.service';
-import {bookState} from 'src/app/core/models/bookState.enum';
-import {RequestQueryParams} from 'src/app/core/models/requestQueryParams';
 import {IRequest} from 'src/app/core/models/request';
 import {BookQueryParams} from '../../../core/models/bookQueryParams';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SearchBarService} from '../../../core/services/searchBar/searchBar.service';
 import {environment} from 'src/environments/environment';
 import {booksPage} from '../../../core/models/booksPage.enum';
+import {bookState} from '../../../core/models/bookState.enum';
+import {RequestQueryParams} from '../../../core/models/requestQueryParams';
 
 @Component({
   selector: 'app-registered-book',
@@ -24,10 +24,10 @@ import {booksPage} from '../../../core/models/booksPage.enum';
 export class RegisteredBookComponent implements OnInit, OnDestroy {
 
   isBlockView: boolean = false;
+  userId: number;
+  isRequester: boolean[] = [undefined, undefined, undefined, undefined, undefined ,undefined, undefined, undefined];
   disabledButton: boolean = false;
   books: IBook[];
-  isRequester: boolean = false;
-  userId: number;
   totalSize: number;
   booksPage: booksPage = booksPage.registered;
   queryParams: BookQueryParams = new BookQueryParams;
@@ -45,11 +45,33 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
               private requestService: RequestService) { }
 
   ngOnInit(): void {
+    this.getUserId()
     this.routeActive.queryParams.subscribe((params: Params) => {
       this.queryParams = BookQueryParams.mapFromQuery(params, 1, 8);
       this.populateDataFromQuery();
       this.getBooks(this.queryParams);
     });
+  }
+
+  getUserId(){
+    if (this.isAuthenticated()) {
+      this.authentication.getUserId().subscribe((value: number) => {
+        this.userId = value;
+      });
+    }
+  }
+
+  getUserWhoRequested(book: IBook, key: number) {
+    if (book.state === bookState.requested) {
+      const query = new RequestQueryParams();
+      query.first = false;
+      query.last = true;
+      this.requestService.getRequestForBook(book.id, query).subscribe((value: IRequest) => {
+        if (this.userId === value.user.id) {
+          this.isRequester[key] = true;
+        }
+      });
+    }
   }
 
   async cancelRequest(bookId: number) {
@@ -78,6 +100,7 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
   isAuthenticated(){
     return this.authentication.isAuthenticated();
   }
+
   async requestBook(bookId: number) {
     this.dialogService
       .openConfirmDialog(
@@ -155,6 +178,10 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
       .subscribe({
         next: pageData => {
           this.books = pageData.page;
+          for(var i = 0; i<pageData.page.length; i++){
+
+            this.getUserWhoRequested(pageData.page[i], i)
+          }
           if (pageData.totalCount) {
             this.totalSize = pageData.totalCount;
           }
