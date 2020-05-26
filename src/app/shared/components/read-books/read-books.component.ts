@@ -27,6 +27,7 @@ export class ReadBooksComponent implements OnInit, OnDestroy {
   isBlockView: boolean = false;
   userId: number;
   isRequester: boolean[] = [undefined, undefined, undefined, undefined, undefined ,undefined, undefined, undefined];
+  requestIds: Object = {};
   disabledButton: boolean = false;
   booksPage: booksPage = booksPage.read;
   books: IBook[];
@@ -72,6 +73,7 @@ export class ReadBooksComponent implements OnInit, OnDestroy {
       query.last = true;
       this.requestService.getRequestForBook(book.id, query).subscribe((value: IRequest) => {
         if (this.userId === value.user.id) {
+          this.requestIds[book.id] = value.id
           this.isRequester[key] = true;
         }
       });
@@ -97,7 +99,7 @@ export class ReadBooksComponent implements OnInit, OnDestroy {
       .subscribe(async res => {
         if (res) {
           this.disabledButton = true;
-          this.requestService.deleteRequest(bookId).subscribe(() => {
+          this.requestService.deleteRequest(this.requestIds[bookId]).subscribe(() => {
             this.disabledButton = false;
             this.ngOnInit();
             this.notificationService.success(this.translate

@@ -24,7 +24,7 @@
               </div>
             </div>
               <div class="text-center text-md-left text-md-right mt-2">
-                <span [ngSwitch]="book.state">
+                <span [ngSwitch]="book?.state">
                   <ng-template ngSwitchCase="0"><button [hidden]="!isAuthenticated()" [disabled]="disabledButton" class="btn purple-gradient btn-rounded btn-lg btn-block" (click)="requestBook()">
                     <i class="mr-2" aria-hidden="true"></i> {{ 'components.book.request' | translate }}</button></ng-template>
                   <ng-template ngSwitchCase="1">
@@ -87,10 +87,11 @@
               <strong>{{ 'components.book.publisher' | translate }}: </strong> {{ book?.publisher }} </p>
             <div class="ml-xl-0 ml-4">
               <strong>Status: </strong>
-              <span [ngSwitch]="book.state">
+              <span [ngSwitch]="book?.state">
                 <ng-template ngSwitchCase="0"><span class="badge badge-success product mb-4 ml-2">Available</span></ng-template>
                 <ng-template ngSwitchCase="1"><span class="badge badge-info product mb-4 ml-2">Requested</span></ng-template>
                 <ng-template ngSwitchCase="2"><span class="badge badge-info product mb-4 ml-2">Reading</span></ng-template>
+                <ng-template ngSwitchCase="3"><span class="badge badge-light product mb-4 ml-2">Inactive</span></ng-template>
               </span>
             </div>
             <p [hidden]="!book?.notice" class="ml-xl-0 ml-4"><strong>Notice: </strong> {{ book?.notice }} </p>

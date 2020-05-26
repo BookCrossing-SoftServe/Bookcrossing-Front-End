@@ -26,6 +26,7 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
   isBlockView: boolean = false;
   userId: number;
   isRequester: boolean[] = [undefined, undefined, undefined, undefined, undefined ,undefined, undefined, undefined];
+  requestIds: Object = {};
   disabledButton: boolean = false;
   books: IBook[];
   totalSize: number;
@@ -68,6 +69,7 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
       query.last = true;
       this.requestService.getRequestForBook(book.id, query).subscribe((value: IRequest) => {
         if (this.userId === value.user.id) {
+          this.requestIds[book.id] = value.id
           this.isRequester[key] = true;
         }
       });
@@ -110,7 +112,7 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
       .subscribe(async res => {
         this.disabledButton = true;
         if (res) {
-          this.requestService.requestBook(bookId).subscribe((value: IRequest) => {
+          this.requestService.requestBook(this.requestIds[bookId]).subscribe((value: IRequest) => {
             this.disabledButton = false;
             this.ngOnInit();
             this.notificationService.success(this.translate

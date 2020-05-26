@@ -23,15 +23,14 @@ import { booksPage } from 'src/app/core/models/booksPage.enum';
 export class RequestsComponent implements OnInit {
 
   isBlockView: boolean = false;
+  userId: number;
+  isRequester: boolean[] = [true, true, true, true, true ,true, true, true];
   disabledButton: boolean = false;
   viewMode: string;
-  requests: IRequest[] = [];
+  requests: IRequest[];
   booksPage: booksPage = booksPage.requested;
-  books: IBook[] = [];
+  books: IBook[];
   totalSize: number;
-  bookStatus: bookState[] = [bookState.requested,bookState.requested,bookState.requested,
-    bookState.requested,bookState.requested,bookState.requested,bookState.requested,bookState.requested]
-
   queryParams: BookQueryParams = new BookQueryParams;
   selectedGenres: number[];
   apiUrl: string = environment.apiUrl;

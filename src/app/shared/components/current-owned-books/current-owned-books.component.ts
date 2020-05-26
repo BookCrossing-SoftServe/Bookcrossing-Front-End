@@ -28,6 +28,7 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
   disabledButton: boolean = false;
   userId: number;
   isRequester: boolean[] = [undefined, undefined, undefined, undefined, undefined ,undefined, undefined, undefined];
+  requestIds: Object = {};
   books: IBook[];
   booksPage: booksPage = booksPage.currentOwned;
   totalSize: number;
@@ -71,6 +72,7 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
       query.last = true;
       this.requestService.getRequestForBook(book.id, query).subscribe((value: IRequest) => {
         if (this.userId === value.user.id) {
+          this.requestIds[book.id] = value.id
           this.isRequester[key] = true;
         }
       });
@@ -85,7 +87,7 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
       .subscribe(async res => {
         if (res) {
           this.disabledButton = true;
-          this.requestService.deleteRequest(bookId).subscribe(() => {
+          this.requestService.deleteRequest(this.requestIds[bookId]).subscribe(() => {
             this.disabledButton = false;
             this.ngOnInit();
             this.notificationService.success(this.translate

@@ -14,6 +14,7 @@ import {bookState} from 'src/app/core/models/bookState.enum';
 import {RequestQueryParams} from 'src/app/core/models/requestQueryParams';
 import {environment} from 'src/environments/environment';
 import {booksPage} from 'src/app/core/models/booksPage.enum';
+import {IBookPut} from '../../../core/models/bookPut';
 
 @Component({
   selector: 'app-books',
@@ -25,6 +26,7 @@ export class BooksComponent implements OnInit,OnDestroy {
   isBlockView: boolean = false;
   userId: number;
   isRequester: boolean[] = [undefined, undefined, undefined, undefined, undefined ,undefined, undefined, undefined];
+  requestIds: Object = {};
   disabledButton: boolean = false;
   books: IBook[];
   totalSize: number;
@@ -72,6 +74,7 @@ export class BooksComponent implements OnInit,OnDestroy {
       query.last = true;
       this.requestService.getRequestForBook(book.id, query).subscribe((value: IRequest) => {
         if (this.userId === value.user.id) {
+          this.requestIds[book.id] = value.id
           this.isRequester[key] = true;
         }
       });
@@ -87,7 +90,7 @@ export class BooksComponent implements OnInit,OnDestroy {
       .subscribe(async res => {
         if (res) {
           this.disabledButton = true;
-          this.requestService.deleteRequest(bookId).subscribe(() => {
+          this.requestService.deleteRequest(this.requestIds[bookId]).subscribe(() => {
             this.disabledButton = false;
             this.ngOnInit();
             this.notificationService.success(this.translate
@@ -178,9 +181,11 @@ export class BooksComponent implements OnInit,OnDestroy {
       .subscribe({
         next: pageData => {
           this.books = pageData.page;
-          for(var i = 0; i<pageData.page.length; i++){
+          if(this.isAuthenticated()){
+            for(var i = 0; i<pageData.page.length; i++){
 
-            this.getUserWhoRequested(pageData.page[i], i)
+              this.getUserWhoRequested(pageData.page[i], i)
+            }
           }
           if (pageData.totalCount) {
             this.totalSize = pageData.totalCount;

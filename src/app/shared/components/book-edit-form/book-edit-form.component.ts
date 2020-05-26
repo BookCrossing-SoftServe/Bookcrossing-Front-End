@@ -103,9 +103,6 @@ constructor(
       inactive: new FormControl(null)
     });
     if(this.book.state === bookState.inActive){
-      this.editBookForm.setValue({
-        inactive: true
-      });
       this.isInActive = true;
     }
     if(this.book.authors){
@@ -154,15 +151,6 @@ constructor(
       id: this.book.id,
       fieldMasks: []
     };
-    if(this.editBookForm.get('inactive').value !== this.isInActive){
-      book.fieldMasks.push("State");
-      switch(this.book.state) {
-        case 0: book.state = bookState.inActive;
-          break
-        case 3: book.state = bookState.available
-          break
-      }
-    }
     if(JSON.stringify(selectedGenres) !== JSON.stringify(this.book.genres)){
       book.fieldMasks.push("BookGenre");
       book.bookGenre = selectedGenres;
@@ -188,12 +176,14 @@ constructor(
       book.image = this.selectedFile;
     }
     if(book.fieldMasks.length < 1){
+      this.chengeInActiveIfNeed()
       this.cancel()
     }
     else {
       const formData: FormData = this.getFormData(book);
       this.bookService.putBook(book.id, formData).subscribe(
         (data: boolean) => {
+          this.chengeInActiveIfNeed()
           this.notificationService.success(this.translate.instant("Book is edited successfully"), "X");
           this.onCancel.emit();
         },
@@ -210,6 +200,23 @@ constructor(
       .valueChanges.subscribe((input) => {
         this.filterAuthors(input);
       });
+  }
+  chengeInActiveIfNeed(){
+    if(this.editBookForm.get('inactive').value !== this.isInActive){
+      switch(this.book.state) {
+        case bookState.inActive:
+          this.bookService.activateBook(this.book.id).subscribe(() => {
+            this.onCancel.emit();
+            this.notificationService.success(this.translate.instant("Book is edited successfully"), "X");
+          })
+          break
+        default: this.bookService.deactivateBook(this.book.id).subscribe(() => {
+          this.onCancel.emit();
+          this.notificationService.success(this.translate.instant("Book is edited successfully"), "X");
+        })
+          break
+      }
+    }
   }
   validateForm(form: FormGroup): boolean {
     if (!this.userId) {

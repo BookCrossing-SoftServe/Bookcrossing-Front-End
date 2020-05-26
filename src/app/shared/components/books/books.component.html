@@ -110,16 +110,19 @@
                             <span>
                               Status:
                             </span>
-                            <span [ngSwitch]="book.state">
+                            <span [ngSwitch]="book?.state">
               <ng-template ngSwitchCase="0"><span class="badge badge-success product">Available</span>
                 <br>
                 <button role="button" class="btn btn-primary ml-0" [hidden]="!isAuthenticated()" [disabled]="disabledButton" (click)="requestBook(book.id)">Request</button>
               </ng-template>
               <ng-template ngSwitchCase="1"><span class="badge badge-info product">Requested</span>
               <br>
-              <button role="button" class="btn btn-primary ml-0" [disabled]="disabledButton" (click)="cancelRequest(book.id)">Cancel request</button>
+              <button *ngIf="isRequester[key]" role="button" class="btn btn-primary ml-0" [disabled]="disabledButton" (click)="cancelRequest(book.id)">Cancel request</button>
               </ng-template>
-              <ng-template ngSwitchCase="2"><span class="badge badge-info product">Reading</span></ng-template>
+              <ng-template ngSwitchCase="2"><span class="badge badge-info product">Reading</span>
+              </ng-template>
+              <ng-template ngSwitchCase="3"><span class="badge badge-light product">Inactive</span>
+              </ng-template>
             </span>
                             </p>
                           </div>
@@ -205,18 +208,18 @@
                 </span>
                 <br>
                 <span>Status: </span>
-                <span [ngSwitch]="book.state">
+                <span [ngSwitch]="book?.state">
               <ng-template ngSwitchCase="0"><span class="badge badge-success product">Available</span>
                 <br>
-                <a role="button" class="btn btn-primary ml-0" [hidden]="!isAuthenticated()" (click)="requestBook(book.id)">Request</a>
+                <button role="button" class="btn btn-primary ml-0" [hidden]="!isAuthenticated()" [disabled]="disabledButton" (click)="requestBook(book.id)">Request</button>
               </ng-template>
               <ng-template ngSwitchCase="1"><span class="badge badge-info product">Requested</span>
               <br>
-              <a *ngIf="isRequester[key]" role="button" class="btn btn-primary ml-0" (click)="cancelRequest(book.id)">Cancel request</a>
+              <button *ngIf="isRequester[key]" role="button" class="btn btn-primary ml-0" [disabled]="disabledButton" (click)="cancelRequest(book.id)">Cancel request</button>
               </ng-template>
               <ng-template ngSwitchCase="2"><span class="badge badge-info product">Reading</span>
-                <br>
-              <a *ngIf="userId === book.userId" role="button" class="btn btn-primary ml-0">Make available</a>
+              </ng-template>
+              <ng-template ngSwitchCase="3"><span class="badge badge-light product">Inactive</span>
               </ng-template>
             </span>
 

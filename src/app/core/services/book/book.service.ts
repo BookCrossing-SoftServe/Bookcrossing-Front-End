@@ -52,4 +52,12 @@ export class BookService {
     return this.http.put(this.apiUrl + bookId, book);
   }
 
+  deactivateBook(bookId: number){
+    return this.http.put(this.apiUrl + bookId + '/deactivate', undefined);
+  }
+
+  activateBook(bookId: number){
+    return this.http.put(this.apiUrl + bookId + '/activate', undefined);
+  }
+
 }
