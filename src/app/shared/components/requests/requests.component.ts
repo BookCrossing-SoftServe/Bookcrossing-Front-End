@@ -10,7 +10,7 @@ import {SearchBarService} from 'src/app/core/services/searchBar/searchBar.servic
 import {environment} from 'src/environments/environment';
 import {IBook} from '../../../core/models/book';
 import {AuthenticationService} from '../../../core/services/authentication/authentication.service';
-import {bookStatus} from 'src/app/core/models/bookStatus.enum';
+import {bookState} from 'src/app/core/models/bookState.enum';
 import {RequestQueryParams} from '../../../core/models/requestQueryParams';
 import { booksPage } from 'src/app/core/models/booksPage.enum';
 
@@ -23,13 +23,14 @@ import { booksPage } from 'src/app/core/models/booksPage.enum';
 export class RequestsComponent implements OnInit {
 
   isBlockView: boolean = false;
+  disabledButton: boolean = false;
   viewMode: string;
   requests: IRequest[] = [];
   booksPage: booksPage = booksPage.requested;
-  books: IBook[];
+  books: IBook[] = [];
   totalSize: number;
-  bookStatus: bookStatus[] = [bookStatus.requested,bookStatus.requested,bookStatus.requested,
-    bookStatus.requested,bookStatus.requested,bookStatus.requested,bookStatus.requested,bookStatus.requested]
+  bookStatus: bookState[] = [bookState.requested,bookState.requested,bookState.requested,
+    bookState.requested,bookState.requested,bookState.requested,bookState.requested,bookState.requested]
 
   queryParams: BookQueryParams = new BookQueryParams;
   selectedGenres: number[];
@@ -71,9 +72,7 @@ export class RequestsComponent implements OnInit {
       if(pageData.totalCount){
         this.totalSize = pageData.totalCount;
       }
-    },
-    error: error => this.notificationService.error(this.translate
-      .instant("You haven`t made any requests yet!"), "X")
+    }
    });
   };
 
@@ -87,12 +86,15 @@ export class RequestsComponent implements OnInit {
       .afterClosed()
       .subscribe(async res => {
         if (res) {
+          this.disabledButton = true;
           let request = this.requests.find(x=>x.book.id === bookId)
           this.requestService.deleteRequest(request.id).subscribe(() => {
+            this.disabledButton = false;
             this.ngOnInit();
               this.notificationService.success(this.translate
                 .instant("Request is cancelled."), "X");
             }, err => {
+            this.disabledButton = false;
               this.notificationService.error(this.translate
                 .instant("Something went wrong!"), "X");
             });

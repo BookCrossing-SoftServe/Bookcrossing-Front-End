@@ -1,18 +1,19 @@
-import {Component, EventEmitter, OnInit, Input, Output, ViewChild} from '@angular/core';
-import { IAuthor } from "src/app/core/models/author";
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { BookService } from 'src/app/core/services/book/book.service';
-import { IBook } from 'src/app/core/models/book';
-import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/core/services/authentication/authentication.service';
-import { AuthorService } from 'src/app/core/services/author/authors.service';
-import { GenreService } from 'src/app/core/services/genre/genre';
-import { IGenre } from 'src/app/core/models/genre';
-import { SubscriptionLike } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from 'src/app/core/services/notification/notification.service';
-import { DialogService } from 'src/app/core/services/dialog/dialog.service';
-import { IBookPut } from 'src/app/core/models/bookPut';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {IAuthor} from 'src/app/core/models/author';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {BookService} from 'src/app/core/services/book/book.service';
+import {IBook} from 'src/app/core/models/book';
+import {Router} from '@angular/router';
+import {AuthenticationService} from 'src/app/core/services/authentication/authentication.service';
+import {AuthorService} from 'src/app/core/services/author/authors.service';
+import {GenreService} from 'src/app/core/services/genre/genre';
+import {IGenre} from 'src/app/core/models/genre';
+import {SubscriptionLike} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {NotificationService} from 'src/app/core/services/notification/notification.service';
+import {DialogService} from 'src/app/core/services/dialog/dialog.service';
+import {IBookPut} from 'src/app/core/models/bookPut';
+import {bookState} from '../../../core/models/bookState.enum';
 
 @Component({
   selector: 'app-author-form',
@@ -24,10 +25,12 @@ export class BookEditFormComponent implements OnInit {
 @ViewChild("lastnameInput") inputLastname;
 @Output() onCancel : EventEmitter<void> = new EventEmitter<void>()
 @Input() book : IBook
+@Input() isAdmin: boolean
 
 editBookForm: FormGroup;
 
   userId: number;
+  isInActive: boolean = false;
   genres: IGenre[] = [];
   selectedAuthors: IAuthor[] = [];
   authors: IAuthor[] = [];
@@ -97,7 +100,14 @@ constructor(
       authorFirstname: new FormControl(null),
       description: new FormControl({value:this.book.notice, disabled: false}),
       image: new FormControl({value:this.book.imagePath, disabled: false}),
+      inactive: new FormControl(null)
     });
+    if(this.book.state === bookState.inActive){
+      this.editBookForm.setValue({
+        inactive: true
+      });
+      this.isInActive = true;
+    }
     if(this.book.authors){
       this.book.authors.forEach(element => {
         this.addAuthor(this.selectedAuthors, element);
@@ -144,6 +154,15 @@ constructor(
       id: this.book.id,
       fieldMasks: []
     };
+    if(this.editBookForm.get('inactive').value !== this.isInActive){
+      book.fieldMasks.push("State");
+      switch(this.book.state) {
+        case 0: book.state = bookState.inActive;
+          break
+        case 3: book.state = bookState.available
+          break
+      }
+    }
     if(JSON.stringify(selectedGenres) !== JSON.stringify(this.book.genres)){
       book.fieldMasks.push("BookGenre");
       book.bookGenre = selectedGenres;
@@ -168,16 +187,21 @@ constructor(
       book.fieldMasks.push("Image");
       book.image = this.selectedFile;
     }
-    const formData: FormData = this.getFormData(book);
-    this.bookService.putBook(book.id, formData).subscribe(
-      (data: boolean) => {
-        this.notificationService.success(this.translate.instant("Book is edited successfully"), "X");
-        this.onCancel.emit();
-      },
-      (error) => {
-        this.notificationService.error(this.translate.instant("Please edit something!"), "X");
-      }
-    );
+    if(book.fieldMasks.length < 1){
+      this.cancel()
+    }
+    else {
+      const formData: FormData = this.getFormData(book);
+      this.bookService.putBook(book.id, formData).subscribe(
+        (data: boolean) => {
+          this.notificationService.success(this.translate.instant("Book is edited successfully"), "X");
+          this.onCancel.emit();
+        },
+        (error) => {
+          this.notificationService.error(this.translate.instant("Please edit something!"), "X");
+        }
+      );
+    }
 
     // after submmit subscription stops work
     this.authorsSubscription.unsubscribe();
@@ -297,7 +321,6 @@ constructor(
             }
           });
         } else {
-          console.log(key + " " + book[key]);
           formData.append(key, book[key]);
         }
       }

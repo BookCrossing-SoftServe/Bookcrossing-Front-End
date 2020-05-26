@@ -6,7 +6,7 @@ import {DialogService} from 'src/app/core/services/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
 import {NotificationService} from 'src/app/core/services/notification/notification.service';
 import {RequestService} from 'src/app/core/services/request/request.service';
-import {bookStatus} from 'src/app/core/models/bookStatus.enum';
+import {bookState} from 'src/app/core/models/bookState.enum';
 import {RequestQueryParams} from 'src/app/core/models/requestQueryParams';
 import {IRequest} from 'src/app/core/models/request';
 import {BookQueryParams} from '../../../core/models/bookQueryParams';
@@ -24,13 +24,12 @@ import {booksPage} from '../../../core/models/booksPage.enum';
 export class RegisteredBookComponent implements OnInit, OnDestroy {
 
   isBlockView: boolean = false;
+  disabledButton: boolean = false;
   books: IBook[];
   isRequester: boolean = false;
   userId: number;
   totalSize: number;
   booksPage: booksPage = booksPage.registered;
-  bookStatus: bookStatus[] = [undefined,undefined,undefined,undefined,
-    undefined,undefined,undefined,undefined]
   queryParams: BookQueryParams = new BookQueryParams;
   selectedGenres: number[];
   apiUrl: string = environment.apiUrl;
@@ -53,29 +52,31 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
     });
   }
 
-  async cancelRequest(id: number){}
+  async cancelRequest(bookId: number) {
+    this.dialogService
+      .openConfirmDialog(
+        await this.translate.get("Do you want to cancel request? Current owner will be notified about your cancellation.").toPromise()
+      )
+      .afterClosed()
+      .subscribe(async res => {
+        if (res) {
+          this.disabledButton = true;
+          this.requestService.deleteRequest(bookId).subscribe(() => {
+            this.disabledButton = false;
+            this.ngOnInit();
+            this.notificationService.success(this.translate
+              .instant("Request is cancelled."), "X");
+          }, err => {
+            this.disabledButton = false;
+            this.notificationService.error(this.translate
+              .instant("Something went wrong!"), "X");
+          });
+        }
+      });
+  }
 
   isAuthenticated(){
     return this.authentication.isAuthenticated();
-  }
-  getStatus(book : IBook, index: number){
-    if(book.available){
-      this.bookStatus[index] = bookStatus.available
-    }
-    else{
-      let query = new RequestQueryParams();
-      query.first = false;
-      query.last = true;
-      this.requestService.getRequestForBook(book.id, query)
-        .subscribe((value: IRequest) => {
-          if(value.receiveDate){
-            this.bookStatus[index] = bookStatus.reading
-          }
-          else{
-            this.bookStatus[index] = bookStatus.requested
-          }
-        }, error => {})
-    }
   }
   async requestBook(bookId: number) {
     this.dialogService
@@ -84,12 +85,15 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
       )
       .afterClosed()
       .subscribe(async res => {
+        this.disabledButton = true;
         if (res) {
           this.requestService.requestBook(bookId).subscribe((value: IRequest) => {
+            this.disabledButton = false;
             this.ngOnInit();
             this.notificationService.success(this.translate
               .instant("Book is successfully requested. Please contact with current owner to receive a book"), "X");
             }, err => {
+            this.disabledButton = false;
               this.notificationService.error(this.translate
                 .instant("Something went wrong!"), "X");
             });
@@ -151,10 +155,6 @@ export class RegisteredBookComponent implements OnInit, OnDestroy {
       .subscribe({
         next: pageData => {
           this.books = pageData.page;
-          for(var i = 0; i<pageData.page.length; i++){
-
-            this.getStatus(pageData.page[i], i)
-          }
           if (pageData.totalCount) {
             this.totalSize = pageData.totalCount;
           }
