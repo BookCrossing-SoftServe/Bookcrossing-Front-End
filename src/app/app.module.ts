@@ -1,3 +1,4 @@
+import { BookEditFormComponent } from './shared/components/book-edit-form/book-edit-form.component';
 import { UserService } from './core/services/user/user.service';
 import { RequestService } from 'src/app/core/services/request/request.service';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
@@ -34,13 +35,13 @@ import { PaginationComponent } from './shared/components/pagination/pagination.c
 import { MatCardModule } from '@angular/material/card';
 import { LanguageService } from './core/services/language/language.service';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { AddLocationComponent } from './shared/components/add-location/add-location.component';
+import { LocationFormComponent } from './shared/components/admin/location-form/location-form.component';
 import { LocationService } from './core/services/location/location.service';
 import { NotificationService } from './core/services/notification/notification.service';
 import { MapboxComponent } from './shared/components/mapbox/mapbox.component';
 import { MatInputModule } from '@angular/material/input';
-import { AuthorsComponent } from './shared/components/authors/authors.component';
-import { AuthorFormComponent } from './shared/components/author-form/author-form.component';
+import { AuthorsComponent } from './shared/components/admin/authors/authors.component';
+import { AuthorFormComponent } from './shared/components/admin/author-form/author-form.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { DemoComponent } from './shared/components/demo/demo.component';
 import { ForgotPasswordComponent } from './shared/components/password/forgot-password/forgot-password.component';
@@ -58,7 +59,6 @@ import { GenreService } from './core/services/genre/genre';
 import { HomeComponent } from './shared/components/home/home.component';
 import { RulesComponent } from './shared/components/rules/rules.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { GenreComponent } from './shared/components/genre/genre.component';
 import { RegisteredBookComponent } from './shared/components/registered-book/registered-book.component';
 import { DialogService } from './core/services/dialog/dialog.service';
 import { LanguagesComponent } from './shared/components/languages/languages.component';
@@ -70,6 +70,26 @@ import { BookFilterBarComponent } from './shared/components/book-filter-bar/book
 import { CurrentOwnedBooksComponent } from './shared/components/current-owned-books/current-owned-books.component';
 import { CommentComponent } from './shared/components/comment/comment.component';
 import { ChildcommentComponent } from './shared/components/comment/childcomment/childcomment.component';
+import {AdminTableComponent} from './shared/components/admin/admin-table/admin-table.component';
+import { GenresComponent } from './shared/components/admin/genres/genres.component';
+import { LocationsComponent } from './shared/components/admin/locations/locations.component';
+import { GenreFormComponent } from './shared/components/admin/genre-form/genre-form.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { ContactsComponent } from './shared/components/contacts/contacts.component';
+import { ReadBooksComponent } from './shared/components/read-books/read-books.component';
+import { DashboardComponent } from './shared/components/admin/dashboard/dashboard.component';
+import { ProfileComponent } from './shared/components/profile/profile.component';
+import { ProfileEditComponent } from './shared/components/profile-edit/profile-edit.component';
+import {DonateDialogComponent} from './shared/components/donate-dialog/donate-dialog.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {EllipsisPipe} from './shared/pipes/elipsis.pipe';
+import {NotificationComponent} from './shared/components/notification/notification.component';
+import {MatLineModule} from '@angular/material/core';
+import {MatListModule} from '@angular/material/list';
+import {NotFoundComponent} from './shared/components/not-found/not-found.component';
+import {UserNamePipe} from './shared/pipes/userName.pipe';
+import {StarRatingModule} from '@sreyaj/ng-star-rating';
+
 
 @NgModule({
   declarations: [
@@ -82,13 +102,15 @@ import { ChildcommentComponent } from './shared/components/comment/childcomment/
     NavbarComponent,
     FooterComponent,
     BooksComponent,
-    AddLocationComponent,
+    LocationFormComponent,
     MapboxComponent,
     AuthorsComponent,
     AuthorFormComponent,
     BookFilterBarComponent,
     ReportsComponent,
     FilterPipe,
+    EllipsisPipe,
+    UserNamePipe,
     RefDirective,
     PaginationComponent,
     DemoComponent,
@@ -96,11 +118,11 @@ import { ChildcommentComponent } from './shared/components/comment/childcomment/
     ResetPasswordComponent,
     AdminComponent,
     DemoComponent,
+    BookEditFormComponent,
     ViewLocationComponent,
     ContentFilterPipe,
     HomeComponent,
     RulesComponent,
-    GenreComponent,
     RegisteredBookComponent,
     ConfirmDialogComponent,
     LanguagesComponent,
@@ -110,8 +132,19 @@ import { ChildcommentComponent } from './shared/components/comment/childcomment/
     CurrentOwnedBooksComponent,
     CommentComponent,
     ChildcommentComponent,
-
-
+    ContactsComponent,
+    ReadBooksComponent,
+    AdminTableComponent,
+    GenresComponent,
+    LocationsComponent,
+    GenreFormComponent,
+    ContactsComponent,
+    NotFoundComponent,
+    DashboardComponent,
+    ProfileComponent,
+    ProfileEditComponent,
+    DonateDialogComponent,
+    NotificationComponent
 
   ],
   imports: [
@@ -119,18 +152,22 @@ import { ChildcommentComponent } from './shared/components/comment/childcomment/
     AppRoutingModule,
     HttpClientModule,
     MatSnackBarModule,
+    MatButtonToggleModule,
     MatMenuModule,
     MatTooltipModule,
     JwtModule,
     MatDialogModule,
     MatButtonModule,
+    MatTooltipModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
     MatSortModule,
+    MatSidenavModule,
     NgxPaginationModule,
     AvatarModule,
+    StarRatingModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -147,10 +184,12 @@ import { ChildcommentComponent } from './shared/components/comment/childcomment/
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: [""],
-        blacklistedRoutes: [""]
+        whitelistedDomains: [''],
+        blacklistedRoutes: ['']
       }
     }),
+    MatLineModule,
+    MatListModule
   ],
   providers: [
     BookService,
@@ -162,7 +201,7 @@ import { ChildcommentComponent } from './shared/components/comment/childcomment/
     CookieService,
     JwtHelperService,
     LocationService,
-    GenreService, 
+    GenreService,
     DialogService,
     UserService
 

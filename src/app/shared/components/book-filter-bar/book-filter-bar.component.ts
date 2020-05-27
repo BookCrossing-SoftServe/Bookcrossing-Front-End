@@ -5,6 +5,7 @@ import { LocationService } from 'src/app/core/services/location/location.service
 import { GenreService } from 'src/app/core/services/genre/genre';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from 'src/app/core/services/notification/notification.service';
+import { MatButtonToggleChange } from '@angular/material/button-toggle/button-toggle';
 
 @Component({
   selector: 'app-book-filter-bar',
@@ -16,8 +17,10 @@ export class BookFilterBarComponent implements OnInit {
   @Output() selectedGenresChange: EventEmitter<number[]> = new EventEmitter<number[]>();
   @Output() selectedLocationChange: EventEmitter<number> = new EventEmitter<number>();
   @Output() availableSelectedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() viewMode: EventEmitter<string> = new EventEmitter<string>()
 
   genres: IGenre[]
+  selectedMode: string;
   locations: ILocation[];
   @Input() selectedGenres: number[]
   @Input() selectedLocation: number;
@@ -32,6 +35,7 @@ export class BookFilterBarComponent implements OnInit {
   ngOnInit(): void {
     this.getAllGenres();
     this.getLocation();
+    this.getViewMode();
   }
   notifyFilterChange() {
     this.filterChange.emit(true);
@@ -71,7 +75,7 @@ export class BookFilterBarComponent implements OnInit {
         this.locations = data;
       },
       error: () => {
-        this.notificationService.warn(this.translate
+        this.notificationService.error(this.translate
           .instant("An error has occured, please try again later!"), "X")
       }
     }
@@ -83,10 +87,26 @@ export class BookFilterBarComponent implements OnInit {
         this.genres = data;
       },
       error: () => {
-        this.notificationService.warn(this.translate
+        this.notificationService.error(this.translate
           .instant("An error has occured, please try again later!"), "X")
       }
     }
     );
+  }
+
+  onViewModeChange(value: any) {
+    localStorage.setItem("viewMode", value);
+    this.getViewMode()
+  }
+
+  getViewMode() {
+    if (localStorage.hasOwnProperty("viewMode")) {
+      this.selectedMode = localStorage.getItem("viewMode");
+      this.viewMode.emit(localStorage.getItem("viewMode"))
+    }
+    else{
+      this.selectedMode = 'list'
+      this.viewMode.emit("list")
+    }
   }
 }

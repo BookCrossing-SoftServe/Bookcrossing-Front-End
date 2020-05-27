@@ -1,3 +1,4 @@
+<br/>
 <table class="table container">
     <thead class="unique-color white-text">
       <tr>
@@ -6,6 +7,10 @@
       </tr>
     </thead>
     <tbody>
+    <tr>
+      <td><a [routerLink]="['/profile']">/profile</a></td>
+      <td>User Profile</td>
+    </tr>
       <tr>
         <td><a [routerLink]="['/login']">/login</a></td>
         <td>Login in our site</td>
@@ -23,7 +28,7 @@
         <td>Single page for a book</td>
       </tr>
       <tr>
-        <td><a [routerLink]="['/requests']">/requests</a></td>
+        <td><a [routerLink]="['/books/requests']">/books/requests</a></td>
         <td>All user requests</td>
       </tr>
       <tr>
@@ -43,15 +48,21 @@
         <td>List of current owned books</td>
       </tr>
       <tr>
-        <td><a [routerLink]="['/add-location']">/add-location</a></td>
+        <td><a [routerLink]="['/location-form']">/add-location</a></td>
         <td>Add new location</td>
       </tr>
       <tr>
         <td><a [routerLink]="['/admin/authors']">/admin/authors</a></td>
         <td>Manage authors</td>
       </tr>
+      <tr>
+        <td><a [routerLink]="['/contacts']">/contacts</a></td>
+        <td>Contacts Page</td>
+      </tr>
     </tbody>
   </table>
   <div class="container"><div class="alert alert-info" role="alert">
-    Test credentials: test@gmail.com | test
+    Test credentials: User - test@gmail.com | test
+    <br>
+    Admin - admin@gmail.com | admin
   </div></div>

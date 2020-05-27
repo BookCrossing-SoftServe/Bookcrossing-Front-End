@@ -26,7 +26,7 @@
     }
 
     constructor(private http: HttpClient,
-      private jwtHelper: JwtHelperService) {
+                private jwtHelper: JwtHelperService) {
       this.currentUserSubject = new BehaviorSubject<IUser>(JSON.parse(localStorage.getItem('currentUser')));
       this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -71,12 +71,13 @@
         email
       });
     }
+
     isAuthenticated() {
       const token: string = localStorage.getItem("currentUser");
       return token && !this.jwtHelper.isTokenExpired(token);
     }
 
-   getUserId() {
+    getUserId() {
       return this.http.get(`${this.userUrl}/id/`)
     }
 
@@ -85,12 +86,22 @@
       if (token && !this.jwtHelper.isTokenExpired(token)) {
         const role = this.jwtHelper.decodeToken(token)[
           "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ];
+          ];
         if (role === "Admin") {
           return true;
         }
       } else {
         return false;
+      }
+    }
+
+    getUserRole() {
+      const token: string = localStorage.getItem('currentUser');
+      if (token && !this.jwtHelper.isTokenExpired(token)) {
+        const role = this.jwtHelper.decodeToken(token)[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+          ];
+        return role;
       }
     }
   }

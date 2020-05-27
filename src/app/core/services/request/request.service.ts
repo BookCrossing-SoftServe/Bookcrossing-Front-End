@@ -35,17 +35,20 @@ export class RequestService {
     }
     return this.http.get<IRequest>(this.baseUrl + `/${bookId}`, { params } );
   }
+  getAllRequestsForBook(bookId: number): Observable<IRequest[]>{
+    return this.http.get<IRequest[]>(this.baseUrl + `/${bookId}`);
+  }
 
   getUserRequestsPage(bookParams : BookQueryParams): Observable<IPage<IRequest>> {
     return this.pagination.getBookPage<IRequest>(`${this.baseUrl}/`,bookParams);
   }
 
-  deleteRequest(requestId: number) :Observable<boolean>{
-    return this.http.delete<boolean>(this.baseUrl + `/${requestId}`);
+  deleteRequest(requestId: number){
+    return this.http.delete(this.baseUrl + `/${requestId}`);
   }
 
-  approveReceive(requestId: number) :Observable<boolean>{
-    return this.http.put<boolean>(this.baseUrl + `/${requestId}`, {
+  approveReceive(requestId: number){
+    return this.http.put(this.baseUrl + `/${requestId}`, {
       requestId: requestId,
     });
   }

@@ -1,10 +1,13 @@
+<ng-template appRef>
+  <!--Add Form-->
+</ng-template>
 <div class="container my-5 py-5 z-depth-1">
 
     <section class="text-center">
 
       <div class="row">
         <div class="col-lg-4">
-  
+
             <div class="carousel-inner text-center text-md-left" role="listbox">
               <div class="size carousel-item active zoom">
                 <div class="mask flex-center waves-effect waves-light">
@@ -21,127 +24,88 @@
               </div>
             </div>
               <div class="text-center text-md-left text-md-right mt-2">
-                <span [ngSwitch]="bookStatus">
-                  <ng-template ngSwitchCase="1"><button [hidden]="!isAuthenticated()" class="btn purple-gradient btn-rounded btn-lg btn-block" (click)="requestBook()">
+                <span [ngSwitch]="book?.state">
+                  <ng-template ngSwitchCase="0"><button [hidden]="!isAuthenticated()" [disabled]="disabledButton" class="btn purple-gradient btn-rounded btn-lg btn-block" (click)="requestBook()">
                     <i class="mr-2" aria-hidden="true"></i> {{ 'components.book.request' | translate }}</button></ng-template>
-                  <ng-template ngSwitchCase="2">
-                    <button [hidden]="!isRequester" class="mt-0 btn purple-gradient btn-rounded btn-lg btn-block" (click)="startReading()">
+                  <ng-template ngSwitchCase="1">
+                    <button [hidden]="!isRequester" [disabled]="disabledButton" class="mt-0 btn purple-gradient btn-rounded btn-lg btn-block" (click)="startReading()">
                     <i class="mr-2" aria-hidden="true"></i> Start reading</button>
-                    <button [hidden]="!isRequester" class="btn purple-gradient btn-rounded btn-lg btn-block" (click)="cancelRequest()">
+                    <button [hidden]="!isRequester" [disabled]="disabledButton" class="btn purple-gradient btn-rounded btn-lg btn-block" (click)="cancelRequest()">
                       <i class="mr-2" aria-hidden="true"></i> Cancel request</button>
                   </ng-template>
-                  <ng-template ngSwitchCase="3">
-                    <button [hidden]="!isRequester" class="btn purple-gradient btn-rounded btn-lg btn-block"(click)="makeAvailable()" >
+                  <ng-template ngSwitchCase="2">
+                    <button [hidden]="!isRequester" [disabled]="disabledButton" class="btn purple-gradient btn-rounded btn-lg btn-block"(click)="makeAvailable()" >
                     <i class="mr-2" aria-hidden="true"></i> Make available</button>
                   </ng-template>
                 </span>
             </div>
         </div>
-  
-        <div class="col-lg-8 text-center text-md-left">
-  
-          <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-text mb-1 ml-xl-0 ml-4" style="font-size: 24px;">{{ book?.name }}</h2>
+        <div class="col-lg-7 text-center text-md-left">
+
+          <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-text mb-1 ml-xl-0 ml-4 book-name">{{ book?.name }}</h2>
+          <div class="row">
+            <div class="col-2">
+              <div *ngIf="readCount !== null" class="font-weight-bold">Read by: <span class="font-weight-normal">{{readCount}}</span></div>
+            </div>
+            <div class="col-3">
+              <ngx-star-rating [filledColor]="'#FF8800'" (rated)="onRatingSet($event)" rating="0" readonly="true"></ngx-star-rating>
+            </div>
+          </div>
         <br>
-        
+
           <div class="font-weight-normal">
-            
+
             <p class="ml-xl-0 ml-4">
-              <strong>{{ 'components.book.authors' | translate }}: </strong><span *ngFor="let author of book?.authors">{{author?.firstName}} {{author?.lastName}}</span></p>
+              <ng-template [ngIf]="book?.authors.length==1" [ngIfElse]="manyAuthors"><strong>Author: </strong></ng-template>
+              <ng-template #manyAuthors><strong>Authors: </strong></ng-template>
+              <span *ngFor="let author of book?.authors; let i = index"><ng-template [ngIf]="i!=0">, </ng-template>{{author?.firstName}} {{author?.lastName}}</span></p>
             <p class="ml-xl-0 ml-4">
-              <strong>Category: </strong><span *ngFor="let genre of book?.genres">{{ genre?.name }}</span></p>
+              <ng-template [ngIf]="book?.genres.length==1" [ngIfElse]="manyGenres"><strong>Category: </strong></ng-template>
+              <ng-template #manyGenres><strong>Categories: </strong></ng-template>
+              <span *ngFor="let genre of book?.genres; let i = index"><ng-template [ngIf]="i!=0">, </ng-template>{{ genre?.name }}</span></p>
               <p class="ml-xl-0 ml-4">
-                <!-- <strong>Location: </strong> {{ book.locations[0]?.location.city + " " + book.locations[0]?.location.officeName}} </p> -->
-                <strong>Location: </strong> {{ currentOwner?.userLocation[0]?.location?.city + " " +  currentOwner?.userLocation[0]?.location?.officeName}} </p>
-              <p class="ml-xl-0 ml-4">
-                <strong>Current owner: </strong> {{ currentOwner?.firstName + " " + currentOwner?.lastName }} </p>
-              <p class="ml-xl-0 ml-4">
-                <strong>Registered by: </strong> {{ firstOwner?.firstName + " " + firstOwner?.lastName }} </p>
+                <strong>Location: </strong> {{ book?.location?.location?.city + " " + book?.location?.location?.officeName}} </p>
+              <p *ngIf="currentOwner !== null" class="ml-xl-0 ml-4">
+                <strong>Current owner: </strong> {{ currentOwner?.firstName + " " + currentOwner?.lastName}}
+                <span>
+                  (<a [href]="'mailto:'.concat(currentOwner?.email)">{{ currentOwner?.email | UserName }}</a>)
+                </span>
+              </p>
+              <p *ngIf="firstOwner !== null" class="ml-xl-0 ml-4">
+                <strong>Registered by: </strong> {{ firstOwner?.firstName + " " + firstOwner?.lastName }}
+                <span>
+                  (<a [href]="'mailto:'.concat(firstOwner?.email)">{{ firstOwner?.email | UserName }}</a>)
+                </span>
+              </p>
               <p class="ml-xl-0 ml-4" *ngIf="userWhoRequested != null">
-                <strong>Requested by: </strong> {{ userWhoRequested?.firstName + " " + userWhoRequested?.lastName }} </p>
+                <strong>Requested by: </strong> {{ userWhoRequested?.firstName + " " + userWhoRequested?.lastName }}
+                <span>
+                  (<a [href]="'mailto:'.concat(userWhoRequested?.email)">{{ userWhoRequested?.email | UserName }}</a>)
+                </span>
+              </p>
             <p class="ml-xl-0 ml-4">
               <strong>{{ 'components.book.publisher' | translate }}: </strong> {{ book?.publisher }} </p>
             <div class="ml-xl-0 ml-4">
               <strong>Status: </strong>
-              <span [ngSwitch]="bookStatus">
-                <ng-template ngSwitchCase="1"><span class="badge badge-success product mb-4 ml-2">Available</span></ng-template>
-                <ng-template ngSwitchCase="2"><span class="badge badge-info product mb-4 ml-2">Requested</span></ng-template>
-                <ng-template ngSwitchCase="3"><span class="badge badge-info product mb-4 ml-2">Reeding</span></ng-template>
+              <span [ngSwitch]="book?.state">
+                <ng-template ngSwitchCase="0"><span class="badge badge-success product mb-4 ml-2">Available</span></ng-template>
+                <ng-template ngSwitchCase="1"><span class="badge badge-info product mb-4 ml-2">Requested</span></ng-template>
+                <ng-template ngSwitchCase="2"><span class="badge badge-info product mb-4 ml-2">Reading</span></ng-template>
+                <ng-template ngSwitchCase="3"><span class="badge badge-light product mb-4 ml-2">Inactive</span></ng-template>
               </span>
             </div>
-            <p class="ml-xl-0 ml-4"><strong>Notice: </strong> {{ book?.notice }} </p>
-  
+            <p [hidden]="!book?.notice" class="ml-xl-0 ml-4"><strong>Notice: </strong> {{ book?.notice }} </p>
           </div>
-  
+
+        </div>
+        <div class="col-lg-1">
+          <div class=" row d-flex">
+            <button *ngIf="isAdmin() || isBookOwner" class="btn btn-md btn-md px-3 m-1" (click)="showEditForm(book)"> <i
+                class="fas fa-edit"></i></button>
+          </div>
         </div>
       </div>
-  
+
     </section>
-  
   <app-comment [bookId]="bookId"></app-comment>
   </div>
-  <!-- <div class="container my-5">
-
-    <section class="dark-grey-text mb-5">
-  
-      <h3 class="font-weight-bold text-center mb-5">{{ 'components.book.reviews' | translate }}</h3>
-      
-      <div class="media mb-3">
-        <img class="card-img-100 rounded-circle z-depth-1-half d-flex mr-3" src="https://mdbootstrap.com/img/Photos/Avatars/img (8).jpg" alt="Generic placeholder image">
-        <div class="media-body">
-          <a>
-            <h5 class="user-name font-weight-bold">John Doe</h5>
-          </a>
-          <div class="card-data">
-            <ul class="list-unstyled mb-1">
-              <li class="comment-date font-small grey-text">
-                <i class="far fa-clock"></i> 05/10/2015</li>
-            </ul>
-          </div>
-          <p class="dark-grey-text article">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-        </div>
-      </div>
-      
-      <div class="media mb-3">
-        <img class=" card-img-100 rounded-circle z-depth-1-half d-flex mr-3" src="https://mdbootstrap.com/img/Photos/Avatars/img (28).jpg" alt="Generic placeholder image">
-        <div class="media-body">
-          <a>
-            <h5 class="user-name font-weight-bold">Martha Smith</h5>
-          </a>
-          <div class="card-data">
-            <ul class="list-unstyled mb-1">
-              <li class="comment-date font-small grey-text">
-                <i class="far fa-clock"></i> 05/10/2015</li>
-            </ul>
-          </div>
-          <p class="dark-grey-text article">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-        </div>
-      </div>
-      
-      <div class="media">
-        <img class=" card-img-100 rounded-circle z-depth-1-half d-flex mr-3" src="https://mdbootstrap.com/img/Photos/Avatars/img (30).jpg" alt="Generic placeholder image">
-        <div class="media-body">
-          <a>
-            <h5 class="user-name font-weight-bold">Lily Brown</h5>
-          </a>
-          <div class="card-data">
-            <ul class="list-unstyled mb-1">
-              <li class="comment-date font-small grey-text">
-                <i class="far fa-clock"></i> 05/10/2015</li>
-            </ul>
-          </div>
-          <p class="dark-grey-text article">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-        </div>
-      </div>
-  
-      </section>
-
-  </div> -->

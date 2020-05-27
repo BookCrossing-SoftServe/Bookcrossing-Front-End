@@ -9,8 +9,7 @@ import {__await} from 'tslib';
   selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss'],
-  template: `
-    <app-comment [class]="bookId"></app-comment>`
+
 })
 export class CommentComponent implements OnInit {
   @Input() bookId = 0;
