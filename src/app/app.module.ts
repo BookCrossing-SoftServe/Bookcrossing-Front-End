@@ -68,6 +68,8 @@ import { ProfileAvatarComponent } from './shared/components/profile-avatar/profi
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { BookFilterBarComponent } from './shared/components/book-filter-bar/book-filter-bar.component';
 import { CurrentOwnedBooksComponent } from './shared/components/current-owned-books/current-owned-books.component';
+import { CommentComponent } from './shared/components/comment/comment.component';
+import { ChildcommentComponent } from './shared/components/comment/childcomment/childcomment.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +107,11 @@ import { CurrentOwnedBooksComponent } from './shared/components/current-owned-bo
     SearchBarComponent,
     ProfileAvatarComponent,
     BookFilterBarComponent,
-    CurrentOwnedBooksComponent
+    CurrentOwnedBooksComponent,
+    CommentComponent,
+    ChildcommentComponent,
+
+
 
   ],
   imports: [
