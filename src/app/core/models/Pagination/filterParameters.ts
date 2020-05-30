@@ -13,7 +13,7 @@ export class FilterParameters {
 
   static mapFilter(params: HttpParams, filters: FilterParameters[], filterName: string): HttpParams {
     for (let i = 0; i < filters.length; i++) {
-      if (filters[i].propertyName && filters[i].value) {
+      if (filters[i] && filters[i].propertyName && filters[i].value) {
         params = params
           .set(this.getFilterName(i, filterName, this.filterPropertyName), filters[i].propertyName)
           .set(this.getFilterName(i, filterName, this.filterValue), filters[i].value);
@@ -33,7 +33,7 @@ export class FilterParameters {
     let filterCount = 0;
     const filters = [];
     while (params[this.getFilterName(filterCount, filterName, this.filterPropertyName)]
-                  && params[this.getFilterName(filterCount, filterName, this.filterValue)]) {
+                  || params[this.getFilterName(filterCount + 1, filterName, this.filterPropertyName)]) {
       filters[filterCount] = new FilterParameters();
       filters[filterCount].propertyName = params[this.getFilterName(filterCount, filterName, this.filterPropertyName)];
       filters[filterCount].value = params[this.getFilterName(filterCount, filterName, this.filterValue)]
@@ -52,7 +52,7 @@ export class FilterParameters {
 
   static mapFilterToQuery(queryParams: any, filters: FilterParameters[], filterName: string): any {
     for (let i = 0; i < filters.length; i++) {
-      if (filters[i].propertyName && filters[i].value) {
+      if (filters[i] && filters[i].propertyName && filters[i].value) {
         queryParams[this.getFilterName(i, filterName, this.filterPropertyName)] = filters[i].propertyName;
         queryParams[this.getFilterName(i, filterName, this.filterValue)] = filters[i].value;
 

@@ -10,10 +10,11 @@ import { NotificationService } from 'src/app/core/services/notification/notifica
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from 'src/app/core/services/dialog/dialog.service';
 import { AuthenticationService } from 'src/app/core/services/authentication/authentication.service';
-import { bookStatus } from 'src/app/core/models/bookStatus.enum';
+import { bookState } from 'src/app/core/models/bookState.enum';
 import { RequestQueryParams } from 'src/app/core/models/requestQueryParams';
 import { IRequest } from 'src/app/core/models/request';
 import { environment } from 'src/environments/environment';
+import { booksPage } from 'src/app/core/models/booksPage.enum';
 
 @Component({
   selector: 'app-current-owned-books',
@@ -24,10 +25,13 @@ import { environment } from 'src/environments/environment';
 export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
 
   isBlockView: boolean = false;
+  disabledButton: boolean = false;
+  userId: number;
+  isRequester: boolean[] = [undefined, undefined, undefined, undefined, undefined ,undefined, undefined, undefined];
+  requestIds: Object = {};
   books: IBook[];
-  isRequester: boolean = false;
+  booksPage: booksPage = booksPage.currentOwned;
   totalSize: number;
-  bookStatus: bookStatus[] = [1,1,1,1,1]
   queryParams: BookQueryParams = new BookQueryParams;
   apiUrl: string = environment.apiUrl;
 
@@ -46,36 +50,61 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.getUserId()
     this.routeActive.queryParams.subscribe((params: Params) => {
-      this.queryParams = BookQueryParams.mapFromQuery(params, 1, 5)
+      this.queryParams = BookQueryParams.mapFromQuery(params, 1, 8)
       this.populateDataFromQuery();
       this.getBooks(this.queryParams);
     });
   }
-  async cancelRequest(id: number){}
+  getUserId(){
+    if (this.isAuthenticated()) {
+      this.authentication.getUserId().subscribe((value: number) => {
+        this.userId = value;
+      });
+    }
+  }
+
+  getUserWhoRequested(book: IBook, key: number) {
+    if (book.state === bookState.requested) {
+      const query = new RequestQueryParams();
+      query.first = false;
+      query.last = true;
+      this.requestService.getRequestForBook(book.id, query).subscribe((value: IRequest) => {
+        if (this.userId === value.user.id) {
+          this.requestIds[book.id] = value.id
+          this.isRequester[key] = true;
+        }
+      });
+    }
+  }
+  async cancelRequest(bookId: number) {
+    this.dialogService
+      .openConfirmDialog(
+        await this.translate.get("Do you want to cancel request? Current owner will be notified about your cancellation.").toPromise()
+      )
+      .afterClosed()
+      .subscribe(async res => {
+        if (res) {
+          this.disabledButton = true;
+          this.requestService.deleteRequest(this.requestIds[bookId]).subscribe(() => {
+            this.disabledButton = false;
+            this.ngOnInit();
+            this.notificationService.success(this.translate
+              .instant("Request is cancelled."), "X");
+          }, err => {
+            this.disabledButton = false;
+            this.notificationService.error(this.translate
+              .instant("Something went wrong!"), "X");
+          });
+        }
+      });
+  }
 
   isAuthenticated(){
     return this.authentication.isAuthenticated();
   }
-  getStatus(book : IBook, index: number){
-    if(book.available){
-      this.bookStatus[index] = bookStatus.available
-    }
-    else{
-      let query = new RequestQueryParams();
-      query.first = false;
-      query.last = true;
-      this.requestService.getRequestForBook(book.id, query)
-     .subscribe((value: IRequest) => {
-         if(value.receiveDate){
-           this.bookStatus[index] = bookStatus.reading
-         }
-         else{
-           this.bookStatus[index] = bookStatus.requested
-         }
-       }, error => {})
-    }
-  }
+
   async requestBook(bookId: number) {
     this.dialogService
       .openConfirmDialog(
@@ -84,12 +113,15 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(async res => {
         if (res) {
+          this.disabledButton = true;
           this.requestService.requestBook(bookId).subscribe((value: IRequest) => {
+            this.disabledButton = false;
             this.ngOnInit();
             this.notificationService.success(this.translate
               .instant("Book is successfully requested. Please contact with current owner to receive a book"), "X");
             }, err => {
-              this.notificationService.warn(this.translate
+            this.disabledButton = false;
+              this.notificationService.error(this.translate
                 .instant("Something went wrong!"), "X");
             });
         }
@@ -107,7 +139,7 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
       this.searchBarService.changeSearchTerm(this.queryParams.searchTerm)
     }
     if (typeof this.queryParams.showAvailable === 'undefined') {
-      this.queryParams.showAvailable = true;
+      this.queryParams.showAvailable = false;
     }
     if (this.queryParams.genres) {
       let genres: number[];
@@ -126,8 +158,12 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
     this.queryParams.page = currentPage;
     this.queryParams.firstRequest = false;
     this.changeUrl();
+    window.scrollTo({
+      top: 0,
+      behavior:'smooth'
+    });
   }
-  private resetPageIndex(): void {
+  private resetPageIndex() : void {
     this.queryParams.page = 1;
     this.queryParams.firstRequest = true;
   }
@@ -148,17 +184,18 @@ export class CurrentOwnedBooksComponent implements OnInit, OnDestroy {
           this.books = pageData.page;
           for(var i = 0; i<pageData.page.length; i++){
 
-            this.getStatus(pageData.page[i], i)
-        }
+            this.getUserWhoRequested(pageData.page[i], i)
+          }
           if (pageData.totalCount) {
             this.totalSize = pageData.totalCount;
           }
         },
-        error: error => {
-          alert('An error has occured, please try again');
+        error: err => {
+          this.notificationService.error(this.translate
+            .instant("Something went wrong!"), "X");
         }
       });
-  }
+  };
 
   ngOnDestroy() {
     this.searchBarService.changeSearchTerm(null);

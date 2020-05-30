@@ -85,6 +85,8 @@ import {NotificationComponent} from './shared/components/notification/notificati
 import {MatLineModule} from '@angular/material/core';
 import {MatListModule} from '@angular/material/list';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
+import {UserNamePipe} from './shared/pipes/userName.pipe';
+import {StarRatingModule} from '@sreyaj/ng-star-rating';
 
 
 @NgModule({
@@ -106,6 +108,7 @@ import {NotFoundComponent} from './shared/components/not-found/not-found.compone
     ReportsComponent,
     FilterPipe,
     EllipsisPipe,
+    UserNamePipe,
     RefDirective,
     PaginationComponent,
     DemoComponent,
@@ -160,6 +163,7 @@ import {NotFoundComponent} from './shared/components/not-found/not-found.compone
     MatSidenavModule,
     NgxPaginationModule,
     AvatarModule,
+    StarRatingModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

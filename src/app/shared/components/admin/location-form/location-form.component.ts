@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LocationService } from 'src/app/core/services/location/location.service';
 import { ILocation } from 'src/app/core/models/location';
+import { Location} from '@angular/common';
 import { MapboxService } from 'src/app/core/services/mapbox/mapbox.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
@@ -16,6 +17,7 @@ export class LocationFormComponent implements OnInit {
   public address: ILocation;
   public locationEdit: ILocation = {};
   public isEdited = false;
+  public submitButtonText: string;
 
   constructor(
     private translate: TranslateService,
@@ -23,6 +25,7 @@ export class LocationFormComponent implements OnInit {
     private router: ActivatedRoute,
     private locationService: LocationService,
     private mapboxService: MapboxService,
+    private ngLocation: Location,
     private route: Router
   ) {
     mapboxService.currentAddressChanged$.subscribe((address) => {
@@ -40,42 +43,57 @@ export class LocationFormComponent implements OnInit {
       this.locationEdit.city = this.router.snapshot.paramMap.get('city');
       this.locationEdit.officeName = this.router.snapshot.paramMap.get('officeName');
       this.locationEdit.street = this.router.snapshot.paramMap.get('street');
+      this.locationEdit.isActive = this.router.snapshot.paramMap.get('isActive') === 'true';
       this.isEdited = true;
       this.setLocationFormValues(this.locationEdit);
     }
+    this.submitButtonText = this.isEdited ? 'Update' : 'Save';
   }
 
   buildForm() {
     this.addLocationForm = new FormGroup({
-      city: new FormControl(null, Validators.required),
-      street: new FormControl(null, Validators.required),
-      officeName: new FormControl(null, Validators.required),
+      city: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(50)]),
+      street: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(50)]),
+      officeName: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(50)]),
+      isActive: new FormControl(null, Validators.required),
     });
   }
 
   onSubmit() {
+    this.addLocationForm.markAllAsTouched();
+    if (this.addLocationForm.invalid) {
+      return;
+    }
     const location: ILocation = {
       city: this.addLocationForm.get('city').value,
       street: this.addLocationForm.get('street').value,
       officeName: this.addLocationForm.get('officeName').value,
+      isActive: this.addLocationForm.get('isActive').value,
     };
-    console.log(location);
     if (!this.isEdited) {
       this.postLocation(location);
     } else {
       location.id = this.locationEdit.id;
       this.editLocation(location);
     }
-    this.onCancel();
   }
 
   postLocation(location: ILocation) {
     this.locationService.postLocation(location).subscribe(
       (data: ILocation) => {
         this.locationService.submitLocation(data);
+        this.notificationService.success(this.translate
+          .instant('New location was created successfully'), 'X');
+        this.onCancel();
       },
       () => {
-        this.notificationService.warn(this.translate
+        this.notificationService.error(this.translate
           .instant('Something went wrong!'), 'X');
       }
     );
@@ -85,9 +103,12 @@ export class LocationFormComponent implements OnInit {
     this.locationService.editLocation(location).subscribe(
       (data) => {
         this.locationService.submitLocation(location);
+        this.notificationService.success(this.translate
+          .instant('Location was updated successfully'), 'X');
+        this.onCancel();
       },
       () => {
-        this.notificationService.warn(this.translate
+        this.notificationService.error(this.translate
         .instant('Something went wrong!'), 'X');
       }
     );
@@ -100,9 +121,12 @@ export class LocationFormComponent implements OnInit {
     this.addLocationForm.patchValue({
       ['officeName']: location.officeName,
     });
+    this.addLocationForm.patchValue({
+      ['isActive']: location.isActive,
+    });
   }
 
   onCancel() {
-    this.route.navigate(['admin/locations']);
+    this.ngLocation.back();
   }
 }

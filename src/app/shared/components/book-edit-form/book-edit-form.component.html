@@ -21,6 +21,7 @@
           [ngClass]="{
             'is-invalid': submitted && editBookForm.controls.title.errors
           }"
+          maxlength="50"
         />
         <div
           *ngIf="submitted && editBookForm.controls.title.errors"
@@ -51,6 +52,7 @@
               #firstnameInput
               type="text"
               class="form-control"
+              maxlength="20"
               [matAutocomplete]="FirstNameAuto"
               [ngClass]="{
                   'is-invalid':
@@ -94,6 +96,7 @@
               #lastnameInput
               type="text"
               class="form-control"
+              maxlength="20"
               [matAutocomplete]="LastNameAuto"
               (blur)="lastnameInputVisible = false"
             />
@@ -119,8 +122,6 @@
                 <span>{{
                   author.firstName +
                   " " +
-                  author.middleName +
-                  "  " +
                   author.lastName
                   }}</span>
               <span
@@ -149,13 +150,13 @@
             let author of filterConfirmedAuthors()
               | contentFilter
                 : firstnameInput.value.trim()
-                : ['firstName', 'lastName', 'middleName']
+                : ['firstName', 'lastName']
           "
         [value]="author"
         [ngClass]="{ 'hide-input': lastnameInputVisible }"
       >
         {{
-        author.firstName + " " + author.middleName + " " + author.lastName
+        author.firstName + " "  + author.lastName
         }}
       </mat-option>
     </mat-autocomplete>
@@ -172,15 +173,15 @@
             let author of filterConfirmedAuthors()
               | contentFilter
                 : firstnameInput.value.trim()
-                : ['firstName', 'lastName', 'middleName']
+                : ['firstName', 'lastName']
               | contentFilter
                 : lastnameInput.value.trim()
-                : ['firstName', 'lastName', 'middleName']
+                : ['firstName', 'lastName']
           "
         [value]="author"
       >
         {{
-        author.firstName + " " + author.middleName + " " + author.lastName
+        author.firstName + " " + author.lastName
         }}
       </mat-option>
     </mat-autocomplete>
@@ -242,7 +243,11 @@
         <p class="input-label">Publishing house:</p>
       </div>
       <div class="col-4">
-        <input formControlName="publisher" type="text" class="form-control" />
+        <input
+          formControlName="publisher"
+          type="text"
+          class="form-control"
+          maxlength="50"/>
       </div>
     </div>
 
@@ -256,8 +261,24 @@
           formControlName="description"
           type="text"
           class="form-control"
-          placeholder=""
+          maxlength="500"
         ></textarea>
+      </div>
+    </div>
+
+    <div *ngIf="isAdmin" class="form-row mb-4">
+      <div class="col-3">
+        <p class="input-label">Inactive:</p>
+      </div>
+      <div class="col-4">
+        <div class="custom-control custom-checkbox">
+          <input formControlName="inactive"
+                 type="checkbox"
+                 class="form-control custom-control-input"
+                 id="inactive"
+                 [ngModel]="isInActive">
+          <label class="custom-control-label" for="inactive"></label>
+        </div>
       </div>
     </div>
 
