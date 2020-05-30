@@ -94,7 +94,7 @@ export class AddBookComponent implements OnInit {
       title: new FormControl(null, Validators.required),
       genres: new FormControl(null, Validators.required),
       publisher: new FormControl(null),
-      authorLastname: new FormControl(null),
+      // authorLastname: new FormControl(null),
       authorFirstname: new FormControl(null),
       description: new FormControl(null),
     });
@@ -287,11 +287,11 @@ export class AddBookComponent implements OnInit {
   filterConfirmedAuthors() {
     return this.authors.filter((x) => x.isConfirmed === true);
   }
-  onPressSpace() {
-    this.lastnameInputVisible = true;
-    setTimeout(() => {
-      this.authorFocused = false;
-      this.inputLastname.nativeElement.focus();
-    }, 0);
-  }
+  // onPressSpace() {
+  //   this.lastnameInputVisible = true;
+  //   setTimeout(() => {
+  //     this.authorFocused = false;
+  //     this.inputLastname.nativeElement.focus();
+  //   }, 0);
+  // }
 }

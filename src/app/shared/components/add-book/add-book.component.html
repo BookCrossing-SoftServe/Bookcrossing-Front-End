@@ -38,10 +38,7 @@
           <p class="input-label">Author:<span class="asterisk"> *</span></p>
         </div>
         <div
-          [ngClass]="{
-            'col-4': !lastnameInputVisible && !lastnameInput.value,
-            'col-8': lastnameInputVisible || lastnameInput.value
-          }"
+        class="col-4"
         >
           <div class="form-row">
             <div class="col">
@@ -58,7 +55,6 @@
                     !selectedAuthors.length &&
                     (!addBookForm.controls.authorFirstname.value?.trim() || !addBookForm.controls.authorLastname.value?.trim() )
                 }"
-                (keyup.Space)="onPressSpace()"
                 (focus)="authorFocused = true"
                 (blur)="authorFocused = false"
               />
@@ -89,7 +85,7 @@
                 'hide-input': !lastnameInputVisible && !lastnameInput.value
               }"
             >
-              <input
+              <!-- <input
                 formControlName="authorLastname"
                 #lastnameInput
                 type="text"
@@ -97,7 +93,7 @@
                 maxlength="20"
                 [matAutocomplete]="LastNameAuto"
                 (blur)="lastnameInputVisible = false"
-              />
+              /> -->
             </div>
           </div>
           <div
@@ -174,9 +170,7 @@
               | contentFilter
                 : firstnameInput.value.trim()
                 : ['firstName', 'lastName', 'middleName']
-              | contentFilter
-                : lastnameInput.value.trim()
-                : ['firstName', 'lastName', 'middleName']
+      
           "
           [value]="author"
         >
