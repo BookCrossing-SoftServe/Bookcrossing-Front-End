@@ -154,7 +154,6 @@ export class AddBookComponent implements OnInit {
     }
     const formData: FormData = this.getFormData(book);
 
-    console.log(book);
     this.bookService.postBook(formData).subscribe(
       (data: IBook) => {
         this.notificationService.success(
@@ -210,8 +209,6 @@ export class AddBookComponent implements OnInit {
       !this.withoutAuthorChecked &&
       form.get("authorFirstname").value?.trim()
     ) {
-      console.log("here");
-      console.log(!this.checkAuthorLastName(form.get("authorFirstname").value));
       return !this.checkAuthorLastName(form.get("authorFirstname").value);
     } else {
       return false;
@@ -319,7 +316,6 @@ export class AddBookComponent implements OnInit {
     const delim = /(\s+|,+|;+)/g;
     authorString = authorString.replace(delim, " ").trim();
 
-    console.log(authorString);
     const words: string[] = authorString.split(" ");
     let count = words.length;
     for (let i = 0; i < count / 2; i++) {
@@ -357,8 +353,6 @@ export class AddBookComponent implements OnInit {
     input = input.replace(delim, " ").trim();
     const words: string[] = input.split(" ");
     if (words.length < 2) {
-      console.log("false");
-      console.log(words);
       return false;
     }
     return true;
