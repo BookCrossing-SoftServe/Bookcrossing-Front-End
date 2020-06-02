@@ -65,9 +65,9 @@
                   'is-invalid':
                     submitted &&
                     ((!selectedAuthors.length &&
-                      !addBookForm.controls.authorFirstname.value?.trim()) ||
+                      !editBookForm.controls.authorFirstname.value?.trim()) ||
                       !checkAuthorLastName(
-                        addBookForm.controls.authorFirstname.value
+                        editBookForm.controls.authorFirstname.value
                       )) &&
                     !withoutAuthorChecked
                 }"
@@ -78,7 +78,7 @@
               *ngIf="
                   submitted &&
                   !selectedAuthors.length &&
-                  !addBookForm.controls.authorFirstname.value?.trim() &&
+                  !editBookForm.controls.authorFirstname.value?.trim() &&
                   !withoutAuthorChecked
                 "
               class="invalid-feedback"
@@ -89,7 +89,7 @@
               *ngIf="
                   submitted &&
                   !checkAuthorLastName(
-                    addBookForm.controls.authorFirstname.value
+                    editBookForm.controls.authorFirstname.value
                   ) && !withoutAuthorChecked
                 "
               class="new-author-warning"
@@ -99,7 +99,7 @@
           </div>
         </div>
         <div
-          *ngIf="addBookForm.controls.authorFirstname.value && !authorFocused"
+          *ngIf="editBookForm.controls.authorFirstname.value && !authorFocused"
           class="new-author-warning"
         >
           <span>Entered author is saved as 'not confirmed'</span>
