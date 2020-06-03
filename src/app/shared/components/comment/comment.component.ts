@@ -116,7 +116,7 @@ export class CommentComponent implements OnInit {
 
     });
     this.text = '';
-    await this.updateComments();
+    this.ngOnInit()
   }
 
   async deleateComment(id) {
@@ -126,7 +126,7 @@ export class CommentComponent implements OnInit {
     }
     this.commentservice.deleteComment(deleteComment).subscribe((r) => {
     });
-    this.updateComments();
+    this.ngOnInit()
   }
 
   async updateComment(id, text) {
@@ -135,7 +135,7 @@ export class CommentComponent implements OnInit {
     }
     this.commentservice.updateComment(updateComment).subscribe((r) => {
     });
-    this.updateComments();
+    this.ngOnInit()
   }
 
   onRatingSet($event: number) {
