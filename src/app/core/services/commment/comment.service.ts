@@ -43,7 +43,7 @@ export class CommentService {
   }
 
   updateComment(comment: IRootUpdateComment): Observable<number> {
-  return  this.http.put<number>(this.rootUrl, comment);
+    return  this.http.put<number>(this.rootUrl, comment);
   }
   postChildComment(comment: IChildInsertComment) {
     return this.http.post(this.childUrl, comment);
