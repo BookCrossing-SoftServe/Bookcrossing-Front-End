@@ -48,6 +48,7 @@
                   </p>
                   <div class="collapse" id="root_{{i}}">
                     <form #updateFrom="ngForm">
+                      <ngx-star-rating [filledColor]="'#FF8800'" [rating]="updateRating" (rated)="onEditRatingSet($event)"></ngx-star-rating>
                       <textarea [(ngModel)]="c.text" name="text"></textarea>
                       <br>
                       <button type="button" (click)="updateComment(c.id,updateFrom.value.text)"

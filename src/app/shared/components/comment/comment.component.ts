@@ -24,6 +24,7 @@ export class CommentComponent implements OnInit {
   user: IUser;
   text = '';
   rating = 0;
+  updateRating = 0;
   level = 0;
 
 
@@ -131,7 +132,7 @@ export class CommentComponent implements OnInit {
 
   async updateComment(id, text) {
     let updateComment: IRootUpdateComment = {
-      id: id, ownerId: this.user.id, rating: this.rating, text: text
+      id: id, ownerId: this.user.id, rating: this.updateRating, text: text
     }
     this.commentservice.updateComment(updateComment).subscribe((r) => {
     });
@@ -140,6 +141,9 @@ export class CommentComponent implements OnInit {
 
   onRatingSet($event: number) {
     this.rating = $event;
+  }
+  onEditRatingSet($event: number) {
+    this.updateRating = $event;
   }
 
 }
