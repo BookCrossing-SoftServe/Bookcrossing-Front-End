@@ -84,11 +84,13 @@ import {DonateDialogComponent} from './shared/components/donate-dialog/donate-di
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {EllipsisPipe} from './shared/pipes/elipsis.pipe';
 import {NotificationComponent} from './shared/components/notification/notification.component';
-import {MatLineModule} from '@angular/material/core';
+import {MatLineModule, MatNativeDateModule} from '@angular/material/core';
 import {MatListModule} from '@angular/material/list';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 import {UserNamePipe} from './shared/pipes/userName.pipe';
 import {StarRatingModule} from '@sreyaj/ng-star-rating';
+import { BreadcrumbValuePipe } from './shared/pipes/breadcrumbValue.pipe';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 
 @NgModule({
@@ -144,8 +146,8 @@ import {StarRatingModule} from '@sreyaj/ng-star-rating';
     ProfileComponent,
     ProfileEditComponent,
     DonateDialogComponent,
-    NotificationComponent
-
+    NotificationComponent,
+    BreadcrumbValuePipe
   ],
   imports: [
     BrowserModule,
@@ -168,6 +170,8 @@ import {StarRatingModule} from '@sreyaj/ng-star-rating';
     NgxPaginationModule,
     AvatarModule,
     StarRatingModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
