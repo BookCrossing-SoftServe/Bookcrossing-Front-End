@@ -114,9 +114,6 @@ export class CommentComponent implements OnInit {
   }
 
   PostComment() {
-    if(this.rating === 0){
-      this.rating = -1;
-    }
     let postComment: IRootInsertComment = {
       bookId: this.bookId, ownerId: this.user.id, rating: this.rating, text: this.text
     }
