@@ -187,8 +187,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.lineChartLabels = Object.values(value['components.admin.dashboard.line-chart.labels']).map(x => x + '');
       this.pieChartLabels = Object.values(value['components.admin.dashboard.pie-chart.labels']).map(x => x + '');
       this.pieChartTitle = value['components.admin.dashboard.pie-chart.title'].toString();
-      // this.lineChart.data.datasets[0].label = this.lineChartLabels[0];
-      // this.lineChart.data.datasets[1].label = this.lineChartLabels[1];
+      this.lineChart.data.datasets[0].label = this.lineChartLabels[0];
+      this.lineChart.data.datasets[1].label = this.lineChartLabels[1];
       this.getLineChartLabelData();
       this.lineChart.update();
       this.pieChart.data.labels = this.pieChartLabels;
