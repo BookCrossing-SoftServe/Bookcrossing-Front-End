@@ -25,23 +25,23 @@
       {{ user?.birthDate | date }}
     </div>
   </div>
-  <ng-container *ngIf="user?.userLocation?.location">
+  <ng-container *ngIf="user?.userRoomLocation?.location">
     <div class="row mb-4">
       <div class="col-5">Location</div>
       <div class="col">
         {{
-          user.userLocation.location.city +
+          user.userRoomLocation.location.city +
             " " +
-            user.userLocation.location.street +
+            user.userRoomLocation.location.street +
             " " +
-            user.userLocation.location.officeName
+            user.userRoomLocation.location.officeName
         }}
       </div>
     </div>
     <div class="row mb-4">
       <div class="col-5">Room number</div>
       <div class="col">
-        {{ user.userLocation.roomNumber }}
+        {{ user.userRoomLocation.roomNumber }}
       </div>
     </div>
   </ng-container>
