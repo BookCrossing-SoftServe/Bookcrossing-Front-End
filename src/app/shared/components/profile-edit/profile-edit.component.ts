@@ -126,18 +126,15 @@ export class ProfileEditComponent implements OnInit {
     user.birthDate.setHours(12);
 
     if (this.changingLocation) {
-      if (this.editUserForm.get('changeLocation').value === true) {
       user.userHomeAdress = {
         location: this.location,
         homeAdress: this.editUserForm.get('homeAdress').value
       };
-    } else {
+
       user.userRoomLocation = {
         location: this.location,
         roomNumber: this.editUserForm.get('room').value,
       };
-    }
-
     } else if (user?.userRoomLocation?.location) {
       user.userRoomLocation.roomNumber = this.editUserForm.get('room').value;
       user.userHomeAdress.homeAdress = this.editUserForm.get('homeAdress').value;
